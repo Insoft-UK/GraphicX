@@ -58,13 +58,32 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="m54-Is-iLE"/>
-                                        <menuItem title="Export As…" keyEquivalent="E" id="Bw7-FT-i3A">
-                                            <connections>
-                                                <action selector="exportAs:" target="Voe-Tx-rLC" id="Ldf-kP-byT"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Export Palette" id="t8U-dc-GWa">
+                                        <menuItem title="Export" id="0eF-3m-sas">
                                             <modifierMask key="keyEquivalentModifierMask"/>
+                                            <menu key="submenu" title="Export" id="Jkn-Qd-r4g">
+                                                <items>
+                                                    <menuItem title="Export As..." keyEquivalent="W" id="Bw7-FT-i3A">
+                                                        <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                                        <connections>
+                                                            <action selector="exportAs:" target="Voe-Tx-rLC" id="Ldf-kP-byT"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="Export Palette..." id="t8U-dc-GWa">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="dBX-qn-FHF"/>
+                                        <menuItem title="Import" id="UjR-dV-NQV">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <menu key="submenu" title="Import" id="1Fl-At-D9s">
+                                                <items>
+                                                    <menuItem title="Import Palette..." id="sZg-Qx-jzp">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
                                         </menuItem>
                                     </items>
                                 </menu>
@@ -218,15 +237,21 @@
                                                 <items>
                                                     <menuItem title="4 Colors" id="NGA-aF-GrY">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="colors:" target="Voe-Tx-rLC" id="hA3-RO-Xzq"/>
+                                                        </connections>
                                                     </menuItem>
                                                     <menuItem title="16 Colors" id="ITk-Qb-V2P">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
-                                                    </menuItem>
-                                                    <menuItem title="RGB332 Color" id="PAy-IH-wIp">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="colors:" target="Voe-Tx-rLC" id="RHL-OQ-W5Q"/>
+                                                        </connections>
                                                     </menuItem>
                                                     <menuItem title="Indexed Color" id="Yxa-Yb-sik">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="colors:" target="Voe-Tx-rLC" id="pg7-gh-hD1"/>
+                                                        </connections>
                                                     </menuItem>
                                                 </items>
                                             </menu>
@@ -276,17 +301,24 @@
                                             </menu>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="5gT-KC-WSO"/>
-                                        <menuItem title="ZX Spectrum" keyEquivalent="s" id="Q5e-8K-NDq">
-                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                            <connections>
-                                                <action selector="platform:" target="Voe-Tx-rLC" id="Fhr-Ww-JUc"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Atari ST/E Low" state="on" tag="2" keyEquivalent="a" id="GB9-OM-e27">
-                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                            <connections>
-                                                <action selector="platform:" target="Voe-Tx-rLC" id="8Nt-Y4-pms"/>
-                                            </connections>
+                                        <menuItem title="Preset Formats" id="pch-9W-Yb1">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <menu key="submenu" title="Preset Formats" id="mR1-yh-84a">
+                                                <items>
+                                                    <menuItem title="ZX Spectrum" keyEquivalent="s" id="Q5e-8K-NDq">
+                                                        <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                                        <connections>
+                                                            <action selector="platform:" target="Voe-Tx-rLC" id="Fhr-Ww-JUc"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="Atari ST/E Low" tag="2" keyEquivalent="a" id="GB9-OM-e27">
+                                                        <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                                        <connections>
+                                                            <action selector="platform:" target="Voe-Tx-rLC" id="8Nt-Y4-pms"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="tcF-kc-2nh"/>
                                         <menuItem title="Find" id="4EN-yA-p0u">

@@ -231,38 +231,44 @@ UInt32 palette[256] = {
                     }
                     else {
                         if (c < x) {
-                            if (self.bytesPerBitplane == 1) {
-                                c+=7;
-                                UInt8 *planes = (UInt8 *)bytes;
-                                bytes += self.bytesPerBitplane * self.bitplanes;
-                                
-                                for (int n=7; n >= 0; n--) {
-                                    int i = 0;
-                                    for (int p=0; p<self.bitplanes; p++) {
-                                        UInt8 plane = planes[p];
-                                        if (plane & (1 << n)) {
-                                            i |= (1 << p);
+                            if (self.pixelArrangement == PixelArrangementPlanar) {
+                                if (self.bytesPerBitplane == 1) {
+                                    c+=7;
+                                    UInt8 *planes = (UInt8 *)bytes;
+                                    bytes += self.bytesPerBitplane * self.bitplanes;
+                                    
+                                    for (int n=7; n >= 0; n--) {
+                                        int i = 0;
+                                        for (int p=0; p<self.bitplanes; p++) {
+                                            UInt8 plane = planes[p];
+                                            if (plane & (1 << n)) {
+                                                i |= (1 << p);
+                                            }
                                         }
+                                        *pixels++ = palette[i];
                                     }
-                                    *pixels++ = palette[i];
+                                } else {
+                                    c+=15;
+                                    UInt16 *planes = (UInt16 *)bytes;
+                                    bytes += self.bytesPerBitplane * self.bitplanes;
+                                    
+                                    for (int n=15; n >= 0; n--) {
+                                        int i = 0;
+                                        for (int p=0; p<self.bitplanes; p++) {
+                                            UInt16 plane = CFSwapInt16BigToHost(planes[p]);
+                                            if (plane & (1 << n)) {
+                                                i |= (1 << p);
+                                            }
+                                        }
+                                        *pixels++ = palette[i];
+                                    }
                                 }
                             } else {
-                                c+=15;
-                                UInt16 *planes = (UInt16 *)bytes;
-                                bytes += self.bytesPerBitplane * self.bitplanes;
-                                
-                                for (int n=15; n >= 0; n--) {
-                                    int i = 0;
-                                    for (int p=0; p<self.bitplanes; p++) {
-                                        UInt16 plane = CFSwapInt16BigToHost(planes[p]);
-                                        if (plane & (1 << n)) {
-                                            i |= (1 << p);
-                                        }
-                                    }
-                                    *pixels++ = palette[i];
+                                if (self.bitsPerColor == 8) {
+                                    // Indexed Color
+                                    *pixels++ = palette[*bytes++];
                                 }
                             }
-                            
                             
                         } else {
                             *pixels++ = palette[0];

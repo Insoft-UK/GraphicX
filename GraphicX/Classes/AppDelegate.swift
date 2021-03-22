@@ -72,11 +72,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 scene.setBytesPerBitplane(1)
                 scene.setPixelArrangement(PixelArrangementPlanar)
                 scene.setScreenSize(CGSize(width: 256, height: 192))
-            } else {
+            }
+            
+            if sender.title == "Atari ST/E Low" {
                 scene.setBitplanes(4)
                 scene.setBytesPerBitplane(2)
                 scene.setPixelArrangement(PixelArrangementPlanar)
                 scene.setScreenSize(CGSize(width: 320, height: 200))
+            }
+            
+            if sender.title == "ZX Spectrum NEXT" {
+                scene.setBitsPerColor(8)
+                scene.setPixelArrangement(PixelArrangementPacked)
+                scene.setScreenSize(CGSize(width: 256, height: 64))
             }
         }
         
@@ -135,9 +143,26 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     @IBAction func pixelArrangement(_ sender: NSMenuItem) {
         if let scene = Singleton.sharedInstance()?.mainScene {
-            scene.setPixelArrangement(sender.title == "Packed" ? PixelArrangementPlanar : PixelArrangementPacked)
+            scene.setPixelArrangement(sender.title == "Planar" ? PixelArrangementPlanar : PixelArrangementPacked)
         }
         
+        updateAllMenus()
+    }
+    
+    @IBAction func colors(_ sender: NSMenuItem) {
+        if let scene = Singleton.sharedInstance()?.mainScene {
+            if sender.title == "4 Colors" {
+                scene.setBitsPerColor(2)
+            }
+            
+            if sender.title == "16 Colors" {
+                scene.setBitsPerColor(4)
+            }
+            
+            if sender.title == "Indexed Color" {
+                scene.setBitsPerColor(8)
+            }
+        }
         updateAllMenus()
     }
     
@@ -190,13 +215,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     menu.item(withTitle: "4")?.state = .off
                     menu.item(withTitle: String(scene.bitplanes))?.state = .on
                 }
-                formatMenu.item(withTitle: "ZX Spectrum")?.state = scene.bitplanes == 1 && scene.bytesPerBitplane == 1 ? .on : .off
-                formatMenu.item(withTitle: "Atari ST/E Low")?.state = scene.bitplanes == 4 && scene.bytesPerBitplane == 2 ? .on : .off
-            
+                
             } else {
                 formatMenu.item(withTitle: "Bitplane")?.isEnabled = false
-                formatMenu.item(withTitle: "ZX Spectrum")?.isEnabled = false
-                formatMenu.item(withTitle: "Atari ST/E Low")?.isEnabled = false
             }
             
         }
