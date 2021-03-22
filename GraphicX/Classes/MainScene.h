@@ -31,6 +31,7 @@ typedef enum {
 
 @property (readonly) PixelArrangement pixelArrangement;
 @property (readonly) NSInteger bytesPerBitplane;
+@property (readonly) NSInteger bitsPerColor;
 @property (readonly) NSInteger bitplanes;
 @property (readonly) CGSize screenSize;
 
@@ -45,6 +46,7 @@ typedef enum {
 - (void)setBytesPerBitplane:(NSInteger)bytesPerBitplane;
 - (void)setBitplanes:(NSInteger)bitplanes;
 - (void)setPixelArrangement:(PixelArrangement)pixelArrangement;
+- (void)setBitsPerColor:(NSInteger)bitsPerColor;
 
 - (void)setScreenSize:(CGSize)size;
 

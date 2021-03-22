@@ -63,6 +63,9 @@
                                                 <action selector="exportAs:" target="Voe-Tx-rLC" id="Ldf-kP-byT"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Export Palette" id="t8U-dc-GWa">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>
@@ -140,12 +143,6 @@
                                                                         <action selector="screenWidth:" target="Voe-Tx-rLC" id="cdm-8v-Im5"/>
                                                                     </connections>
                                                                 </menuItem>
-                                                                <menuItem title="640" id="hj2-g9-sOJ">
-                                                                    <modifierMask key="keyEquivalentModifierMask"/>
-                                                                    <connections>
-                                                                        <action selector="screenWidth:" target="Voe-Tx-rLC" id="XS9-TT-1f0"/>
-                                                                    </connections>
-                                                                </menuItem>
                                                             </items>
                                                         </menu>
                                                     </menuItem>
@@ -202,8 +199,33 @@
                                                 <items>
                                                     <menuItem title="Planar" state="on" id="zpy-od-ul3">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="pixelArrangement:" target="Voe-Tx-rLC" id="Od1-jR-Mei"/>
+                                                        </connections>
                                                     </menuItem>
                                                     <menuItem title="Packed" id="M3x-Z3-wEf">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="pixelArrangement:" target="Voe-Tx-rLC" id="KrS-kF-AXR"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </menuItem>
+                                        <menuItem title="Colors" id="8HL-GM-rCw">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <menu key="submenu" title="Colors" id="CsE-ld-Ib9">
+                                                <items>
+                                                    <menuItem title="4 Colors" id="NGA-aF-GrY">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                    </menuItem>
+                                                    <menuItem title="16 Colors" id="ITk-Qb-V2P">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                    </menuItem>
+                                                    <menuItem title="RGB332 Color" id="PAy-IH-wIp">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                    </menuItem>
+                                                    <menuItem title="Indexed Color" id="Yxa-Yb-sik">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                     </menuItem>
                                                 </items>

@@ -31,7 +31,7 @@ THE SOFTWARE.
 
 
 
-UInt32 atariSTPalette[16] = {
+UInt32 palette[256] = {
     0xff000000, 0xff111111, 0xff222222, 0xff333333, 0xff444444, 0xff555555, 0xff666666, 0xff777777,
     0xff888888, 0xff999999, 0xffaaaaaa, 0xffbbbbbb, 0xffcccccc, 0xffdddddd, 0xffeeeeee, 0xffffffff
 };
@@ -177,7 +177,7 @@ UInt32 atariSTPalette[16] = {
 -(void)update:(CFTimeInterval)currentTime {
     
     // Called before each frame is rendered
-    //[self updateMutableTexture];
+    
 }
 
 - (void)updateMutableTexture {
@@ -195,80 +195,9 @@ UInt32 atariSTPalette[16] = {
     NSInteger height = (NSInteger)self.screenSize.height;
     NSInteger bytesPerLine = width * ( (self.bytesPerBitplane * 8) / (self.bitplanes * 2) );
     
-    switch (self.bytesPerBitplane) {
-        case 1: // 8-bit bitplane/s
-            switch (self.bitplanes) {
-                case 1:
-                    [self zxSpectruModifyTextureWithData: self.data rangeFrom:self.offset to: bytesPerLine * height + self.offset];
-                    break;
-                    
-                default:
-                    break;
-            }
-            break;
-            
-        case 2: // 16-bit bitplane/s
-            switch (self.bitplanes) {
-                case 4:
-                    [self modifyTextureWithData: self.data rangeFrom:self.offset to: bytesPerLine * height + self.offset];
-                    break;
-                    
-                default:
-                    break;
-            }
-            break;
-            break;
-        default:
-            break;
-    }
-}
-
-// Modify texure pixel data from raw data that is zx spectrum bitmap graphics.
-- (void)zxSpectruModifyTextureWithData:(const NSData *) data rangeFrom:(size_t)from to:(size_t)to {
-    if (to < from) return;
+    [self modifyTextureWithData: self.data rangeFrom:self.offset to: bytesPerLine * height + self.offset];
     
-    NSUInteger x = (to - from) / 24; /// Equilivant to doing "to / 192 * 8"
     
-    [self.mutableTexture modifyPixelDataWithBlock:^(void *pixelData, size_t lengthInBytes) {
-        UInt32 *pixels = (UInt32 *)pixelData;
-        UInt8 *bytes = (UInt8 *)data.bytes;
-        
-        bytes += from;
-        
-        int height = (int)self.screenSize.height;
-        int width = (int)self.screenSize.width;
-        
-        int w = (int)self.mutableTexture.size.width;
-        int lines = (int)self.mutableTexture.size.height;
-        
-        for (int r = -(lines - height) / 2; r < (height + (lines - height) / 2); ++r) {
-            if (r < 0 || r >= height) {
-                for (int c = 0; c < w; ++c) {
-                    *pixels++ = 0x00000000;
-                }
-            } else {
-                for (int c = -(w - width) / 2; c < width + (w - width) / 2; ++c) {
-                    if (c < 0 || c >= width) {
-                        *pixels++ = 0x00000000;
-                    }
-                    else {
-                        if (c < x) {
-                            const UInt8 data = *bytes++;
-                            for (int i = 7; i >= 0; i--) {
-                                *pixels++ = (data & (1 << i)) ? 0xffffffff : 0xff000000;
-                            }
-                        } else {
-                            for (int i = 0; i < 8; ++i) {
-                                *pixels++ = 0x00000000;
-                            }
-                        }
-                        c+=7;
-                    }
-                }
-            }
-        }
-    }];
-     
 }
 
 // Modify texure pixel data from raw data that is atari st bitmap graphics.
@@ -293,32 +222,50 @@ UInt32 atariSTPalette[16] = {
         for (int r = -(lines - height) / 2; r < (height + (lines - height) / 2); ++r) {
             if (r < 0 || r >= height) {
                 for (int c = 0; c < w; ++c) {
-                    *pixels++ = atariSTPalette[0];
+                    *pixels++ = palette[0];
                 }
             } else {
                 for (int c = -(w - width) / 2; c < (width + (w - width) / 2); ++c) {
                     if (c < 0 || c >= width) {
-                        *pixels++ = atariSTPalette[0];
+                        *pixels++ = palette[0];
                     }
                     else {
                         if (c < x) {
-                            c+=15;
-                            UInt16 *bitplanes = (UInt16 *)bytes;
-                            bytes+=8;
-                            
-                            for (int n=15; n >= 0; n--) {
-                                int i = 0;
-                                for (int p=0; p<4; p++) {
-                                    UInt16 bitplane = CFSwapInt16BigToHost(bitplanes[p]);
-                                    if (bitplane & (1 << n)) {
-                                        i |= (1 << p);
+                            if (self.bytesPerBitplane == 1) {
+                                c+=7;
+                                UInt8 *planes = (UInt8 *)bytes;
+                                bytes += self.bytesPerBitplane * self.bitplanes;
+                                
+                                for (int n=7; n >= 0; n--) {
+                                    int i = 0;
+                                    for (int p=0; p<self.bitplanes; p++) {
+                                        UInt8 plane = planes[p];
+                                        if (plane & (1 << n)) {
+                                            i |= (1 << p);
+                                        }
                                     }
+                                    *pixels++ = palette[i];
                                 }
-                                *pixels++ = atariSTPalette[i];
+                            } else {
+                                c+=15;
+                                UInt16 *planes = (UInt16 *)bytes;
+                                bytes += self.bytesPerBitplane * self.bitplanes;
+                                
+                                for (int n=15; n >= 0; n--) {
+                                    int i = 0;
+                                    for (int p=0; p<self.bitplanes; p++) {
+                                        UInt16 plane = CFSwapInt16BigToHost(planes[p]);
+                                        if (plane & (1 << n)) {
+                                            i |= (1 << p);
+                                        }
+                                    }
+                                    *pixels++ = palette[i];
+                                }
                             }
                             
+                            
                         } else {
-                            *pixels++ = atariSTPalette[0];
+                            *pixels++ = palette[0];
                         }
                     }
                 }
@@ -328,7 +275,7 @@ UInt32 atariSTPalette[16] = {
         pixels = (UInt32 *)pixelData;
         for (int r = 0; r < 16; r++) {
             for (int c = 0; c < w; c++) {
-                *pixels++ = atariSTPalette[c / (w / 16)];
+                *pixels++ = palette[c / (w / 16)];
             }
         }
     }];
@@ -389,7 +336,7 @@ UInt32 atariSTPalette[16] = {
             NSInteger bytesPerLine = width * ( (self.bytesPerBitplane * 8) / (self.bitplanes * 2) );
             
             if (self.bitplanes > 1) {
-                saveAsBitmapImage([[[url absoluteString] stringByReplacingOccurrencesOfString:@"file://" withString:@""] cStringUsingEncoding:NSUTF8StringEncoding], self.data.bytes + self.offset, (int)bytesPerLine * 2, (int)self.screenSize.height, atariSTPalette);
+                saveAsBitmapImage([[[url absoluteString] stringByReplacingOccurrencesOfString:@"file://" withString:@""] cStringUsingEncoding:NSUTF8StringEncoding], self.data.bytes + self.offset, (int)bytesPerLine * 2, (int)self.screenSize.height, palette);
             } else {
                 saveAsPortableBitmapImage([[[url absoluteString] stringByReplacingOccurrencesOfString:@"file://" withString:@""] cStringUsingEncoding:NSUTF8StringEncoding], self.data.bytes + self.offset, (int)bytesPerLine * 8, (int)self.screenSize.height);
             }
@@ -402,7 +349,7 @@ UInt32 atariSTPalette[16] = {
     if (self.screenSize.width > self.mutableTexture.size.width) {
         _screenSize.width = self.mutableTexture.size.width;
     }
-    //[self adjustOffsetBy:0]; // Making sure the offset remains valid.
+    [self adjustOffsetBy:0]; // Making sure the offset remains valid.
     [self updateMutableTexture];
 }
 
@@ -411,31 +358,37 @@ UInt32 atariSTPalette[16] = {
     if (self.screenSize.width < self.bytesPerBitplane * 8) {
         _screenSize.width = self.bytesPerBitplane * 8;
     }
-    //[self adjustOffsetBy:0]; // Making sure the offset remains valid.
+    [self adjustOffsetBy:0]; // Making sure the offset remains a valid range.
     [self updateMutableTexture];
 }
 
 - (void)setBytesPerBitplane:(NSInteger)bytesPerBitplane {
     _bytesPerBitplane = bytesPerBitplane;
-    //[self adjustOffsetBy:0]; // Making sure the offset remains valid.
+    [self adjustOffsetBy:0]; // Making sure the offset remains a valid range.
     [self updateMutableTexture];
 }
 
 - (void)setBitplanes:(NSInteger)bitplanes {
     _bitplanes = bitplanes;
-    //[self adjustOffsetBy:0]; // Making sure the offset remains valid.
+    [self adjustOffsetBy:0]; // Making sure the offset remains a valid range.
     [self updateMutableTexture];
 }
 
 - (void)setPixelArrangement:(PixelArrangement)pixelArrangement {
     _pixelArrangement = pixelArrangement;
-    //[self adjustOffsetBy:0]; // Making sure the offset remains valid.
+    [self adjustOffsetBy:0]; // Making sure the offset remains a valid range.
+    [self updateMutableTexture];
+}
+
+- (void)setBitsPerColor:(NSInteger)bitsPerColor {
+    _bitsPerColor = bitsPerColor;
+    [self adjustOffsetBy:0]; // Making sure the offset remains a valid range.
     [self updateMutableTexture];
 }
 
 - (void)setScreenSize:(CGSize)size {
     _screenSize = size;
-    //[self adjustOffsetBy:0]; // Making sure the offset remains valid.
+    [self adjustOffsetBy:0]; // Making sure the offset remains a valid range.
     [self updateMutableTexture];
 }
 
@@ -504,7 +457,7 @@ UInt32 atariSTPalette[16] = {
                     NSLog(@"RGB: 0x%02X 0x%02X 0x%02X", r,g,b);
                     
                 
-                    atariSTPalette[i] = 0xff000000 | r | g << 8 | b << 16;
+                    palette[i] = 0xff000000 | r | g << 8 | b << 16;
                 }
                 
                 self.palOffset++;
