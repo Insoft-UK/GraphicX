@@ -47,8 +47,6 @@ static __inline CGSize ScreenSize() {
     return [NSScreen mainScreen].frame.size;
 }
 
-// MARK: - Device Type
-
 // MARK: - Math Functions
 static __inline__ int RandomIntegerBetween(int min, int max) {
     return min + arc4random_uniform(max - min + 1);

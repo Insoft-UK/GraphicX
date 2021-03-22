@@ -43,12 +43,13 @@ typedef enum {
 - (void)increaseWidth;
 - (void)decreaseWidth;
 
+// MARK: - Getters and Setters
+
 - (void)setBytesPerBitplane:(NSInteger)bytesPerBitplane;
 - (void)setBitplanes:(NSInteger)bitplanes;
 - (void)setPixelArrangement:(PixelArrangement)pixelArrangement;
 - (void)setBitsPerColor:(NSInteger)bitsPerColor;
 
 - (void)setScreenSize:(CGSize)size;
-
 
 @end
