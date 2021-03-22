@@ -156,6 +156,8 @@ UInt32 atariSTPalette[16] = {
     
     NSLog(@"keyDown:'%@' keyCode: 0x%02X", theEvent.characters, theEvent.keyCode);
     
+    [self updateMutableTexture];
+    
 }
 
 // MARK: - Mouse Events
@@ -542,7 +544,7 @@ UInt32 atariSTPalette[16] = {
         // Check offset is valid and will not result in memory being accessed beyond the memory allocated.
         NSInteger width = (NSInteger)self.screenSize.width;
         NSInteger height = (NSInteger)self.screenSize.height;
-        NSInteger bytesPerLine = width * ( (self.bytesPerBitplane * 8) / (self.bitplanes * 2) );
+        NSInteger bytesPerLine = width / ( (self.bytesPerBitplane * 8) / (self.bitplanes * 2) );
         
         if ( bytesPerLine * height + self.offset >= self.data.length ) {
             self.offset = self.data.length - bytesPerLine * height;
