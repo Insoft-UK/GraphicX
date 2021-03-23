@@ -19,6 +19,7 @@
 		1365C85026092A1200B23CC3 /* NEOchrome.c in Sources */ = {isa = PBXBuildFile; fileRef = 1365C84F26092A1200B23CC3 /* NEOchrome.c */; };
 		1365C85426092CF300B23CC3 /* UniversalPictureFormat.c in Sources */ = {isa = PBXBuildFile; fileRef = 1365C85326092CF300B23CC3 /* UniversalPictureFormat.c */; };
 		1365C85F260947CC00B23CC3 /* common.c in Sources */ = {isa = PBXBuildFile; fileRef = 1365C85E260947CC00B23CC3 /* common.c */; };
+		1365C8662609844500B23CC3 /* act.c in Sources */ = {isa = PBXBuildFile; fileRef = 1365C8652609844500B23CC3 /* act.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +48,8 @@
 		1365C85326092CF300B23CC3 /* UniversalPictureFormat.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = UniversalPictureFormat.c; sourceTree = "<group>"; };
 		1365C85C2609392700B23CC3 /* common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
 		1365C85E260947CC00B23CC3 /* common.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = common.c; sourceTree = "<group>"; };
+		1365C8642609844500B23CC3 /* act.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = act.h; sourceTree = "<group>"; };
+		1365C8652609844500B23CC3 /* act.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = act.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,6 +171,7 @@
 				1365C84C260929C500B23CC3 /* Universal Picture Format */,
 				1365C7AE260580DF00B23CC3 /* BMP */,
 				1365C7AD260580D400B23CC3 /* PBM */,
+				1365C862260982EA00B23CC3 /* ACT */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -239,6 +243,23 @@
 			isa = PBXGroup;
 			children = (
 				1365C84E26092A1200B23CC3 /* NEOchrome.h */,
+			);
+			name = includes;
+			sourceTree = "<group>";
+		};
+		1365C862260982EA00B23CC3 /* ACT */ = {
+			isa = PBXGroup;
+			children = (
+				1365C863260982FB00B23CC3 /* includes */,
+				1365C8652609844500B23CC3 /* act.c */,
+			);
+			path = ACT;
+			sourceTree = "<group>";
+		};
+		1365C863260982FB00B23CC3 /* includes */ = {
+			isa = PBXGroup;
+			children = (
+				1365C8642609844500B23CC3 /* act.h */,
 			);
 			name = includes;
 			sourceTree = "<group>";
@@ -334,6 +355,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1365C8662609844500B23CC3 /* act.c in Sources */,
 				1365C79626057FA700B23CC3 /* ViewController.swift in Sources */,
 				1365C78E26057FA700B23CC3 /* AppDelegate.swift in Sources */,
 				1365C85426092CF300B23CC3 /* UniversalPictureFormat.c in Sources */,
@@ -495,7 +517,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.4;
+				MARKETING_VERSION = 0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = uk.insoft.GraphicX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT)/Classes/GraphicX-Bridging-Header.h";
@@ -523,7 +545,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.4;
+				MARKETING_VERSION = 0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = uk.insoft.GraphicX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT)/Classes/GraphicX-Bridging-Header.h";

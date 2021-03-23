@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 Insoft. All rights reserved.
+Copyright © 2021 Insoft. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,37 +20,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#import <SpriteKit/SpriteKit.h>
+#ifndef act_h
+#define act_h
 
-typedef enum {
-    PixelArrangementPlanar,
-    PixelArrangementPacked
-} PixelArrangement;
+#include <stdio.h>
+#include <stdlib.h>
 
-@interface MainScene : SKScene
+/* Set up for C function definitions, even when using C++ */
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-@property (readonly) PixelArrangement pixelArrangement;
-@property (readonly) NSInteger bytesPerBitplane;
-@property (readonly) NSInteger bitsPerColor;
-@property (readonly) NSInteger bitplanes;
-@property (readonly) CGSize screenSize;
+    void saveAsPhotoshopPalette(const char *filepath, const void *pal, uint16_t colors, uint16_t transparent);
 
-// MARK: - Pubplic Methods
+/* Ends C function definitions when using C++ */
+#ifdef __cplusplus
+}
+#endif
 
-- (void)nextPalette;
-- (void)openDocument;
-- (void)exportAs;
-- (void)exportPalette;
-- (void)increaseWidth;
-- (void)decreaseWidth;
-
-// MARK: - Getters and Setters
-
-- (void)setBytesPerBitplane:(NSInteger)bytesPerBitplane;
-- (void)setBitplanes:(NSInteger)bitplanes;
-- (void)setPixelArrangement:(PixelArrangement)pixelArrangement;
-- (void)setBitsPerColor:(NSInteger)bitsPerColor;
-
-- (void)setScreenSize:(CGSize)size;
-
-@end
+#endif /* act_h */

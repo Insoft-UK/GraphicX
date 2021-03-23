@@ -375,6 +375,23 @@ UInt32 palette[256] = {
     }
 }
 
+- (void)exportPalette {
+    NSURL *url;
+    
+    NSSavePanel *savePanel = [[NSSavePanel alloc] init];
+    savePanel.title = @"GraphicX";
+    savePanel.canCreateDirectories = YES;
+    savePanel.nameFieldStringValue = @"palette.act";
+    
+    NSModalResponse modalResponse = [savePanel runModal];
+    if (modalResponse == NSModalResponseOK) {
+        url = savePanel.URL;
+        if (url != nil) {
+            saveAsPhotoshopPalette([[[url absoluteString] stringByReplacingOccurrencesOfString:@"file://" withString:@""] cStringUsingEncoding:NSUTF8StringEncoding], palette, 16, 0);
+        }
+    }
+}
+
 - (void)increaseWidth {
     _screenSize.width += self.bytesPerBitplane * 8;
     if (self.screenSize.width > self.mutableTexture.size.width) {

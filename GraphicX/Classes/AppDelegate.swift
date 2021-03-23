@@ -118,6 +118,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
     
+    @IBAction func exportPalette(_ sender: NSMenuItem) {
+        if let scene = Singleton.sharedInstance()?.mainScene {
+            scene.exportPalette()
+        }
+    }
+    
     @IBAction func screenWidth(_ sender: NSMenuItem) {
         if let scene = Singleton.sharedInstance()?.mainScene {
             let w = Int(sender.title) ?? 0

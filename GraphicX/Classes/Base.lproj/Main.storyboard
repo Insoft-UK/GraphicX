@@ -70,6 +70,9 @@
                                                     </menuItem>
                                                     <menuItem title="Export Palette..." id="t8U-dc-GWa">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="exportPalette:" target="Voe-Tx-rLC" id="MGr-s6-XBw"/>
+                                                        </connections>
                                                     </menuItem>
                                                 </items>
                                             </menu>

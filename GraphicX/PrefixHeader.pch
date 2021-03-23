@@ -43,6 +43,7 @@ THE SOFTWARE.
 /// Universal Picture Format
 #import "UniversalPictureFormat.h"
 
+#import "act.h"
 #import "pbm.h"
 #import "bmp.h"
 
