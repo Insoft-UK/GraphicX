@@ -20,22 +20,34 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#ifndef pbm_h
-#define pbm_h
+#ifndef UniversalPictureFormat_h
+#define UniversalPictureFormat_h
 
-#include <stdbool.h>
+#include "NEOchrome.h"
+
+typedef struct {
+    int planes;                 // Number of bit planes
+    int bitsPerPlane;
+    int colourBitCount;         // Colour bits per pixel. 1 4 8 or 24
+    
+    int width;
+    int height;
+    
+    uint32_t palette[256];
+    
+    unsigned long int pictureDataOffset;    // Zero :- unable to identify raw data
+} UniversalPictureFormat;
 
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void loadPortableBitmapData(const char *filepath, void *dest);
-bool saveAsPortableBitmapImage(const char *filepath, const void *src, int width, int height);
+UniversalPictureFormat getUniversalPictureFormat(const void *rawData, long unsigned int length);
 
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* pbm_h */
+#endif /* UniversalPictureFormat_h */

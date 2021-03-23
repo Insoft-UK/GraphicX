@@ -20,22 +20,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#ifndef pbm_h
-#define pbm_h
 
-#include <stdbool.h>
+#include "common.h"
 
-/* Set up for C function definitions, even when using C++ */
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-void loadPortableBitmapData(const char *filepath, void *dest);
-bool saveAsPortableBitmapImage(const char *filepath, const void *src, int width, int height);
-
-/* Ends C function definitions when using C++ */
-#ifdef __cplusplus
+word swapWordBigToHost(word val) {
+    uint16_t t = 1;
+    if (*(uint8_t *)&t & 1) {
+        return (val << 8) | ((val >> 8) & 0xFF);
+    }
+    return val;
 }
-#endif
-
-#endif /* pbm_h */

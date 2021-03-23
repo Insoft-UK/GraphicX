@@ -109,6 +109,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     @IBAction func openDocument(_ sender: NSMenuItem) {
         Singleton.sharedInstance()?.mainScene.openDocument()
+        updateAllMenus()
     }
     
     @IBAction func exportAs(_ sender: NSMenuItem) {

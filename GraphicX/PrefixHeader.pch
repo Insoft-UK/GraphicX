@@ -40,6 +40,9 @@ THE SOFTWARE.
 #import "MainScene.h"
 
 
+/// Universal Picture Format
+#import "UniversalPictureFormat.h"
+
 #import "pbm.h"
 #import "bmp.h"
 

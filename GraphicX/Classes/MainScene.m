@@ -68,6 +68,7 @@ UInt32 palette[256] = {
     _bitplanes = 4;
     self.offset = 0;
     self.palOffset = 0;
+    self.bitsPerColor = 8;
     [self setScreenSize:CGSizeMake(320, 200)];
     _pixelArrangement = PixelArrangementPlanar;
 
@@ -268,6 +269,22 @@ UInt32 palette[256] = {
                                     // Indexed Color
                                     *pixels++ = palette[*bytes++];
                                 }
+                                
+                                if (self.bitsPerColor == 4) {
+                                    // 16 Colors
+                                    *pixels++ = palette[bytes[0] >> 4];
+                                    *pixels++ = palette[bytes[0] & 0b1111];
+                                    bytes++;
+                                }
+                                
+                                if (self.bitsPerColor == 2) {
+                                    // 4 Colors
+                                    *pixels++ = palette[bytes[0] >> 6];
+                                    *pixels++ = palette[(bytes[0] >> 4) & 0b11];
+                                    *pixels++ = palette[(bytes[0] >> 2) & 0b11];
+                                    *pixels++ = palette[bytes[0] & 0b11];
+                                    bytes++;
+                                }
                             }
                             
                         } else {
@@ -314,6 +331,14 @@ UInt32 palette[256] = {
             if (self.data == nil) {
                 NSLog(@"ERROR! No Data");
             } else {
+                UniversalPictureFormat upf = getUniversalPictureFormat(self.data.bytes, self.data.length);
+                if (upf.pictureDataOffset != 0) {
+                    self.bitplanes = upf.planes;
+                    self.bytesPerBitplane = upf.bitsPerPlane / 8;
+                    self.bitsPerColor = upf.colourBitCount;
+                    self.offset = (NSInteger)upf.pictureDataOffset;
+                    memcpy(palette, upf.palette, sizeof(palette));
+                }
                 [self updateMutableTexture];
             }
         }

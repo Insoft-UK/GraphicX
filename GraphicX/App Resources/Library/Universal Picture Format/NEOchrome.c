@@ -20,22 +20,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#ifndef pbm_h
-#define pbm_h
+#include "NEOchrome.h"
 
-#include <stdbool.h>
 
-/* Set up for C function definitions, even when using C++ */
-#ifdef __cplusplus
-extern "C" {
-#endif
 
-void loadPortableBitmapData(const char *filepath, void *dest);
-bool saveAsPortableBitmapImage(const char *filepath, const void *src, int width, int height);
-
-/* Ends C function definitions when using C++ */
-#ifdef __cplusplus
+bool isNEOchromeFormat(const void *rawData, long unsigned int length) {
+    if (length != 32128) return false; /// A NEO file will always be exacly 32,128 bytes in length.
+    
+    const NEOchrome *neo_ref = (NEOchrome *)rawData;
+    
+    if (neo_ref->flag != 0) return false;
+    if (neo_ref->resolution != 0) return false;
+    if (neo_ref->imageXoffset != 0) return false;
+    if (neo_ref->imageYoffset != 0) return false;
+ 
+    return true;
 }
-#endif
 
-#endif /* pbm_h */
+

@@ -16,6 +16,9 @@
 		1365C7BE2605828100B23CC3 /* pbm.c in Sources */ = {isa = PBXBuildFile; fileRef = 1365C7BD2605828100B23CC3 /* pbm.c */; };
 		1365C7C22605829100B23CC3 /* bmp.c in Sources */ = {isa = PBXBuildFile; fileRef = 1365C7C12605829100B23CC3 /* bmp.c */; };
 		1365C7CD260584AB00B23CC3 /* MainScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 1365C7CC260584AB00B23CC3 /* MainScene.m */; };
+		1365C85026092A1200B23CC3 /* NEOchrome.c in Sources */ = {isa = PBXBuildFile; fileRef = 1365C84F26092A1200B23CC3 /* NEOchrome.c */; };
+		1365C85426092CF300B23CC3 /* UniversalPictureFormat.c in Sources */ = {isa = PBXBuildFile; fileRef = 1365C85326092CF300B23CC3 /* UniversalPictureFormat.c */; };
+		1365C85F260947CC00B23CC3 /* common.c in Sources */ = {isa = PBXBuildFile; fileRef = 1365C85E260947CC00B23CC3 /* common.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +41,12 @@
 		1365C7C42605829A00B23CC3 /* bmp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bmp.h; sourceTree = "<group>"; };
 		1365C7CB260584AA00B23CC3 /* MainScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainScene.h; sourceTree = "<group>"; };
 		1365C7CC260584AB00B23CC3 /* MainScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainScene.m; sourceTree = "<group>"; };
+		1365C84E26092A1200B23CC3 /* NEOchrome.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NEOchrome.h; sourceTree = "<group>"; };
+		1365C84F26092A1200B23CC3 /* NEOchrome.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = NEOchrome.c; sourceTree = "<group>"; };
+		1365C85226092CF300B23CC3 /* UniversalPictureFormat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UniversalPictureFormat.h; sourceTree = "<group>"; };
+		1365C85326092CF300B23CC3 /* UniversalPictureFormat.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = UniversalPictureFormat.c; sourceTree = "<group>"; };
+		1365C85C2609392700B23CC3 /* common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
+		1365C85E260947CC00B23CC3 /* common.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = common.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -156,6 +165,7 @@
 		1365C7AC260580C300B23CC3 /* Library */ = {
 			isa = PBXGroup;
 			children = (
+				1365C84C260929C500B23CC3 /* Universal Picture Format */,
 				1365C7AE260580DF00B23CC3 /* BMP */,
 				1365C7AD260580D400B23CC3 /* PBM */,
 			);
@@ -192,6 +202,43 @@
 			isa = PBXGroup;
 			children = (
 				1365C7C02605828900B23CC3 /* pbm.h */,
+			);
+			name = includes;
+			sourceTree = "<group>";
+		};
+		1365C84C260929C500B23CC3 /* Universal Picture Format */ = {
+			isa = PBXGroup;
+			children = (
+				1365C858260932BB00B23CC3 /* Atari ST Picture Formats */,
+				1365C84D260929E800B23CC3 /* includes */,
+				1365C85326092CF300B23CC3 /* UniversalPictureFormat.c */,
+				1365C85E260947CC00B23CC3 /* common.c */,
+			);
+			path = "Universal Picture Format";
+			sourceTree = "<group>";
+		};
+		1365C84D260929E800B23CC3 /* includes */ = {
+			isa = PBXGroup;
+			children = (
+				1365C85226092CF300B23CC3 /* UniversalPictureFormat.h */,
+				1365C85C2609392700B23CC3 /* common.h */,
+			);
+			name = includes;
+			sourceTree = "<group>";
+		};
+		1365C858260932BB00B23CC3 /* Atari ST Picture Formats */ = {
+			isa = PBXGroup;
+			children = (
+				1365C85A260932F800B23CC3 /* includes */,
+				1365C84F26092A1200B23CC3 /* NEOchrome.c */,
+			);
+			name = "Atari ST Picture Formats";
+			sourceTree = "<group>";
+		};
+		1365C85A260932F800B23CC3 /* includes */ = {
+			isa = PBXGroup;
+			children = (
+				1365C84E26092A1200B23CC3 /* NEOchrome.h */,
 			);
 			name = includes;
 			sourceTree = "<group>";
@@ -289,8 +336,11 @@
 			files = (
 				1365C79626057FA700B23CC3 /* ViewController.swift in Sources */,
 				1365C78E26057FA700B23CC3 /* AppDelegate.swift in Sources */,
+				1365C85426092CF300B23CC3 /* UniversalPictureFormat.c in Sources */,
 				1365C7C22605829100B23CC3 /* bmp.c in Sources */,
 				1365C7CD260584AB00B23CC3 /* MainScene.m in Sources */,
+				1365C85026092A1200B23CC3 /* NEOchrome.c in Sources */,
+				1365C85F260947CC00B23CC3 /* common.c in Sources */,
 				1365C7BE2605828100B23CC3 /* pbm.c in Sources */,
 				1365C7B22605812B00B23CC3 /* Constants.m in Sources */,
 				1365C7B72605818800B23CC3 /* Singleton.m in Sources */,
