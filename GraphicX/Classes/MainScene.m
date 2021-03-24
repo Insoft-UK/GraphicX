@@ -118,17 +118,18 @@ UInt32 _palette[256] = {
 - (void)keyDown:(NSEvent *)theEvent {
     
     NSInteger width = (NSInteger)self.screenSize.width;
-    NSInteger bytesPerLine = width * ( (self.bytesPerBitplane * 8) / (self.bitplanes * 2) );
+    NSInteger height = (NSInteger)self.screenSize.height;
+    NSInteger bytesPerLine = width / ( (self.bytesPerBitplane * 8) / (self.bitplanes * 2) );
     
     switch (theEvent.keyCode) {
             
         case 0x24 /* ENTER  */:
-            [self adjustOffsetBy:width * bytesPerLine];
+            [self adjustOffsetBy:height * bytesPerLine];
             break;
             
 
         case 0x33 /* BACKSPACE  */:
-            [self adjustOffsetBy:-width * bytesPerLine];
+            [self adjustOffsetBy:-height * bytesPerLine];
             break;
             
         
@@ -228,12 +229,12 @@ UInt32 _palette[256] = {
         for (int r = -(lines - height) / 2; r < (height + (lines - height) / 2); ++r) {
             if (r < 0 || r >= height) {
                 for (int c = 0; c < w; ++c) {
-                    *pixels++ = self.palette.color[0];
+                    *pixels++ = [self.palette getRgbColorAtIndex:0];
                 }
             } else {
                 for (int c = -(w - width) / 2; c < (width + (w - width) / 2); ++c) {
                     if (c < 0 || c >= width) {
-                        *pixels++ = self.palette.color[0];
+                        *pixels++ = [self.palette getRgbColorAtIndex:0];
                     }
                     else {
                         if (c < x) {
@@ -251,7 +252,7 @@ UInt32 _palette[256] = {
                                                 i |= (1 << p);
                                             }
                                         }
-                                        *pixels++ = self.palette.color[i];
+                                        *pixels++ = [self.palette getRgbColorAtIndex:i];
                                     }
                                 } else {
                                     c+=15;
@@ -266,34 +267,34 @@ UInt32 _palette[256] = {
                                                 i |= (1 << p);
                                             }
                                         }
-                                        *pixels++ = self.palette.color[i];
+                                        *pixels++ = [self.palette getRgbColorAtIndex:i];
                                     }
                                 }
                             } else {
                                 if (self.bitsPerColor == 8) {
                                     // Indexed Color
-                                    *pixels++ = self.palette.color[*bytes++];
+                                    *pixels++ = [self.palette getRgbColorAtIndex:*bytes++];
                                 }
                                 
                                 if (self.bitsPerColor == 4) {
                                     // 16 Colors
-                                    *pixels++ = self.palette.color[bytes[0] >> 4];
-                                    *pixels++ = self.palette.color[bytes[0] & 0b1111];
+                                    *pixels++ = [self.palette getRgbColorAtIndex:bytes[0] >> 4];
+                                    *pixels++ = [self.palette getRgbColorAtIndex:bytes[0] & 0b1111];
                                     bytes++;
                                 }
                                 
                                 if (self.bitsPerColor == 2) {
                                     // 4 Colors
-                                    *pixels++ = self.palette.color[bytes[0] >> 6];
-                                    *pixels++ = self.palette.color[(bytes[0] >> 4) & 0b11];
-                                    *pixels++ = self.palette.color[(bytes[0] >> 2) & 0b11];
-                                    *pixels++ = self.palette.color[bytes[0] & 0b11];
+                                    *pixels++ = [self.palette getRgbColorAtIndex:bytes[0] >> 6];
+                                    *pixels++ = [self.palette getRgbColorAtIndex:(bytes[0] >> 4) & 0b11];
+                                    *pixels++ = [self.palette getRgbColorAtIndex:(bytes[0] >> 2) & 0b11];
+                                    *pixels++ = [self.palette getRgbColorAtIndex:bytes[0] & 0b11];
                                     bytes++;
                                 }
                             }
                             
                         } else {
-                            *pixels++ = self.palette.color[0];
+                            *pixels++ = [self.palette getRgbColorAtIndex:0];
                         }
                     }
                 }
@@ -303,7 +304,7 @@ UInt32 _palette[256] = {
         pixels = (UInt32 *)pixelData;
         for (int r = height - 32; r < height; r++) {
             for (int c = 0; c < w; c++) {
-                *pixels++ = self.palette.color[c / (w / 16)];
+                *pixels++ = [self.palette getRgbColorAtIndex:c / (w / 16)];
             }
         }
     }];
@@ -343,7 +344,9 @@ UInt32 _palette[256] = {
                     self.bytesPerBitplane = upf.bitsPerPlane / 8;
                     self.bitsPerColor = upf.colourBitCount;
                     self.offset = (NSInteger)upf.pictureDataOffset;
-                    memcpy(self.palette.color, upf.palette, sizeof(UInt32) * 256);
+                    for (int i=0; i<256; i++) {
+                        [self.palette setRgbColor:upf.palette[i] atIndex:i];
+                    }
                 } else {
                     self.offset = 0;
                 }
@@ -471,30 +474,7 @@ UInt32 _palette[256] = {
 
 
 
--(BOOL)repeatedValues:(UInt16 *)list lengthOf:(NSUInteger)length {
-    for (int i = 0; i < length; i++) {
-        for (int j = 0; j < length; j++) {
-            if (i != j) {
-                if (list[i] == list[j]) {
-                    return YES;
-                }
-            }
-        }
-    }
-    return NO;
-}
 
--(BOOL)isPosibleAnAtariSTPalette:(UInt16 *)list {
-    for (int i = 0; i < 16; i++) {
-        if (i == 0 && list[i] != 0) {
-            return NO;
-        }
-        if (CFSwapInt16BigToHost(list[i]) & 0xf000) {
-            return NO;
-        }
-    }
-    return YES;
-}
 
 - (void)findAtariSTPaletteFromData:(const NSData *) data  {
     UInt8 *bytes = (UInt8 *)data.bytes;
@@ -503,37 +483,29 @@ UInt32 _palette[256] = {
     
     
     while (lengthInBytes--) {
-        if ([self isPosibleAnAtariSTPalette:(UInt16 *)bytes] == YES) {
-            if ([self repeatedValues:(UInt16 *)bytes lengthOf:16] == NO) {
-                /// Palette found!
-                UInt16* pal = ( UInt16 * )bytes;
-                
-                for (int i=0; i<16; i++) {
-                    self.palette.color[i] = [Palette colorFrom9BitRgb:CFSwapInt16BigToHost(pal[i])];
-                }
-                
-                [self.palette setColorCount:16];
-                
-                self.palOffset++;
-                
-                if (self.palOffset + 32 >= data.length) {
-                    self.palOffset = 0;
-                }
-                
-                
-                
-                return;
-            }
-        }
+        UInt16* pal = ( UInt16* )bytes;
         
+        if ([Palette isAtariSteFormat:( UInt16* )bytes] == YES) {
+            for (int i=0; i<16; i++) {
+                [self.palette setRgbColor:[Palette colorFrom12BitRgb:pal[i]] atIndex:i];
+            }
+            break;
+        } else if ([Palette isAtariStFormat:( UInt16* )bytes] == YES) {
+            for (int i=0; i<16; i++) {
+                [self.palette setRgbColor:[Palette colorFrom9BitRgb:pal[i]] atIndex:i];
+            }
+            break;
+        }
+
         self.palOffset++;
         bytes++;
     }
     
-    
+    self.palOffset++;
     if (self.palOffset + 32 >= data.length) {
         self.palOffset = 0;
     }
+    
     
 }
 

@@ -25,16 +25,31 @@ THE SOFTWARE.
 
 @interface Palette: NSObject
 
--(void)loadWithContentsOfFile:( NSString* _Nonnull )file;
--(void)saveAsPhotoshopActAtPath:( NSString* _Nonnull )path;
+// MARK: - Properties
 
-+(UInt32)colorFrom9BitRgb:(UInt16)rgb;
-
-@property (readonly) UInt32* _Nonnull color;
 @property (readonly) NSUInteger colorCount;
 
+// MARK: - Instance Methods
+
+-(void)loadWithContentsOfFile:( NSString* _Nonnull )file;
+-(void)saveAsPhotoshopActAtPath:( NSString* _Nonnull )path;
+-(UInt32)colorAtIndex:(NSUInteger)index;
+
+// MARK: - Class Methods
+
++(UInt32)colorFrom9BitRgb:( UInt16 )rgb;
++(UInt32)colorFrom12BitRgb:( UInt16 )rgb;
+
++(BOOL)isAtariStFormat:( UInt16* _Nonnull )rgb;
++(BOOL)isAtariSteFormat:( UInt16* _Nonnull )rgb;
+
+// MARK:- Getter & Setters
+
 -(void)setColorCount:(NSUInteger)count;
+-(void)setRgbColor:( UInt32 )rgb atIndex:(NSUInteger)index;
+-(UInt32)getRgbColorAtIndex:(NSUInteger)index;
 
 @end
+
 
 #endif /* Palette_h */
