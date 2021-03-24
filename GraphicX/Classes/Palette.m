@@ -23,7 +23,11 @@ THE SOFTWARE.
 #import "Palette.h"
 
 @interface Palette()
+
+// MARK: - Private Properties
+
 @property NSData *data;
+
 @end
 
 

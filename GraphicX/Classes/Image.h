@@ -26,8 +26,12 @@ THE SOFTWARE.
 #define Image_h
 
 @interface Image: NSObject
+
+// MARK: - Class Methods
+
 + (CGImageRef)createCGImage:(CGSize)size ofPixelData:(const void *)pixelData;
 + (BOOL)writeCGImage:(CGImageRef)image to:(NSURL *)destinationURL;
+
 @end
 
 

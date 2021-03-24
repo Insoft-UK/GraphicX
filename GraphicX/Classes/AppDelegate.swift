@@ -40,49 +40,44 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Insert code here to tear down your application
     }
     
-    // MARK: - Action Methods for Menu
+    // MARK: - Private Action Methods
     
-    @IBAction func findPalette(_ sender: NSMenuItem) {
+    @IBAction private func findPalette(_ sender: NSMenuItem) {
         Singleton.sharedInstance()?.mainScene.nextPalette()
     }
     
-    @IBAction func bitplane(_ sender: NSMenuItem) {
-        if let scene = Singleton.sharedInstance()?.mainScene {
-            let planes = Int(sender.title) ?? 0
-            if planes > 0 {
-                scene.setBitplanes(planes)
-            } else {
-                if sender.title == "8 Bits" {
-                    scene.setBytesPerBitplane(1)
-                }
-                
-                if sender.title == "16 Bits" {
-                    scene.setBytesPerBitplane(2)
-                }
-            }
+    @IBAction private func planeCount(_ sender: NSMenuItem) {
+        if let number = UInt(sender.title) {
+            Singleton.sharedInstance()?.mainScene.setPlaneCount(number)
+            updateAllMenus()
         }
-        
-        updateAllMenus()
     }
     
-    @IBAction func platform(_ sender: NSMenuItem) {
+    @IBAction private func bitsPerPlane(_ sender: NSMenuItem) {
+        if let number = UInt(sender.title) {
+            Singleton.sharedInstance()?.mainScene.setBitsPerPlane(number)
+            updateAllMenus()
+        }
+    }
+    
+    @IBAction private func platform(_ sender: NSMenuItem) {
         if let scene = Singleton.sharedInstance()?.mainScene {
             if sender.title == "ZX Spectrum" {
-                scene.setBitplanes(1)
-                scene.setBytesPerBitplane(1)
+                scene.setPlaneCount(1)
+                scene.setBitsPerPlane(8)
                 scene.setPixelArrangement(PixelArrangementPlanar)
                 scene.setScreenSize(CGSize(width: 256, height: 192))
             }
             
             if sender.title == "Atari ST/E Low" {
-                scene.setBitplanes(4)
-                scene.setBytesPerBitplane(2)
+                scene.setPlaneCount(4)
+                scene.setBitsPerPlane(16)
                 scene.setPixelArrangement(PixelArrangementPlanar)
                 scene.setScreenSize(CGSize(width: 320, height: 200))
             }
             
             if sender.title == "ZX Spectrum NEXT" {
-                scene.setBitsPerColor(8)
+                scene.setBitsPerComponent(8)
                 scene.setPixelArrangement(PixelArrangementPacked)
                 scene.setScreenSize(CGSize(width: 256, height: 64))
             }
@@ -91,64 +86,48 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         updateAllMenus()
     }
     
-    @IBAction func increaseWidth(_ sender: NSMenuItem) {
-        if let scene = Singleton.sharedInstance()?.mainScene {
-            scene.increaseWidth()
-        }
-        
+    @IBAction private func increaseWidth(_ sender: NSMenuItem) {
+        Singleton.sharedInstance()?.mainScene.increaseWidth()
         updateAllMenus()
     }
     
-    @IBAction func decreaseWidth(_ sender: NSMenuItem) {
-        if let scene = Singleton.sharedInstance()?.mainScene {
-            scene.decreaseWidth()
-        }
-        
+    @IBAction private func decreaseWidth(_ sender: NSMenuItem) {
+        Singleton.sharedInstance()?.mainScene.decreaseWidth()
         updateAllMenus()
     }
     
-    @IBAction func openDocument(_ sender: NSMenuItem) {
+    @IBAction private func openDocument(_ sender: NSMenuItem) {
         Singleton.sharedInstance()?.mainScene.openDocument()
         updateAllMenus()
     }
     
-    @IBAction func importPalettet(_ sender: NSMenuItem) {
+    @IBAction private func importPalettet(_ sender: NSMenuItem) {
         Singleton.sharedInstance()?.mainScene.importPalette()
     }
     
-    @IBAction func exportAs(_ sender: NSMenuItem) {
+    @IBAction private func exportAs(_ sender: NSMenuItem) {
         Singleton.sharedInstance()?.mainScene.exportAs()
     }
     
-    @IBAction func exportPalette(_ sender: NSMenuItem) {
+    @IBAction private func exportPalette(_ sender: NSMenuItem) {
         Singleton.sharedInstance()?.mainScene.exportPalette()
     }
     
-    @IBAction func screenWidth(_ sender: NSMenuItem) {
-        if let scene = Singleton.sharedInstance()?.mainScene {
-            let w = Int(sender.title) ?? 0
-            if w > 0 {
-                let size = CGSize(width: CGFloat(w), height: scene.screenSize.height)
-                scene.setScreenSize(size)
-            }
+    @IBAction private func screenWidth(_ sender: NSMenuItem) {
+        if let number = UInt(sender.title) {
+            Singleton.sharedInstance()?.mainScene.setScreenSize(CGSize(width: CGFloat(number), height: (Singleton.sharedInstance()?.mainScene.screenSize.height)!))
+            updateAllMenus()
         }
-        
-        updateAllMenus()
     }
     
-    @IBAction func screenHeight(_ sender: NSMenuItem) {
-        if let scene = Singleton.sharedInstance()?.mainScene {
-            let h = Int(sender.title) ?? 0
-            if h > 0 {
-                let size = CGSize(width: scene.screenSize.width, height: CGFloat(h))
-                scene.setScreenSize(size)
-            }
+    @IBAction private func screenHeight(_ sender: NSMenuItem) {
+        if let number = UInt(sender.title) {
+            Singleton.sharedInstance()?.mainScene.setScreenSize(CGSize(width: (Singleton.sharedInstance()?.mainScene.screenSize.width)!, height: CGFloat(number)))
+            updateAllMenus()
         }
-        
-        updateAllMenus()
     }
     
-    @IBAction func pixelArrangement(_ sender: NSMenuItem) {
+    @IBAction private func pixelArrangement(_ sender: NSMenuItem) {
         if let scene = Singleton.sharedInstance()?.mainScene {
             scene.setPixelArrangement(sender.title == "Planar" ? PixelArrangementPlanar : PixelArrangementPacked)
         }
@@ -158,19 +137,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     @IBAction func colors(_ sender: NSMenuItem) {
         if let scene = Singleton.sharedInstance()?.mainScene {
-            if sender.title == "4 Colors" {
-                scene.setBitsPerColor(2)
+            scene.setPixelArrangement(PixelArrangementPacked)
+            scene.setPlaneCount(1)
+
+            if let number = UInt(sender.title) {
+                switch number {
+                case 4:
+                    scene.setBitsPerComponent(2)
+                case 16:
+                    scene.setBitsPerComponent(4)
+                default:
+                    break
+                }
+            } else {
+                scene.setBitsPerComponent(8)
             }
-            
-            if sender.title == "16 Colors" {
-                scene.setBitsPerColor(4)
-            }
-            
-            if sender.title == "Indexed Color" {
-                scene.setBitsPerColor(8)
-            }
+            updateAllMenus()
         }
-        updateAllMenus()
     }
     
     // MARK: - Private Methods
@@ -214,13 +197,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 formatMenu.item(withTitle: "Bitplane")?.isEnabled = true
                 
                 if let menu = formatMenu.item(withTitle: "Bitplane")?.submenu {
-                    menu.item(withTitle: "8 Bits")?.state = scene.bytesPerBitplane == 1 ? .on : .off
-                    menu.item(withTitle: "16 Bits")?.state = scene.bytesPerBitplane == 2 ? .on : .off
+                    menu.item(withTitle: "8 Bits")?.state = scene.bitsPerPlane == 8 ? .on : .off
+                    menu.item(withTitle: "16 Bits")?.state = scene.bitsPerPlane == 16 ? .on : .off
                     
                     menu.item(withTitle: "1")?.state = .off
                     menu.item(withTitle: "2")?.state = .off
                     menu.item(withTitle: "4")?.state = .off
-                    menu.item(withTitle: String(scene.bitplanes))?.state = .on
+                    menu.item(withTitle: String(scene.planeCount))?.state = .on
                 }
                 
             } else {
@@ -244,10 +227,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             if scene.pixelArrangement == PixelArrangementPacked {
                 formatMenu.item(withTitle: "Colors")?.isEnabled = true
                 if let menu = formatMenu.item(withTitle: "Colors")?.submenu {
-                    menu.item(withTitle: "4 Colors")?.state = scene.bitsPerColor == 2 ? .on : .off
-                    menu.item(withTitle: "16 Colors")?.state = scene.bitsPerColor == 4 ? .on : .off
-                    menu.item(withTitle: "RGB332 Color")?.state = scene.bitsPerColor == 8 ? .on : .off
-                    menu.item(withTitle: "Indexed Color")?.state = scene.bitsPerColor == 8 ? .on : .off
+                    menu.item(withTitle: "4 Colors")?.state = scene.bitsPerComponent == 2 ? .on : .off
+                    menu.item(withTitle: "16 Colors")?.state = scene.bitsPerComponent == 4 ? .on : .off
+                    menu.item(withTitle: "RGB332 Color")?.state = scene.bitsPerComponent == 8 ? .on : .off
+                    menu.item(withTitle: "Indexed Color")?.state = scene.bitsPerComponent == 8 ? .on : .off
                     
                     
                 }

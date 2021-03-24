@@ -29,14 +29,19 @@ typedef enum {
 
 @interface MainScene : SKScene
 
-@property (readonly) PixelArrangement pixelArrangement;
-@property (readonly) NSInteger bytesPerBitplane;
-@property (readonly) NSInteger bitsPerColor;
-@property (readonly) NSInteger bitplanes;
-@property (readonly) CGSize screenSize;
-@property (readonly) BOOL mask;
+// MARK: - Class Properties
 
-// MARK: - Pubplic Methods
+@property (readonly) PixelArrangement pixelArrangement;
+//@property (readonly) NSInteger bytesPerBitplane;
+
+@property (readonly) NSUInteger bitsPerComponent;
+@property (readonly) NSUInteger bitsPerPlane;
+@property (readonly) NSUInteger planeCount;
+
+@property (readonly) CGSize screenSize;
+@property (readonly) BOOL maskInterleaved;
+
+// MARK: - Class Instance Methods
 
 - (void)nextPalette;
 - (void)openDocument;
@@ -46,12 +51,13 @@ typedef enum {
 - (void)increaseWidth;
 - (void)decreaseWidth;
 
-// MARK: - Getters and Setters
+// MARK:- Class Getter & Setters
 
-- (void)setBytesPerBitplane:(NSInteger)bytesPerBitplane;
-- (void)setBitplanes:(NSInteger)bitplanes;
+- (void)setBitsPerComponent:(NSUInteger)bitsPerComponent;
+- (void)setBitsPerPlane:(NSUInteger)bitsPerPlane;
+- (void)setPlaneCount:(NSUInteger)planeCount;
+
 - (void)setPixelArrangement:(PixelArrangement)pixelArrangement;
-- (void)setBitsPerColor:(NSInteger)bitsPerColor;
 
 - (void)setScreenSize:(CGSize)size;
 

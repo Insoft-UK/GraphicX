@@ -25,11 +25,11 @@ THE SOFTWARE.
 
 @interface Palette: NSObject
 
-// MARK: - Properties
+// MARK: - Class Properties
 
 @property (readonly) NSUInteger colorCount;
 
-// MARK: - Instance Methods
+// MARK: - Class Instance Methods
 
 -(void)loadWithContentsOfFile:( NSString* _Nonnull )file;
 -(void)saveAsPhotoshopActAtPath:( NSString* _Nonnull )path;
@@ -43,7 +43,7 @@ THE SOFTWARE.
 +(BOOL)isAtariStFormat:( UInt16* _Nonnull )rgb;
 +(BOOL)isAtariSteFormat:( UInt16* _Nonnull )rgb;
 
-// MARK:- Getter & Setters
+// MARK:- Class Getter & Setters
 
 -(void)setColorCount:(NSUInteger)count;
 -(void)setRgbColor:( UInt32 )rgb atIndex:(NSUInteger)index;

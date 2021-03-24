@@ -42,8 +42,8 @@ UInt32 _palette[256] = {
 
 @property (nonatomic) SKMutableTexture *mutableTexture;
 @property (nonatomic) NSData *data;
-@property (nonatomic) NSInteger offset;
-@property (nonatomic) NSInteger palOffset;
+@property (readonly) NSUInteger dataOffset;
+@property (readonly) NSUInteger paletteOffset;
 
 @property Palette *palette;
 
@@ -55,6 +55,7 @@ UInt32 _palette[256] = {
 
 @implementation MainScene
 
+// MARK: - View
 
 - (void)didMoveToView:(SKView *)view {
     // Setup your scene here
@@ -67,12 +68,16 @@ UInt32 _palette[256] = {
     
 }
 
+// MARK: - Setup
+
 - (void)setup {
-    _bytesPerBitplane = 2;
-    _bitplanes = 4;
-    self.offset = 0;
-    self.palOffset = 0;
-    self.bitsPerColor = 8;
+    self.bitsPerComponent = 8;
+    self.bitsPerPlane = 16;
+    self.planeCount = 4;
+    self.dataOffset = 0;
+    self.paletteOffset = 0;
+    self.maskInterleaved = NO;
+    
     [self setScreenSize:CGSizeMake(320, 200)];
     _pixelArrangement = PixelArrangementPlanar;
 
@@ -117,53 +122,74 @@ UInt32 _palette[256] = {
 
 - (void)keyDown:(NSEvent *)theEvent {
     
-    NSInteger width = (NSInteger)self.screenSize.width;
     NSInteger height = (NSInteger)self.screenSize.height;
-    NSInteger bytesPerLine = width / ( (self.bytesPerBitplane * 8) / (self.bitplanes * 2) );
     
-    switch (theEvent.keyCode) {
-            
-        case 0x24 /* ENTER  */:
-            [self adjustOffsetBy:height * bytesPerLine];
-            break;
-            
-
-        case 0x33 /* BACKSPACE  */:
-            [self adjustOffsetBy:-height * bytesPerLine];
-            break;
-            
+    NSUInteger flags = [theEvent modifierFlags] & NSEventModifierFlagDeviceIndependentFlagsMask;
+    if( flags == NSEventModifierFlagCommand ){
+        switch (theEvent.keyCode) {
+            case 0x02: // D
+                self.dataOffset += self.bitsPerPlane * self.planeCount / 8;
+                break;
+                
+            case 0x00: // A
+                self.dataOffset -= self.bitsPerPlane * self.planeCount / 8;
+                break;
+                
+            case 0x0D: // W
+                self.dataOffset += [self bytesPerLine] * 8;
+                break;
+                
+            case 0x01: // S
+                self.dataOffset -= [self bytesPerLine] * 8;
+                break;
+        }
+    } else {
+        switch (theEvent.keyCode) {
+                
+            case 0x24 /* ENTER  */:
+                self.dataOffset += [self bytesPerLine] * height;
+                break;
+                
+                
+            case 0x33 /* BACKSPACE  */:
+                self.dataOffset -= [self bytesPerLine] * height;
+                break;
+                
+                
+            case 0x35 /* ESC */:
+                self.dataOffset = 0;
+                self.paletteOffset = 0;
+                break;
+                
+            case 0x7b /* CURSOR LEFT */:
+                
+                self.dataOffset--;
+                break;
+                
+            case 0x7c /* CURSOR RIGHT */:
+                self.dataOffset++;
+                break;
+                
+            case 0x7d /* CURSOR DOWN */:
+                self.dataOffset += [self bytesPerLine];
+                break;
+                
+            case 0x7e /* CURSOR UP */:
+                self.dataOffset -= [self bytesPerLine];
+                break;
+                
+                
+            default:
+#ifdef DEBUG
+                NSLog(@"keyDown:'%@' keyCode: 0x%02X", theEvent.characters, theEvent.keyCode);
+#endif
+                break;
+        }
         
-        case 0x35 /* ESC */:
-            self.offset = 0;
-            self.palOffset = 0;
-            break;
-            
-        case 0x7b /* CURSOR LEFT */:
-            [self adjustOffsetBy:-1];
-            break;
-            
-        case 0x7c /* CURSOR RIGHT */:
-            [self adjustOffsetBy:1];
-            break;
-            
-        case 0x7d /* CURSOR DOWN */:
-            
-            [self adjustOffsetBy:bytesPerLine];
-            break;
-            
-        case 0x7e /* CURSOR UP */:
-            [self adjustOffsetBy:-bytesPerLine];
-            break;
-            
-            
-        default:
-            NSLog(@"keyDown:'%@' keyCode: 0x%02X", theEvent.characters, theEvent.keyCode);
-            break;
     }
     
-    NSLog(@"keyDown:'%@' keyCode: 0x%02X", theEvent.characters, theEvent.keyCode);
     
-    [self updateMutableTexture];
+    
     
 }
 
@@ -182,12 +208,16 @@ UInt32 _palette[256] = {
 // MARK: - Update
 
 -(void)update:(CFTimeInterval)currentTime {
+    static NSUInteger previousDataOffset = 0;
     
-    // Called before each frame is rendered
+    if (previousDataOffset != self.dataOffset) {
+        [self modifyMutableTexture];
+    }
     
+    previousDataOffset = self.dataOffset;
 }
 
-- (void)updateMutableTexture {
+- (void)modifyMutableTexture {
     if (self.data == nil) {
         [self.mutableTexture modifyPixelDataWithBlock:^(void *pixelData, size_t lengthInBytes) {
             UInt32 *pixels = (UInt32 *)pixelData;
@@ -198,12 +228,8 @@ UInt32 _palette[256] = {
         return;
     }
     
-    NSInteger width = (NSInteger)self.screenSize.width;
     NSInteger height = (NSInteger)self.screenSize.height;
-    NSInteger bytesPerLine = width * ( (self.bytesPerBitplane * 8) / (self.bitplanes * 2) );
-    
-    [self modifyTextureWithData: self.data rangeFrom:self.offset to: bytesPerLine * height + self.offset];
-    
+    [self modifyTextureWithData: self.data rangeFrom:self.dataOffset to: [self bytesPerLine] * height + self.dataOffset];
     
 }
 
@@ -212,6 +238,8 @@ UInt32 _palette[256] = {
     if (to < from) return;
     
     NSUInteger x = (to - from) / (int)self.screenSize.height * 2;
+    
+    [self setDataOffset:self.dataOffset]; // Will result dataOffset being validated.
     
     [self.mutableTexture modifyPixelDataWithBlock:^(void *pixelData, size_t lengthInBytes) {
         UInt32 *pixels = (UInt32 *)pixelData;
@@ -239,14 +267,14 @@ UInt32 _palette[256] = {
                     else {
                         if (c < x) {
                             if (self.pixelArrangement == PixelArrangementPlanar) {
-                                if (self.bytesPerBitplane == 1) {
+                                if (self.bitsPerPlane == 8) {
                                     c+=7;
                                     UInt8 *planes = (UInt8 *)bytes;
-                                    bytes += self.bytesPerBitplane * self.bitplanes;
+                                    bytes += self.bitsPerPlane / 8 * self.planeCount;
                                     
                                     for (int n=7; n >= 0; n--) {
                                         int i = 0;
-                                        for (int p=0; p<self.bitplanes; p++) {
+                                        for (int p=0; p<self.planeCount; p++) {
                                             UInt8 plane = planes[p];
                                             if (plane & (1 << n)) {
                                                 i |= (1 << p);
@@ -257,12 +285,15 @@ UInt32 _palette[256] = {
                                 } else {
                                     c+=15;
                                     UInt16 *planes = (UInt16 *)bytes;
-                                    bytes += self.bytesPerBitplane * self.bitplanes;
+                                    bytes += self.bitsPerPlane / 8 * self.planeCount;
                                     
                                     for (int n=15; n >= 0; n--) {
                                         int i = 0;
-                                        for (int p=0; p<self.bitplanes; p++) {
-                                            UInt16 plane = CFSwapInt16BigToHost(planes[p]);
+                                        for (int p=0; p<self.planeCount; p++) {
+                                            UInt16 plane = planes[p];
+#ifdef __LITTLE_ENDIAN__
+                                            plane = CFSwapInt16BigToHost(plane);
+#endif
                                             if (plane & (1 << n)) {
                                                 i |= (1 << p);
                                             }
@@ -271,19 +302,19 @@ UInt32 _palette[256] = {
                                     }
                                 }
                             } else {
-                                if (self.bitsPerColor == 8) {
+                                if (self.bitsPerComponent == 8 && self.pixelArrangement == PixelArrangementPacked) {
                                     // Indexed Color
                                     *pixels++ = [self.palette getRgbColorAtIndex:*bytes++];
                                 }
                                 
-                                if (self.bitsPerColor == 4) {
+                                if (self.bitsPerComponent == 4 && self.pixelArrangement == PixelArrangementPacked) {
                                     // 16 Colors
                                     *pixels++ = [self.palette getRgbColorAtIndex:bytes[0] >> 4];
                                     *pixels++ = [self.palette getRgbColorAtIndex:bytes[0] & 0b1111];
                                     bytes++;
                                 }
                                 
-                                if (self.bitsPerColor == 2) {
+                                if (self.bitsPerComponent == 2 && self.pixelArrangement == PixelArrangementPacked) {
                                     // 4 Colors
                                     *pixels++ = [self.palette getRgbColorAtIndex:bytes[0] >> 6];
                                     *pixels++ = [self.palette getRgbColorAtIndex:(bytes[0] >> 4) & 0b11];
@@ -301,8 +332,8 @@ UInt32 _palette[256] = {
             }
         }
         
-        pixels = (UInt32 *)pixelData;
-        for (int r = height - 32; r < height; r++) {
+        pixels = (UInt32 *)pixelData + lengthInBytes - 1 - w * 8;
+        for (int r = lines - 8; r < lines; r++) {
             for (int c = 0; c < w; c++) {
                 *pixels++ = [self.palette getRgbColorAtIndex:c / (w / 16)];
             }
@@ -312,11 +343,11 @@ UInt32 _palette[256] = {
     
 }
 
-// MARK: - Public Methods
+// MARK: - Class Public Methods
 
 - (void)nextPalette {
     [self findAtariSTPaletteFromData:self.data];
-    [self updateMutableTexture];
+    [self modifyMutableTexture];
 }
 
 - (void)openDocument {
@@ -340,17 +371,17 @@ UInt32 _palette[256] = {
                 
                 UniversalPictureFormat upf = getUniversalPictureFormat(self.data.bytes, self.data.length);
                 if (upf.pictureDataOffset != 0) {
-                    self.bitplanes = upf.planes;
-                    self.bytesPerBitplane = upf.bitsPerPlane / 8;
-                    self.bitsPerColor = upf.colourBitCount;
-                    self.offset = (NSInteger)upf.pictureDataOffset;
+                    [self setPlaneCount:upf.planeCount];
+                    [self setBitsPerPlane:upf.bitsPerPlane];
+                    self.bitsPerComponent = upf.bitsPerComponent;
+                    self.dataOffset = (NSInteger)upf.pictureDataOffset;
                     for (int i=0; i<256; i++) {
                         [self.palette setRgbColor:upf.palette[i] atIndex:i];
                     }
                 } else {
-                    self.offset = 0;
+                    self.dataOffset = 0;
                 }
-                [self updateMutableTexture];
+                [self modifyMutableTexture];
             }
         }
     }
@@ -372,7 +403,7 @@ UInt32 _palette[256] = {
         url = openPanel.URL;
         if (url != nil) {
             [self.palette loadWithContentsOfFile:url.path];
-            [self updateMutableTexture];
+            [self modifyMutableTexture];
         }
     }
     
@@ -418,68 +449,75 @@ UInt32 _palette[256] = {
 }
 
 - (void)increaseWidth {
-    _screenSize.width += self.bytesPerBitplane * 8;
+    _screenSize.width += self.bitsPerPlane;
     if (self.screenSize.width > self.mutableTexture.size.width) {
         _screenSize.width = self.mutableTexture.size.width;
     }
-    [self adjustOffsetBy:0]; // Making sure the offset remains valid.
-    [self updateMutableTexture];
+    [self modifyMutableTexture];
 }
 
 - (void)decreaseWidth {
-    _screenSize.width -= self.bytesPerBitplane * 8;
-    if (self.screenSize.width < self.bytesPerBitplane * 8) {
-        _screenSize.width = self.bytesPerBitplane * 8;
+    _screenSize.width -= self.bitsPerPlane;
+    if (self.screenSize.width < self.bitsPerPlane) {
+        _screenSize.width = self.bitsPerPlane;
     }
-    [self adjustOffsetBy:0]; // Making sure the offset remains a valid range.
-    [self updateMutableTexture];
+    [self modifyMutableTexture];
 }
 
-- (void)setBytesPerBitplane:(NSInteger)bytesPerBitplane {
-    _bytesPerBitplane = bytesPerBitplane;
-    
-    [self adjustOffsetBy:0]; // Making sure the offset remains a valid range.
-    [self updateMutableTexture];
+// MARK:- Public Getter & Setters
+
+- (void)setBitsPerComponent:(NSUInteger)bitsPerComponent {
+    _bitsPerComponent = bitsPerComponent > 1 ? bitsPerComponent : 1;
+    [self modifyMutableTexture];
 }
 
-- (void)setBitplanes:(NSInteger)bitplanes {
-    _bitplanes = bitplanes;
-    [self.palette setColorCount:2 ^ self.bitplanes];
-    [self adjustOffsetBy:0]; // Making sure the offset remains a valid range.
-    [self updateMutableTexture];
+- (void)setBitsPerPlane:(NSUInteger)bitsPerPlane {
+    _bitsPerPlane = bitsPerPlane > 7 ? bitsPerPlane & 0xF8 : 0; // Multiple of 8 & >= 8 only!
+    [self modifyMutableTexture];
+}
+
+- (void)setPlaneCount:(NSUInteger)planeCount {
+    _planeCount = planeCount > 0 ? planeCount : 1;
+    [self.palette setColorCount:2 ^ self.planeCount];
+    [self modifyMutableTexture];
 }
 
 - (void)setPixelArrangement:(PixelArrangement)pixelArrangement {
     _pixelArrangement = pixelArrangement;
-    [self adjustOffsetBy:0]; // Making sure the offset remains a valid range.
-    [self updateMutableTexture];
+    [self modifyMutableTexture];
 }
 
-- (void)setBitsPerColor:(NSInteger)bitsPerColor {
-    _bitsPerColor = bitsPerColor;
-    [self.palette setColorCount:2 ^ self.bitsPerColor];
-    [self adjustOffsetBy:0]; // Making sure the offset remains a valid range.
-    [self updateMutableTexture];
-}
 
 - (void)setScreenSize:(CGSize)size {
     _screenSize = size;
-    [self adjustOffsetBy:0]; // Making sure the offset remains a valid range.
-    [self updateMutableTexture];
+    [self modifyMutableTexture];
+}
+
+- (void)setMaskInterleaved:(BOOL)maskInterleaved {
+    _maskInterleaved = maskInterleaved;
 }
 
 
+// MARK:- Private Getter & Setters
 
-//MARK:- Private Methods
+- (void)setDataOffset:(NSUInteger)dataOffset {
+    _dataOffset = dataOffset + [self bytesPerLine] * (NSUInteger)self.screenSize.height < self.data.length ? dataOffset : self.data.length - [self bytesPerLine] * (NSUInteger)self.screenSize.height;
+}
 
+- (void)setPaletteOffset:(NSUInteger)paletteOffset {
+    _paletteOffset = paletteOffset < self.data.length ? paletteOffset : paletteOffset -self.data.length;
+}
 
+// MARK:- Private Class Methods
 
-
+- (NSUInteger)bytesPerLine {
+    return ( NSUInteger )self.screenSize.width / self.bitsPerPlane * ( self.bitsPerPlane / 8 * self.planeCount );
+}
 
 - (void)findAtariSTPaletteFromData:(const NSData *) data  {
     UInt8 *bytes = (UInt8 *)data.bytes;
-    bytes += self.palOffset;
-    NSUInteger lengthInBytes = data.length - 32 - self.palOffset;
+    bytes += self.paletteOffset;
+    NSUInteger lengthInBytes = data.length - 32 - self.paletteOffset;
     
     
     while (lengthInBytes--) {
@@ -497,46 +535,17 @@ UInt32 _palette[256] = {
             break;
         }
 
-        self.palOffset++;
+        self.paletteOffset++;
         bytes++;
     }
     
-    self.palOffset++;
-    if (self.palOffset + 32 >= data.length) {
-        self.palOffset = 0;
+    self.paletteOffset++;
+    if (self.paletteOffset + 32 >= data.length) {
+        self.paletteOffset = 0;
     }
     
     
 }
-
-
-
-
-- (void)adjustOffsetBy:(NSInteger)value {
-    if (self.data != nil) {
-        if (value != 0) {
-            self.offset += value;
-            
-            if ( self.offset < 0 ) {
-                self.offset = 0;
-            }
-        }
-        
-        // Check offset is valid and will not result in memory being accessed beyond the memory allocated.
-        NSInteger width = (NSInteger)self.screenSize.width;
-        NSInteger height = (NSInteger)self.screenSize.height;
-        NSInteger bytesPerLine = width / ( (self.bytesPerBitplane * 8) / (self.bitplanes * 2) );
-        
-        if ( bytesPerLine * height + self.offset >= self.data.length ) {
-            self.offset = self.data.length - bytesPerLine * height;
-        }
-    } else {
-        self.offset = 0;
-    }
-    
-    [self updateMutableTexture];
-}
-
 
 
 

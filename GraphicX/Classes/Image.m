@@ -24,6 +24,8 @@ THE SOFTWARE.
 
 @implementation Image
 
+// MARK: - Public Class Methods
+
 + (CGImageRef)createCGImage:(CGSize)size ofPixelData:(const void *)pixelData {
     static const size_t kComponentsPerPixel = 4;
     static const size_t kBitsPerComponent = sizeof(unsigned char) * 8;

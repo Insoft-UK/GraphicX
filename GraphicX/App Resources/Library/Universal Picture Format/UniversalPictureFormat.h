@@ -26,9 +26,9 @@ THE SOFTWARE.
 #include "NEOchrome.h"
 
 typedef struct {
-    int planes;                 // Number of bit planes
+    int planeCount;                 // Number of bit planes
     int bitsPerPlane;
-    int colourBitCount;         // Colour bits per pixel. 1 4 8 or 24
+    int bitsPerComponent;           // 1 Monochrome (B/W) : 2,3,4...8,9,10 (Color)
     
     int width;
     int height;
