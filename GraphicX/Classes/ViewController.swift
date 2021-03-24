@@ -27,9 +27,11 @@ import GameplayKit
 class ViewController: NSViewController {
 
     @IBOutlet var skView: SKView!
+    @IBOutlet var imageView: NSImageView!
    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         
         let  mainMenu =  NSApplication.shared.mainMenu
 

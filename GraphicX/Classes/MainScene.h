@@ -34,11 +34,13 @@ typedef enum {
 @property (readonly) NSInteger bitsPerColor;
 @property (readonly) NSInteger bitplanes;
 @property (readonly) CGSize screenSize;
+@property (readonly) BOOL mask;
 
 // MARK: - Pubplic Methods
 
 - (void)nextPalette;
 - (void)openDocument;
+- (void)importPalette;
 - (void)exportAs;
 - (void)exportPalette;
 - (void)increaseWidth;

@@ -20,22 +20,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#ifndef act_h
-#define act_h
+#ifndef Palette_h
+#define Palette_h
 
-#include <stdio.h>
-#include <stdlib.h>
+@interface Palette: NSObject
 
-/* Set up for C function definitions, even when using C++ */
-#ifdef __cplusplus
-extern "C" {
-#endif
+-(void)loadWithContentsOfFile:( NSString* _Nonnull )file;
+-(void)saveAsPhotoshopActAtPath:( NSString* _Nonnull )path;
 
-    void saveAsPhotoshopPalette(const char *filepath, const void *pal, uint16_t colors, uint16_t transparent);
++(UInt32)colorFrom9BitRgb:(UInt16)rgb;
 
-/* Ends C function definitions when using C++ */
-#ifdef __cplusplus
-}
-#endif
+@property (readonly) UInt32* _Nonnull color;
+@property (readonly) NSUInteger colorCount;
 
-#endif /* act_h */
+-(void)setColorCount:(NSUInteger)count;
+
+@end
+
+#endif /* Palette_h */

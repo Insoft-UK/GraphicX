@@ -32,6 +32,8 @@ THE SOFTWARE.
 
 /// Utilities
 #import "Constants.h"
+#import "Palette.h"
+#import "Image.h"
 
 /// Singletons
 #import "Singleton.h"
@@ -43,9 +45,6 @@ THE SOFTWARE.
 /// Universal Picture Format
 #import "UniversalPictureFormat.h"
 
-#import "act.h"
-#import "pbm.h"
-#import "bmp.h"
 
 #endif
 

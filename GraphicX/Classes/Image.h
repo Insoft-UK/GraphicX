@@ -20,24 +20,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include "act.h"
+#import <CoreGraphics/CoreGraphics.h>
+
+#ifndef Image_h
+#define Image_h
+
+@interface Image: NSObject
++ (CGImageRef)createCGImage:(CGSize)size ofPixelData:(const void *)pixelData;
++ (BOOL)writeCGImage:(CGImageRef)image to:(NSURL *)destinationURL;
+@end
 
 
-void saveAsPhotoshopPalette(const char *filepath, const void *pal, uint16_t colors, uint16_t transparent) {
-    FILE *fp;
-    
-    if ((fp = fopen(filepath, "wb")) != NULL) {
-        fwrite(pal, sizeof(char), 768, fp);
-        
-        fputc(0, fp);
-        fputc((uint8_t)colors, fp);
-        
-        if (transparent == 0xffff) {
-            fputc(0xff, fp);
-            fputc(0xff, fp);
-        } else {
-            fputc(0, fp);
-            fputc((uint8_t)transparent, fp);
-        }
-    }
-}
+#endif /* Image_h */

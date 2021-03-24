@@ -20,22 +20,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#ifndef pbm_h
-#define pbm_h
+// Prepairing to port code from Objective-C to Swift
 
-#include <stdbool.h>
-
-/* Set up for C function definitions, even when using C++ */
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-void loadPortableBitmapData(const char *filepath, void *dest);
-bool saveAsPortableBitmapImage(const char *filepath, const void *src, int width, int height);
-
-/* Ends C function definitions when using C++ */
-#ifdef __cplusplus
+@objc class eXImage : NSObject {
+    @objc func writeCGImage(_ image: CGImage, to destinationURL: URL) -> Bool {
+        guard let destination = CGImageDestinationCreateWithURL(destinationURL as CFURL, kUTTypePNG, 1, nil) else { return false }
+        CGImageDestinationAddImage(destination, image, nil)
+        return CGImageDestinationFinalize(destination)
+    }
 }
-#endif
-
-#endif /* pbm_h */

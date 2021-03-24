@@ -112,16 +112,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         updateAllMenus()
     }
     
+    @IBAction func importPalettet(_ sender: NSMenuItem) {
+        Singleton.sharedInstance()?.mainScene.importPalette()
+    }
+    
     @IBAction func exportAs(_ sender: NSMenuItem) {
-        if let scene = Singleton.sharedInstance()?.mainScene {
-            scene.exportAs()
-        }
+        Singleton.sharedInstance()?.mainScene.exportAs()
     }
     
     @IBAction func exportPalette(_ sender: NSMenuItem) {
-        if let scene = Singleton.sharedInstance()?.mainScene {
-            scene.exportPalette()
-        }
+        Singleton.sharedInstance()?.mainScene.exportPalette()
     }
     
     @IBAction func screenWidth(_ sender: NSMenuItem) {

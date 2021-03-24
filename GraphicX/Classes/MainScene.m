@@ -22,6 +22,8 @@ THE SOFTWARE.
 
 #import "MainScene.h"
 
+#import "GraphicX-Swift.h"
+
 
 
 #import <Cocoa/Cocoa.h>
@@ -31,7 +33,7 @@ THE SOFTWARE.
 
 
 
-UInt32 palette[256] = {
+UInt32 _palette[256] = {
     0xff000000, 0xff111111, 0xff222222, 0xff333333, 0xff444444, 0xff555555, 0xff666666, 0xff777777,
     0xff888888, 0xff999999, 0xffaaaaaa, 0xffbbbbbb, 0xffcccccc, 0xffdddddd, 0xffeeeeee, 0xffffffff
 };
@@ -42,6 +44,8 @@ UInt32 palette[256] = {
 @property (nonatomic) NSData *data;
 @property (nonatomic) NSInteger offset;
 @property (nonatomic) NSInteger palOffset;
+
+@property Palette *palette;
 
 //@property NSInteger bytesPerLine;
 
@@ -72,6 +76,7 @@ UInt32 palette[256] = {
     [self setScreenSize:CGSizeMake(320, 200)];
     _pixelArrangement = PixelArrangementPlanar;
 
+    self.palette = [[Palette alloc] init];
     
     self.size = CGSizeMake(720, 576);
     self.backgroundColor = [Colors colorFromRgb:bloodRed];
@@ -223,12 +228,12 @@ UInt32 palette[256] = {
         for (int r = -(lines - height) / 2; r < (height + (lines - height) / 2); ++r) {
             if (r < 0 || r >= height) {
                 for (int c = 0; c < w; ++c) {
-                    *pixels++ = palette[0];
+                    *pixels++ = self.palette.color[0];
                 }
             } else {
                 for (int c = -(w - width) / 2; c < (width + (w - width) / 2); ++c) {
                     if (c < 0 || c >= width) {
-                        *pixels++ = palette[0];
+                        *pixels++ = self.palette.color[0];
                     }
                     else {
                         if (c < x) {
@@ -246,7 +251,7 @@ UInt32 palette[256] = {
                                                 i |= (1 << p);
                                             }
                                         }
-                                        *pixels++ = palette[i];
+                                        *pixels++ = self.palette.color[i];
                                     }
                                 } else {
                                     c+=15;
@@ -261,34 +266,34 @@ UInt32 palette[256] = {
                                                 i |= (1 << p);
                                             }
                                         }
-                                        *pixels++ = palette[i];
+                                        *pixels++ = self.palette.color[i];
                                     }
                                 }
                             } else {
                                 if (self.bitsPerColor == 8) {
                                     // Indexed Color
-                                    *pixels++ = palette[*bytes++];
+                                    *pixels++ = self.palette.color[*bytes++];
                                 }
                                 
                                 if (self.bitsPerColor == 4) {
                                     // 16 Colors
-                                    *pixels++ = palette[bytes[0] >> 4];
-                                    *pixels++ = palette[bytes[0] & 0b1111];
+                                    *pixels++ = self.palette.color[bytes[0] >> 4];
+                                    *pixels++ = self.palette.color[bytes[0] & 0b1111];
                                     bytes++;
                                 }
                                 
                                 if (self.bitsPerColor == 2) {
                                     // 4 Colors
-                                    *pixels++ = palette[bytes[0] >> 6];
-                                    *pixels++ = palette[(bytes[0] >> 4) & 0b11];
-                                    *pixels++ = palette[(bytes[0] >> 2) & 0b11];
-                                    *pixels++ = palette[bytes[0] & 0b11];
+                                    *pixels++ = self.palette.color[bytes[0] >> 6];
+                                    *pixels++ = self.palette.color[(bytes[0] >> 4) & 0b11];
+                                    *pixels++ = self.palette.color[(bytes[0] >> 2) & 0b11];
+                                    *pixels++ = self.palette.color[bytes[0] & 0b11];
                                     bytes++;
                                 }
                             }
                             
                         } else {
-                            *pixels++ = palette[0];
+                            *pixels++ = self.palette.color[0];
                         }
                     }
                 }
@@ -296,9 +301,9 @@ UInt32 palette[256] = {
         }
         
         pixels = (UInt32 *)pixelData;
-        for (int r = 0; r < 16; r++) {
+        for (int r = height - 32; r < height; r++) {
             for (int c = 0; c < w; c++) {
-                *pixels++ = palette[c / (w / 16)];
+                *pixels++ = self.palette.color[c / (w / 16)];
             }
         }
     }];
@@ -331,16 +336,40 @@ UInt32 palette[256] = {
             if (self.data == nil) {
                 NSLog(@"ERROR! No Data");
             } else {
+                
                 UniversalPictureFormat upf = getUniversalPictureFormat(self.data.bytes, self.data.length);
                 if (upf.pictureDataOffset != 0) {
                     self.bitplanes = upf.planes;
                     self.bytesPerBitplane = upf.bitsPerPlane / 8;
                     self.bitsPerColor = upf.colourBitCount;
                     self.offset = (NSInteger)upf.pictureDataOffset;
-                    memcpy(palette, upf.palette, sizeof(palette));
+                    memcpy(self.palette.color, upf.palette, sizeof(UInt32) * 256);
+                } else {
+                    self.offset = 0;
                 }
                 [self updateMutableTexture];
             }
+        }
+    }
+    
+    
+}
+
+- (void)importPalette {
+    NSURL *url;
+    
+    NSOpenPanel *openPanel = [[NSOpenPanel alloc] init];
+    openPanel.title = @"GraphicX";
+    openPanel.canChooseFiles = YES;
+    openPanel.canChooseDirectories = YES;
+    openPanel.canCreateDirectories = NO;
+    
+    NSModalResponse modalResponse = [openPanel runModal];
+    if (modalResponse == NSModalResponseOK) {
+        url = openPanel.URL;
+        if (url != nil) {
+            [self.palette loadWithContentsOfFile:url.path];
+            [self updateMutableTexture];
         }
     }
     
@@ -353,24 +382,17 @@ UInt32 palette[256] = {
     NSSavePanel *savePanel = [[NSSavePanel alloc] init];
     savePanel.title = @"GraphicX";
     savePanel.canCreateDirectories = YES;
-    if (self.bitplanes > 1) {
-        savePanel.nameFieldStringValue = @"result.bmp";
-    } else {
-        savePanel.nameFieldStringValue = @"result.pbm";
-    }
+    savePanel.nameFieldStringValue = @"GraphicX.png";
     
     NSModalResponse modalResponse = [savePanel runModal];
     if (modalResponse == NSModalResponseOK) {
         url = savePanel.URL;
         if (url != nil) {
-            NSInteger width = (NSInteger)self.screenSize.width;
-            NSInteger bytesPerLine = width * ( (self.bytesPerBitplane * 8) / (self.bitplanes * 2) );
-            
-            if (self.bitplanes > 1) {
-                saveAsBitmapImage([[[url absoluteString] stringByReplacingOccurrencesOfString:@"file://" withString:@""] cStringUsingEncoding:NSUTF8StringEncoding], self.data.bytes + self.offset, (int)bytesPerLine * 2, (int)self.screenSize.height, palette);
-            } else {
-                saveAsPortableBitmapImage([[[url absoluteString] stringByReplacingOccurrencesOfString:@"file://" withString:@""] cStringUsingEncoding:NSUTF8StringEncoding], self.data.bytes + self.offset, (int)bytesPerLine * 8, (int)self.screenSize.height);
-            }
+            [self.mutableTexture modifyPixelDataWithBlock:^(void *pixelData, size_t lengthInBytes) {
+                CGImageRef imageRef = [Image createCGImage:self.mutableTexture.size ofPixelData:pixelData];
+                [Image writeCGImage:CGImageCreateWithImageInRect(imageRef, CGRectMake((self.mutableTexture.size.width - self.screenSize.width) / 2, (self.mutableTexture.size.height - self.screenSize.height) / 2, self.screenSize.width, self.screenSize.height)) to:savePanel.URL];
+                CGImageRelease(imageRef);
+            }];
         }
     }
 }
@@ -387,7 +409,7 @@ UInt32 palette[256] = {
     if (modalResponse == NSModalResponseOK) {
         url = savePanel.URL;
         if (url != nil) {
-            saveAsPhotoshopPalette([[[url absoluteString] stringByReplacingOccurrencesOfString:@"file://" withString:@""] cStringUsingEncoding:NSUTF8StringEncoding], palette, 16, 0);
+            [self.palette saveAsPhotoshopActAtPath:url.path];
         }
     }
 }
@@ -412,12 +434,14 @@ UInt32 palette[256] = {
 
 - (void)setBytesPerBitplane:(NSInteger)bytesPerBitplane {
     _bytesPerBitplane = bytesPerBitplane;
+    
     [self adjustOffsetBy:0]; // Making sure the offset remains a valid range.
     [self updateMutableTexture];
 }
 
 - (void)setBitplanes:(NSInteger)bitplanes {
     _bitplanes = bitplanes;
+    [self.palette setColorCount:2 ^ self.bitplanes];
     [self adjustOffsetBy:0]; // Making sure the offset remains a valid range.
     [self updateMutableTexture];
 }
@@ -430,6 +454,7 @@ UInt32 palette[256] = {
 
 - (void)setBitsPerColor:(NSInteger)bitsPerColor {
     _bitsPerColor = bitsPerColor;
+    [self.palette setColorCount:2 ^ self.bitsPerColor];
     [self adjustOffsetBy:0]; // Making sure the offset remains a valid range.
     [self updateMutableTexture];
 }
@@ -481,38 +506,21 @@ UInt32 palette[256] = {
         if ([self isPosibleAnAtariSTPalette:(UInt16 *)bytes] == YES) {
             if ([self repeatedValues:(UInt16 *)bytes lengthOf:16] == NO) {
                 /// Palette found!
-                for (int i=0; i<16; i++) {
-                    /* Atari ST palettes
-                     * xx xx xx xx xx R2 R1 R0  xx G2 G1 G0 xx B2 B1 B0
-                     *
-                     * Atari STE palettes
-                     * xx xx xx xx R0 R3 R2 R1  G0 G3 G2 G1 B0 B3 B2 B1
-                     *
-                     */
-                    
-                    UInt32 r;
-                    r = (UInt32)(((bytes[i * 2] << 1) & 0x0f) | (bytes[0] >> 3));
-                    r |= r << 4;
-                    
-                    UInt32 g;
-                    g = (UInt32)(((bytes[i * 2 + 1] << 1) & 0xf0) | ((bytes[i * 2 + 1] & 0xf0) >> 3));
-                    g |= g >> 4;
-                    
-                    UInt32 b;
-                    b = (UInt32)(((bytes[i * 2 + 1] << 1) & 0x0f) | ((bytes[i * 2 + 1] & 0x0f) >> 3));
-                    b |= b << 4;
-                    
-                    NSLog(@"RGB: 0x%02X 0x%02X 0x%02X", r,g,b);
-                    
+                UInt16* pal = ( UInt16 * )bytes;
                 
-                    palette[i] = 0xff000000 | r | g << 8 | b << 16;
+                for (int i=0; i<16; i++) {
+                    self.palette.color[i] = [Palette colorFrom9BitRgb:CFSwapInt16BigToHost(pal[i])];
                 }
+                
+                [self.palette setColorCount:16];
                 
                 self.palOffset++;
                 
                 if (self.palOffset + 32 >= data.length) {
                     self.palOffset = 0;
                 }
+                
+                
                 
                 return;
             }

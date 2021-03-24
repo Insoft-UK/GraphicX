@@ -23,10 +23,6 @@ THE SOFTWARE.
 
 #include "common.h"
 
-word swapWordBigToHost(word val) {
-    uint16_t t = 1;
-    if (*(uint8_t *)&t & 1) {
-        return (val << 8) | ((val >> 8) & 0xFF);
-    }
-    return val;
+word bswap(word val) {
+    return (val << 8) | ((val >> 8) & 0xFF);
 }

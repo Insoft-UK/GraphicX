@@ -25,6 +25,7 @@ THE SOFTWARE.
 @interface Singleton : NSObject
 
 @property MainScene *mainScene;
+@property NSImageView *imageView;
 
 +(instancetype)sharedInstance;
 

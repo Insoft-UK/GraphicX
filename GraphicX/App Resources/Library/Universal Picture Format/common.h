@@ -40,7 +40,7 @@ typedef uint32_t ulword;
 extern "C" {
 #endif
 
-    word swapWordBigToHost(word val);
+    word bswap(word val);
 
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus

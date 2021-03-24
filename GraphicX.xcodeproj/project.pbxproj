@@ -13,13 +13,13 @@
 		1365C79B26057FAC00B23CC3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1365C79926057FAC00B23CC3 /* Main.storyboard */; };
 		1365C7B22605812B00B23CC3 /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 1365C7B12605812B00B23CC3 /* Constants.m */; };
 		1365C7B72605818800B23CC3 /* Singleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 1365C7B62605818800B23CC3 /* Singleton.m */; };
-		1365C7BE2605828100B23CC3 /* pbm.c in Sources */ = {isa = PBXBuildFile; fileRef = 1365C7BD2605828100B23CC3 /* pbm.c */; };
-		1365C7C22605829100B23CC3 /* bmp.c in Sources */ = {isa = PBXBuildFile; fileRef = 1365C7C12605829100B23CC3 /* bmp.c */; };
 		1365C7CD260584AB00B23CC3 /* MainScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 1365C7CC260584AB00B23CC3 /* MainScene.m */; };
 		1365C85026092A1200B23CC3 /* NEOchrome.c in Sources */ = {isa = PBXBuildFile; fileRef = 1365C84F26092A1200B23CC3 /* NEOchrome.c */; };
 		1365C85426092CF300B23CC3 /* UniversalPictureFormat.c in Sources */ = {isa = PBXBuildFile; fileRef = 1365C85326092CF300B23CC3 /* UniversalPictureFormat.c */; };
 		1365C85F260947CC00B23CC3 /* common.c in Sources */ = {isa = PBXBuildFile; fileRef = 1365C85E260947CC00B23CC3 /* common.c */; };
-		1365C8662609844500B23CC3 /* act.c in Sources */ = {isa = PBXBuildFile; fileRef = 1365C8652609844500B23CC3 /* act.c */; };
+		1365C86D260A667100B23CC3 /* eXImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1365C86C260A667100B23CC3 /* eXImage.swift */; };
+		1365C870260A875700B23CC3 /* Image.m in Sources */ = {isa = PBXBuildFile; fileRef = 1365C86F260A875700B23CC3 /* Image.m */; };
+		1365C875260AA74300B23CC3 /* Palette.m in Sources */ = {isa = PBXBuildFile; fileRef = 1365C874260AA74300B23CC3 /* Palette.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,10 +36,6 @@
 		1365C7B42605816A00B23CC3 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		1365C7B52605818800B23CC3 /* Singleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Singleton.h; sourceTree = "<group>"; };
 		1365C7B62605818800B23CC3 /* Singleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Singleton.m; sourceTree = "<group>"; };
-		1365C7BD2605828100B23CC3 /* pbm.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pbm.c; sourceTree = "<group>"; };
-		1365C7C02605828900B23CC3 /* pbm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pbm.h; sourceTree = "<group>"; };
-		1365C7C12605829100B23CC3 /* bmp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bmp.c; sourceTree = "<group>"; };
-		1365C7C42605829A00B23CC3 /* bmp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bmp.h; sourceTree = "<group>"; };
 		1365C7CB260584AA00B23CC3 /* MainScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainScene.h; sourceTree = "<group>"; };
 		1365C7CC260584AB00B23CC3 /* MainScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainScene.m; sourceTree = "<group>"; };
 		1365C84E26092A1200B23CC3 /* NEOchrome.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NEOchrome.h; sourceTree = "<group>"; };
@@ -48,8 +44,11 @@
 		1365C85326092CF300B23CC3 /* UniversalPictureFormat.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = UniversalPictureFormat.c; sourceTree = "<group>"; };
 		1365C85C2609392700B23CC3 /* common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
 		1365C85E260947CC00B23CC3 /* common.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = common.c; sourceTree = "<group>"; };
-		1365C8642609844500B23CC3 /* act.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = act.h; sourceTree = "<group>"; };
-		1365C8652609844500B23CC3 /* act.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = act.c; sourceTree = "<group>"; };
+		1365C86C260A667100B23CC3 /* eXImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = eXImage.swift; sourceTree = "<group>"; };
+		1365C86F260A875700B23CC3 /* Image.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Image.m; sourceTree = "<group>"; };
+		1365C872260A876E00B23CC3 /* Image.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
+		1365C874260AA74300B23CC3 /* Palette.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Palette.m; sourceTree = "<group>"; };
+		1365C877260AA76500B23CC3 /* Palette.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Palette.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,6 +135,11 @@
 			children = (
 				1365C7B02605812B00B23CC3 /* Constants.h */,
 				1365C7B12605812B00B23CC3 /* Constants.m */,
+				1365C86C260A667100B23CC3 /* eXImage.swift */,
+				1365C86F260A875700B23CC3 /* Image.m */,
+				1365C872260A876E00B23CC3 /* Image.h */,
+				1365C877260AA76500B23CC3 /* Palette.h */,
+				1365C874260AA74300B23CC3 /* Palette.m */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -169,45 +173,8 @@
 			isa = PBXGroup;
 			children = (
 				1365C84C260929C500B23CC3 /* Universal Picture Format */,
-				1365C7AE260580DF00B23CC3 /* BMP */,
-				1365C7AD260580D400B23CC3 /* PBM */,
-				1365C862260982EA00B23CC3 /* ACT */,
 			);
 			path = Library;
-			sourceTree = "<group>";
-		};
-		1365C7AD260580D400B23CC3 /* PBM */ = {
-			isa = PBXGroup;
-			children = (
-				1365C7C6260582B400B23CC3 /* includes */,
-				1365C7BD2605828100B23CC3 /* pbm.c */,
-			);
-			path = PBM;
-			sourceTree = "<group>";
-		};
-		1365C7AE260580DF00B23CC3 /* BMP */ = {
-			isa = PBXGroup;
-			children = (
-				1365C7C5260582A200B23CC3 /* includes */,
-				1365C7C12605829100B23CC3 /* bmp.c */,
-			);
-			path = BMP;
-			sourceTree = "<group>";
-		};
-		1365C7C5260582A200B23CC3 /* includes */ = {
-			isa = PBXGroup;
-			children = (
-				1365C7C42605829A00B23CC3 /* bmp.h */,
-			);
-			name = includes;
-			sourceTree = "<group>";
-		};
-		1365C7C6260582B400B23CC3 /* includes */ = {
-			isa = PBXGroup;
-			children = (
-				1365C7C02605828900B23CC3 /* pbm.h */,
-			);
-			name = includes;
 			sourceTree = "<group>";
 		};
 		1365C84C260929C500B23CC3 /* Universal Picture Format */ = {
@@ -243,23 +210,6 @@
 			isa = PBXGroup;
 			children = (
 				1365C84E26092A1200B23CC3 /* NEOchrome.h */,
-			);
-			name = includes;
-			sourceTree = "<group>";
-		};
-		1365C862260982EA00B23CC3 /* ACT */ = {
-			isa = PBXGroup;
-			children = (
-				1365C863260982FB00B23CC3 /* includes */,
-				1365C8652609844500B23CC3 /* act.c */,
-			);
-			path = ACT;
-			sourceTree = "<group>";
-		};
-		1365C863260982FB00B23CC3 /* includes */ = {
-			isa = PBXGroup;
-			children = (
-				1365C8642609844500B23CC3 /* act.h */,
 			);
 			name = includes;
 			sourceTree = "<group>";
@@ -355,17 +305,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1365C8662609844500B23CC3 /* act.c in Sources */,
+				1365C870260A875700B23CC3 /* Image.m in Sources */,
 				1365C79626057FA700B23CC3 /* ViewController.swift in Sources */,
+				1365C875260AA74300B23CC3 /* Palette.m in Sources */,
 				1365C78E26057FA700B23CC3 /* AppDelegate.swift in Sources */,
 				1365C85426092CF300B23CC3 /* UniversalPictureFormat.c in Sources */,
-				1365C7C22605829100B23CC3 /* bmp.c in Sources */,
 				1365C7CD260584AB00B23CC3 /* MainScene.m in Sources */,
 				1365C85026092A1200B23CC3 /* NEOchrome.c in Sources */,
 				1365C85F260947CC00B23CC3 /* common.c in Sources */,
-				1365C7BE2605828100B23CC3 /* pbm.c in Sources */,
 				1365C7B22605812B00B23CC3 /* Constants.m in Sources */,
 				1365C7B72605818800B23CC3 /* Singleton.m in Sources */,
+				1365C86D260A667100B23CC3 /* eXImage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
