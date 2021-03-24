@@ -42,8 +42,8 @@ UInt32 _palette[256] = {
 
 @property (nonatomic) SKMutableTexture *mutableTexture;
 @property (nonatomic) NSData *data;
-@property (readonly) NSUInteger dataOffset;
-@property (readonly) NSUInteger paletteOffset;
+@property (readonly) NSInteger dataOffset;
+@property (readonly) NSInteger paletteOffset;
 
 @property Palette *palette;
 
@@ -127,6 +127,16 @@ UInt32 _palette[256] = {
     NSUInteger flags = [theEvent modifierFlags] & NSEventModifierFlagDeviceIndependentFlagsMask;
     if( flags == NSEventModifierFlagCommand ){
         switch (theEvent.keyCode) {
+            case 0x0D: // W
+                self.dataOffset = 0;
+                break;
+                
+            case 0x01: // S
+                self.dataOffset = self.data.length - [self bytesPerLine] * height;
+                break;
+        }
+    } else {
+        switch (theEvent.keyCode) {
             case 0x02: // D
                 self.dataOffset += self.bitsPerPlane * self.planeCount / 8;
                 break;
@@ -136,15 +146,12 @@ UInt32 _palette[256] = {
                 break;
                 
             case 0x0D: // W
-                self.dataOffset += [self bytesPerLine] * 8;
+                self.dataOffset -= [self bytesPerLine] * 8;
                 break;
                 
             case 0x01: // S
-                self.dataOffset -= [self bytesPerLine] * 8;
+                self.dataOffset += [self bytesPerLine] * 8;
                 break;
-        }
-    } else {
-        switch (theEvent.keyCode) {
                 
             case 0x24 /* ENTER  */:
                 self.dataOffset += [self bytesPerLine] * height;
@@ -236,9 +243,7 @@ UInt32 _palette[256] = {
 // Modify texure pixel data from raw data that is atari st bitmap graphics.
 - (void)modifyTextureWithData:(const NSData *) data rangeFrom:(size_t)from to:(size_t)to {
     if (to < from) return;
-    
-    NSUInteger x = (to - from) / (int)self.screenSize.height * 2;
-    
+   
     [self setDataOffset:self.dataOffset]; // Will result dataOffset being validated.
     
     [self.mutableTexture modifyPixelDataWithBlock:^(void *pixelData, size_t lengthInBytes) {
@@ -246,7 +251,7 @@ UInt32 _palette[256] = {
         UInt8 *bytes = (UInt8 *)data.bytes;
         
         bytes += from;
-        
+        int planeCount = (int)self.planeCount;
       
         int height = (int)self.screenSize.height;
         int width = (int)self.screenSize.width;
@@ -265,67 +270,62 @@ UInt32 _palette[256] = {
                         *pixels++ = [self.palette getRgbColorAtIndex:0];
                     }
                     else {
-                        if (c < x) {
-                            if (self.pixelArrangement == PixelArrangementPlanar) {
-                                if (self.bitsPerPlane == 8) {
-                                    c+=7;
-                                    UInt8 *planes = (UInt8 *)bytes;
-                                    bytes += self.bitsPerPlane / 8 * self.planeCount;
-                                    
-                                    for (int n=7; n >= 0; n--) {
-                                        int i = 0;
-                                        for (int p=0; p<self.planeCount; p++) {
-                                            UInt8 plane = planes[p];
-                                            if (plane & (1 << n)) {
-                                                i |= (1 << p);
-                                            }
+                        if (self.pixelArrangement == PixelArrangementPlanar) {
+                            if (self.bitsPerPlane == 8) {
+                                c+=7;
+                                UInt8 *planes = (UInt8 *)bytes;
+                                bytes += self.bitsPerPlane / 8 * planeCount;
+                                
+                                for (int n=7; n >= 0; n--) {
+                                    int i = 0;
+                                    for (int p=0; p<planeCount; p++) {
+                                        UInt8 plane = planes[p];
+                                        if (plane & (1 << n)) {
+                                            i |= (1 << p);
                                         }
-                                        *pixels++ = [self.palette getRgbColorAtIndex:i];
                                     }
-                                } else {
-                                    c+=15;
-                                    UInt16 *planes = (UInt16 *)bytes;
-                                    bytes += self.bitsPerPlane / 8 * self.planeCount;
-                                    
-                                    for (int n=15; n >= 0; n--) {
-                                        int i = 0;
-                                        for (int p=0; p<self.planeCount; p++) {
-                                            UInt16 plane = planes[p];
-#ifdef __LITTLE_ENDIAN__
-                                            plane = CFSwapInt16BigToHost(plane);
-#endif
-                                            if (plane & (1 << n)) {
-                                                i |= (1 << p);
-                                            }
-                                        }
-                                        *pixels++ = [self.palette getRgbColorAtIndex:i];
-                                    }
+                                    *pixels++ = [self.palette getRgbColorAtIndex:i];
                                 }
                             } else {
-                                if (self.bitsPerComponent == 8 && self.pixelArrangement == PixelArrangementPacked) {
-                                    // Indexed Color
-                                    *pixels++ = [self.palette getRgbColorAtIndex:*bytes++];
-                                }
+                                c+=15;
+                                UInt16 *planes = (UInt16 *)bytes;
+                                bytes += self.bitsPerPlane / 8 * planeCount;
                                 
-                                if (self.bitsPerComponent == 4 && self.pixelArrangement == PixelArrangementPacked) {
-                                    // 16 Colors
-                                    *pixels++ = [self.palette getRgbColorAtIndex:bytes[0] >> 4];
-                                    *pixels++ = [self.palette getRgbColorAtIndex:bytes[0] & 0b1111];
-                                    bytes++;
-                                }
-                                
-                                if (self.bitsPerComponent == 2 && self.pixelArrangement == PixelArrangementPacked) {
-                                    // 4 Colors
-                                    *pixels++ = [self.palette getRgbColorAtIndex:bytes[0] >> 6];
-                                    *pixels++ = [self.palette getRgbColorAtIndex:(bytes[0] >> 4) & 0b11];
-                                    *pixels++ = [self.palette getRgbColorAtIndex:(bytes[0] >> 2) & 0b11];
-                                    *pixels++ = [self.palette getRgbColorAtIndex:bytes[0] & 0b11];
-                                    bytes++;
+                                for (int n=15; n >= 0; n--) {
+                                    int i = 0;
+                                    for (int p=0; p<planeCount; p++) {
+                                        UInt16 plane = planes[p];
+#ifdef __LITTLE_ENDIAN__
+                                        plane = CFSwapInt16BigToHost(plane);
+#endif
+                                        if (plane & (1 << n)) {
+                                            i |= (1 << p);
+                                        }
+                                    }
+                                    *pixels++ = [self.palette getRgbColorAtIndex:i];
                                 }
                             }
-                            
                         } else {
-                            *pixels++ = [self.palette getRgbColorAtIndex:0];
+                            if (self.bitsPerComponent == 8 && self.pixelArrangement == PixelArrangementPacked) {
+                                // Indexed Color
+                                *pixels++ = [self.palette getRgbColorAtIndex:*bytes++];
+                            }
+                            
+                            if (self.bitsPerComponent == 4 && self.pixelArrangement == PixelArrangementPacked) {
+                                // 16 Colors
+                                *pixels++ = [self.palette getRgbColorAtIndex:bytes[0] >> 4];
+                                *pixels++ = [self.palette getRgbColorAtIndex:bytes[0] & 0b1111];
+                                bytes++;
+                            }
+                            
+                            if (self.bitsPerComponent == 2 && self.pixelArrangement == PixelArrangementPacked) {
+                                // 4 Colors
+                                *pixels++ = [self.palette getRgbColorAtIndex:bytes[0] >> 6];
+                                *pixels++ = [self.palette getRgbColorAtIndex:(bytes[0] >> 4) & 0b11];
+                                *pixels++ = [self.palette getRgbColorAtIndex:(bytes[0] >> 2) & 0b11];
+                                *pixels++ = [self.palette getRgbColorAtIndex:bytes[0] & 0b11];
+                                bytes++;
+                            }
                         }
                     }
                 }
@@ -500,18 +500,32 @@ UInt32 _palette[256] = {
 
 // MARK:- Private Getter & Setters
 
-- (void)setDataOffset:(NSUInteger)dataOffset {
-    _dataOffset = dataOffset + [self bytesPerLine] * (NSUInteger)self.screenSize.height < self.data.length ? dataOffset : self.data.length - [self bytesPerLine] * (NSUInteger)self.screenSize.height;
+- (void)setDataOffset:(NSInteger)dataOffset {
+    if (_dataOffset + dataOffset < 0) {
+        _dataOffset = 0;
+    } else {
+        _dataOffset = dataOffset + [self bytesPerLine] * (NSUInteger)self.screenSize.height < self.data.length ? dataOffset : self.data.length - [self bytesPerLine] * (NSUInteger)self.screenSize.height;
+    }
 }
 
-- (void)setPaletteOffset:(NSUInteger)paletteOffset {
+- (void)setPaletteOffset:(NSInteger)paletteOffset {
     _paletteOffset = paletteOffset < self.data.length ? paletteOffset : paletteOffset -self.data.length;
 }
 
 // MARK:- Private Class Methods
 
 - (NSUInteger)bytesPerLine {
-    return ( NSUInteger )self.screenSize.width / self.bitsPerPlane * ( self.bitsPerPlane / 8 * self.planeCount );
+    NSUInteger width = ( NSUInteger )self.screenSize.width;
+    NSUInteger bytes;
+    
+    if (self.maskInterleaved == YES) {
+        bytes = width / self.bitsPerPlane * ( self.bitsPerPlane / 8 * self.planeCount ) / 2;
+        bytes += bytes / 4;
+    } else {
+        bytes = width / self.bitsPerPlane * ( self.bitsPerPlane / 8 * self.planeCount );
+    }
+    
+    return bytes;
 }
 
 - (void)findAtariSTPaletteFromData:(const NSData *) data  {

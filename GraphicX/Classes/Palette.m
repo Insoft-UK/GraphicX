@@ -78,9 +78,14 @@ THE SOFTWARE.
 }
 
 -(void)saveAsPhotoshopActAtPath:( NSString* _Nonnull )path {
-    NSFileHandle *fileHandler = [NSFileHandle fileHandleForWritingAtPath:path];
+    // Issue with NSFileHandle, so just using c until its resolved!
     
-    if ( fileHandler != nil ) {
+    //NSFileHandle *fileHandler = [NSFileHandle fileHandleForWritingAtPath:path];
+    FILE *fp;
+    
+    fp = fopen([path UTF8String], "wb");
+    
+    if ( fp != nil ) {
         NSData* actData = ( NSData* )[NSMutableData dataWithLength:772];
         if (actData != nil) {
             if (actData.length == 772) {
@@ -105,12 +110,12 @@ THE SOFTWARE.
                 byte[2] = 0xff;
                 byte[3] = 0xff;
                 
-                
-                [fileHandler writeData:actData];
+                fwrite(actData.bytes, sizeof(char), 772, fp);
+                //[fileHandler writeData:actData];
             }
         }
-        
-        [fileHandler closeFile];
+        //[fileHandler closeFile];
+        fclose(fp);
     }
 }
 

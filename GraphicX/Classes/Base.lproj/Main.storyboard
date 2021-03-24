@@ -203,14 +203,14 @@
                                                         </menu>
                                                     </menuItem>
                                                     <menuItem isSeparatorItem="YES" id="AJ0-Rx-d60"/>
-                                                    <menuItem title="Increase Width" keyEquivalent="d" id="6dh-zS-Vam">
-                                                        <modifierMask key="keyEquivalentModifierMask" option="YES"/>
+                                                    <menuItem title="Increase Width" keyEquivalent="i" id="6dh-zS-Vam">
+                                                        <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                                         <connections>
                                                             <action selector="increaseWidth:" target="Voe-Tx-rLC" id="1J7-fz-haT"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Decrease Width" keyEquivalent="a" id="9Xr-vX-E3A">
-                                                        <modifierMask key="keyEquivalentModifierMask" option="YES"/>
+                                                    <menuItem title="Decrease Width" keyEquivalent="i" id="9Xr-vX-E3A">
+                                                        <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES"/>
                                                         <connections>
                                                             <action selector="decreaseWidth:" target="Voe-Tx-rLC" id="0PD-gY-uMe"/>
                                                         </connections>
@@ -314,6 +314,9 @@
                                         </menuItem>
                                         <menuItem title="Mask Interleaved" id="bfc-7B-Ert">
                                             <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="maskInterleaved:" target="Voe-Tx-rLC" id="X2u-C0-iJh"/>
+                                            </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="5gT-KC-WSO"/>
                                         <menuItem title="Preset Formats" id="pch-9W-Yb1">

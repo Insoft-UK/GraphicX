@@ -56,6 +56,7 @@ typedef enum {
 - (void)setBitsPerComponent:(NSUInteger)bitsPerComponent;
 - (void)setBitsPerPlane:(NSUInteger)bitsPerPlane;
 - (void)setPlaneCount:(NSUInteger)planeCount;
+- (void)setMaskInterleaved:(BOOL)maskInterleaved;
 
 - (void)setPixelArrangement:(PixelArrangement)pixelArrangement;
 

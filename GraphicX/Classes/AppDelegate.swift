@@ -138,7 +138,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBAction func colors(_ sender: NSMenuItem) {
         if let scene = Singleton.sharedInstance()?.mainScene {
             scene.setPixelArrangement(PixelArrangementPacked)
-            scene.setPlaneCount(1)
 
             if let number = UInt(sender.title) {
                 switch number {
@@ -154,6 +153,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
             updateAllMenus()
         }
+    }
+    
+    @IBAction func maskInterleaved(_ sender: NSMenuItem) {
+        Singleton.sharedInstance()?.mainScene.setMaskInterleaved(sender.state == .off ? true : false)
+        updateAllMenus()
     }
     
     // MARK: - Private Methods
@@ -245,5 +249,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         updateBitplaneMenu()
         updatePixelArrangementMenu()
         updateColorsMenu()
+        
+        formatMenu.item(withTitle: "Mask Interleaved")?.state = Singleton.sharedInstance()?.mainScene.maskInterleaved == true ? .on : .off
     }
 }
