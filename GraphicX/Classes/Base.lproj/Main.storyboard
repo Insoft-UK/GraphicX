@@ -58,7 +58,7 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="m54-Is-iLE"/>
-                                        <menuItem title="Export" id="0eF-3m-sas">
+                                        <menuItem title="Export" state="on" id="0eF-3m-sas">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <menu key="submenu" title="Export" id="Jkn-Qd-r4g">
                                                 <items>
@@ -264,8 +264,59 @@
                                         </menuItem>
                                         <menuItem title="Bitplane" id="Fal-I4-PZk">
                                             <modifierMask key="keyEquivalentModifierMask"/>
+                                            <menu key="submenu" title="Bitplane" id="8mr-sm-Yjd">
+                                                <items>
+                                                    <menuItem title="Menu" id="JRc-NX-7HU">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <menu key="submenu" title="Menu" id="ILN-re-hwY"/>
+                                                    </menuItem>
+                                                    <menuItem title="Size" enabled="NO" id="ZvO-Gk-QUH">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                    </menuItem>
+                                                    <menuItem title="8 Bits" id="YGs-j5-SAR">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="bitplane:" target="Voe-Tx-rLC" id="yjC-OA-rRo"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="16 Bits" state="on" id="Lbh-J2-qVU">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="bitplane:" target="Voe-Tx-rLC" id="j9x-An-IpN"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem isSeparatorItem="YES" id="swp-gr-a21"/>
+                                                    <menuItem title="Planes" enabled="NO" id="cqv-fj-IhA">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                    </menuItem>
+                                                    <menuItem title="1" id="Nop-cj-93Q">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="bitplane:" target="Voe-Tx-rLC" id="ykJ-Im-IPZ"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="2" id="BgM-ve-c93">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="bitplane:" target="Voe-Tx-rLC" id="4Z7-6k-gRd"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="4" state="on" id="RB4-Sm-HuC">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="bitplane:" target="Voe-Tx-rLC" id="2hB-i5-2ry"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="5" id="hbz-o3-HPx">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="bitplane:" target="Voe-Tx-rLC" id="43W-oO-OSo"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
                                         </menuItem>
-                                        <menuItem title="Mask Interlaced" id="bfc-7B-Ert">
+                                        <menuItem title="Mask Interleaved" id="bfc-7B-Ert">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="5gT-KC-WSO"/>
@@ -397,23 +448,10 @@
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="ViewController" customModule="GraphicX" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="m2S-Jp-Qdl" customClass="SKView">
-                        <rect key="frame" x="0.0" y="0.0" width="720" height="576"/>
+                        <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <subviews>
-                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dSR-CT-7th">
-                                <rect key="frame" x="0.0" y="0.0" width="720" height="576"/>
-                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="psC-mc-aLn"/>
-                            </imageView>
-                        </subviews>
-                        <constraints>
-                            <constraint firstItem="dSR-CT-7th" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="aQt-dK-5VQ"/>
-                            <constraint firstItem="dSR-CT-7th" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="bhx-h4-FmH"/>
-                            <constraint firstAttribute="trailing" secondItem="dSR-CT-7th" secondAttribute="trailing" id="ikF-vb-irl"/>
-                            <constraint firstAttribute="bottom" secondItem="dSR-CT-7th" secondAttribute="bottom" id="pFD-fd-aG3"/>
-                        </constraints>
                     </view>
                     <connections>
-                        <outlet property="imageView" destination="dSR-CT-7th" id="Z47-PR-8ba"/>
                         <outlet property="skView" destination="m2S-Jp-Qdl" id="qux-te-cT3"/>
                     </connections>
                 </viewController>
