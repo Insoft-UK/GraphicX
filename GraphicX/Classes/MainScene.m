@@ -248,9 +248,13 @@ UInt32 _palette[256] = {
         return;
     }
     
-    self.imageNode.xScale = floor(self.mutableTexture.size.width / self.screenSize.width);
-    self.imageNode.yScale = -floor(self.mutableTexture.size.height / self.screenSize.height);
-
+    CGFloat xScale = floor(self.mutableTexture.size.width / self.screenSize.width);
+    CGFloat yScale = floor(self.mutableTexture.size.height / self.screenSize.height);
+    CGFloat scale = MinFloat(xScale, yScale);
+    
+    
+    [self.imageNode setScale:scale];
+    self.imageNode.yScale = -self.imageNode.yScale;
     
     self.dataOffset = self.dataOffset; // Will perform a check when set, so we can be sure the offset is allways valid.
     
