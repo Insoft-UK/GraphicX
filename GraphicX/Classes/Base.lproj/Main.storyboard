@@ -82,7 +82,7 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <menu key="submenu" title="Import" id="1Fl-At-D9s">
                                                 <items>
-                                                    <menuItem title="Import Palette..." id="sZg-Qx-jzp">
+                                                    <menuItem title="Photoshop Palette" id="sZg-Qx-jzp">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="importPalettet:" target="Voe-Tx-rLC" id="BXr-0a-MQS"/>
