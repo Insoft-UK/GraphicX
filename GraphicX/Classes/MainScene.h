@@ -34,9 +34,9 @@ typedef enum {
 @property (readonly) PixelArrangement pixelArrangement;
 //@property (readonly) NSInteger bytesPerBitplane;
 
-@property (readonly) NSUInteger bitsPerComponent;
-@property (readonly) NSUInteger bitsPerPlane;
-@property (readonly) NSUInteger planeCount;
+@property (readonly) UInt32 bitsPerComponent;
+@property (readonly) UInt32 bitsPerPlane;
+@property (readonly) UInt32 planeCount;
 
 @property (readonly) CGSize screenSize;
 @property (readonly) BOOL maskInterleaved;
@@ -53,9 +53,9 @@ typedef enum {
 
 // MARK:- Class Getter & Setters
 
-- (void)setBitsPerComponent:(NSUInteger)bitsPerComponent;
-- (void)setBitsPerPlane:(NSUInteger)bitsPerPlane;
-- (void)setPlaneCount:(NSUInteger)planeCount;
+- (void)setBitsPerComponent:(UInt32)bitsPerComponent;
+- (void)setBitsPerPlane:(UInt32)bitsPerPlane;
+- (void)setPlaneCount:(UInt32)planeCount;
 - (void)setMaskInterleaved:(BOOL)maskInterleaved;
 
 - (void)setPixelArrangement:(PixelArrangement)pixelArrangement;

@@ -28,8 +28,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     @IBOutlet weak var mainMenu: NSMenu!
     
-    @IBOutlet weak var formatMenu: NSMenu!
-
+    
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Insert code here to initialize your application
@@ -47,14 +46,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     @IBAction private func planeCount(_ sender: NSMenuItem) {
-        if let number = UInt(sender.title) {
+        if let number = UInt32(sender.title) {
             Singleton.sharedInstance()?.mainScene.setPlaneCount(number)
             updateAllMenus()
         }
     }
     
     @IBAction private func bitsPerPlane(_ sender: NSMenuItem) {
-        if let number = UInt(sender.title) {
+        if let number = UInt32(sender.title) {
             Singleton.sharedInstance()?.mainScene.setBitsPerPlane(number)
             updateAllMenus()
         }
@@ -63,17 +62,21 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBAction private func platform(_ sender: NSMenuItem) {
         if let scene = Singleton.sharedInstance()?.mainScene {
             if sender.title == "ZX Spectrum" {
+                scene.setBitsPerComponent(1)
                 scene.setPlaneCount(1)
                 scene.setBitsPerPlane(8)
                 scene.setPixelArrangement(PixelArrangementPlanar)
                 scene.setScreenSize(CGSize(width: 256, height: 192))
+                scene.setMaskInterleaved(false);
             }
             
             if sender.title == "Atari ST/E Low" {
+                scene.setBitsPerComponent(1)
                 scene.setPlaneCount(4)
                 scene.setBitsPerPlane(16)
                 scene.setPixelArrangement(PixelArrangementPlanar)
                 scene.setScreenSize(CGSize(width: 320, height: 200))
+                scene.setMaskInterleaved(false);
             }
             
             if sender.title == "ZX Spectrum NEXT" {
@@ -156,7 +159,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     @IBAction func maskInterleaved(_ sender: NSMenuItem) {
-        Singleton.sharedInstance()?.mainScene.setMaskInterleaved(sender.state == .off ? true : false)
+        if let scene = Singleton.sharedInstance()?.mainScene {
+            scene.setMaskInterleaved(!scene.maskInterleaved)
+        }
         updateAllMenus()
     }
     
@@ -164,7 +169,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     private func updateScreenSizeMenu() {
         if let scene = Singleton.sharedInstance()?.mainScene {
-            if let menu = formatMenu.item(withTitle: "Screen Size")?.submenu {
+            if let menu = mainMenu.item(at: 2)?.submenu?.item(withTitle: "Size")?.submenu {
                 
                 // Width
                 if let width = menu.item(withTitle: "Width")?.submenu {
@@ -198,9 +203,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private func updatePlanesMenu() {
         if let scene = Singleton.sharedInstance()?.mainScene {
             if scene.pixelArrangement == PixelArrangementPlanar {
-                formatMenu.item(withTitle: "Planes")?.isEnabled = true
                 
-                if let menu = formatMenu.item(withTitle: "Planes")?.submenu {
+                mainMenu.item(at: 2)?.submenu?.item(withTitle: "Planes")?.isEnabled = true
+                
+                if let menu = mainMenu.item(at: 2)?.submenu?.item(withTitle: "Planes")?.submenu {
                     menu.item(withTitle: "8")?.state = scene.bitsPerPlane == 8 ? .on : .off
                     menu.item(withTitle: "16")?.state = scene.bitsPerPlane == 16 ? .on : .off
                     
@@ -208,10 +214,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     menu.item(withTitle: "2")?.state = .off
                     menu.item(withTitle: "4")?.state = .off
                     menu.item(withTitle: String(scene.planeCount))?.state = .on
+                    
+                    menu.item(withTitle: "Mask Interleaved")?.state = scene.maskInterleaved == true ? .on : .off
                 }
                 
             } else {
-                formatMenu.item(withTitle: "Planes")?.isEnabled = false
+                mainMenu.item(at: 2)?.submenu?.item(withTitle: "Planes")?.isEnabled = false
             }
             
         }
@@ -219,7 +227,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     private func updatePixelArrangementMenu() {
         if let scene = Singleton.sharedInstance()?.mainScene {
-            if let menu = formatMenu.item(withTitle: "Pixel Arrangement")?.submenu {
+            if let menu = mainMenu.item(at: 2)?.submenu?.item(withTitle: "Pixel Arrangement")?.submenu {
                 menu.item(withTitle: "Planar")?.state = scene.pixelArrangement == PixelArrangementPlanar ? .on : .off
                 menu.item(withTitle: "Packed")?.state = scene.pixelArrangement == PixelArrangementPacked ? .on : .off
             }
@@ -229,8 +237,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private func updateColorsMenu() {
         if let scene = Singleton.sharedInstance()?.mainScene {
             if scene.pixelArrangement == PixelArrangementPacked {
-                formatMenu.item(withTitle: "Colors")?.isEnabled = true
-                if let menu = formatMenu.item(withTitle: "Colors")?.submenu {
+                mainMenu.item(at: 2)?.submenu?.item(withTitle: "Colors")?.isEnabled = true
+                if let menu = mainMenu.item(at: 2)?.submenu?.item(withTitle: "Colors")?.submenu {
                     menu.item(withTitle: "4 Colors")?.state = scene.bitsPerComponent == 2 ? .on : .off
                     menu.item(withTitle: "16 Colors")?.state = scene.bitsPerComponent == 4 ? .on : .off
                     menu.item(withTitle: "RGB332 Color")?.state = scene.bitsPerComponent == 8 ? .on : .off
@@ -239,7 +247,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     
                 }
             } else {
-                formatMenu.item(withTitle: "Colors")?.isEnabled = false
+                mainMenu.item(at: 2)?.submenu?.item(withTitle: "Colors")?.isEnabled = false
             }
         }
     }
@@ -249,7 +257,5 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         updatePlanesMenu()
         updatePixelArrangementMenu()
         updateColorsMenu()
-        
-        formatMenu.item(withTitle: "Mask Interleaved")?.state = Singleton.sharedInstance()?.mainScene.maskInterleaved == true ? .on : .off
     }
 }

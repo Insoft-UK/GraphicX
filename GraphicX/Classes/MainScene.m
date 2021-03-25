@@ -248,6 +248,10 @@ UInt32 _palette[256] = {
         return;
     }
     
+    self.imageNode.xScale = floor(self.mutableTexture.size.width / self.screenSize.width);
+    self.imageNode.yScale = -floor(self.mutableTexture.size.height / self.screenSize.height);
+
+    
     self.dataOffset = self.dataOffset; // Will perform a check when set, so we can be sure the offset is allways valid.
     
     NSInteger height = (NSInteger)self.screenSize.height;
@@ -286,8 +290,9 @@ UInt32 _palette[256] = {
                     }
                     else {
                         if (self.pixelArrangement == PixelArrangementPlanar) {
-                            // NOTE:- Mask Interleaved not yet implimented!
+                            
                             if (self.bitsPerPlane == 8) {
+                                // NOTE:- Mask Interleaved not suported for 8-bit bitplane/s
                                 c += self.bitsPerPlane - 1;
                                 UInt8 *planes = (UInt8 *)bytes;
                                 bytes += self.bitsPerPlane / 8 * planeCount;
@@ -304,25 +309,6 @@ UInt32 _palette[256] = {
                                     *pixel++ = planeCount > 1 ? [self.palette getRgbColorAtIndex:i] : (0xFFFFFF * i) | 0xFF000000;
                                 }
                             } else {
-                                /*
-                                UInt16 *planeData = (UInt16 *)bytes;
-                                
-                                for (NSUInteger n=self.bitsPerPlane - 1; n >= 0; n--) {
-                                    int i = 0;
-                                    
-                                    for (int p=0; p<self.planeCount; p++) {
-                                        UInt16 plane = planeData[p];
-                            #ifdef __LITTLE_ENDIAN__
-                                        plane = CFSwapInt16BigToHost(plane);
-                            #endif
-                                        if (plane & (1 << n)) {
-                                            i |= (1 << p);
-                                        }
-                                    }
-                                    *pixel++ = self.planeCount > 1 ? [self.palette getRgbColorAtIndex:i] : (0xFFFFFF * i) | 0xFF000000;
-                                }
-                                */
-                                
                                 UInt16 *planeData = (UInt16 *)bytes;
                                 
                                 if (self.maskInterleaved == YES && c % (self.bitsPerPlane * 2) >= self.bitsPerPlane ) {
@@ -542,19 +528,25 @@ UInt32 _palette[256] = {
 
 // MARK:- Public Getter & Setters
 
-- (void)setBitsPerComponent:(NSUInteger)bitsPerComponent {
+- (void)setBitsPerComponent:(UInt32)bitsPerComponent {
     _bitsPerComponent = bitsPerComponent > 1 ? bitsPerComponent : 1;
     [self modifyMutableTexture];
 }
 
-- (void)setBitsPerPlane:(NSUInteger)bitsPerPlane {
+- (void)setBitsPerPlane:(UInt32)bitsPerPlane {
     _bitsPerPlane = bitsPerPlane > 7 ? bitsPerPlane & 0xF8 : 0; // Multiple of 8 & >= 8 only!
+    if (bitsPerPlane == 8) {
+        self.maskInterleaved = NO;
+    }
     [self modifyMutableTexture];
 }
 
-- (void)setPlaneCount:(NSUInteger)planeCount {
+- (void)setPlaneCount:(UInt32)planeCount {
     _planeCount = planeCount > 0 ? planeCount : 1;
     [self.palette setColorCount:2 ^ self.planeCount];
+    if (planeCount == 1) {
+        self.maskInterleaved = NO;
+    }
     [self modifyMutableTexture];
 }
 
