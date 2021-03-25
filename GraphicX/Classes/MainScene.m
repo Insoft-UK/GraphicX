@@ -45,6 +45,8 @@ UInt32 _palette[256] = {
 @property (readonly) NSInteger dataOffset;
 @property (readonly) NSInteger paletteOffset;
 
+@property SKSpriteNode *imageNode;
+
 @property Palette *palette;
 
 //@property NSInteger bytesPerLine;
@@ -92,14 +94,14 @@ UInt32 _palette[256] = {
         memset(pixelData, 0x0, lengthInBytes);
     }];
     self.mutableTexture.filteringMode = SKTextureFilteringNearest;
-    SKSpriteNode *node = [SKSpriteNode spriteNodeWithTexture:self.mutableTexture];
+    self.imageNode = [SKSpriteNode spriteNodeWithTexture:self.mutableTexture];
     
-    node = [SKSpriteNode spriteNodeWithTexture:self.mutableTexture];
-    node.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame));
-    node.yScale = -1;
+    self.imageNode = [SKSpriteNode spriteNodeWithTexture:self.mutableTexture];
+    self.imageNode.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame));
+    self.imageNode.yScale = -1;
     
     
-    [self addChild:node];
+    [self addChild:self.imageNode];
     
     
 }
@@ -221,6 +223,16 @@ UInt32 _palette[256] = {
         [self modifyMutableTexture];
     }
     
+    /*
+    if (ceil(self.mutableTexture.size.width / self.screenSize.width) < 2.0 || ceil(self.mutableTexture.size.height / self.screenSize.height) < 2.0) {
+        self.imageNode.xScale = 1;
+        self.imageNode.yScale = -1;
+    } else {
+        self.imageNode.xScale = 2;
+        self.imageNode.yScale = -2;
+    }
+    */
+    
     previousDataOffset = self.dataOffset;
 }
 
@@ -234,6 +246,8 @@ UInt32 _palette[256] = {
         }];
         return;
     }
+    
+    self.dataOffset = self.dataOffset; // Will perform a check when set, so we can be sure the offset is allways valid.
     
     NSInteger height = (NSInteger)self.screenSize.height;
     [self modifyTextureWithData: self.data rangeFrom:self.dataOffset to: [self bytesPerLine] * height + self.dataOffset];
@@ -251,7 +265,7 @@ UInt32 _palette[256] = {
         UInt8 *bytes = (UInt8 *)data.bytes;
         
         bytes += from;
-        int planeCount = (int)self.planeCount;
+        int planeCount = self.maskInterleaved == YES ? (int)self.planeCount + 1 : (int)self.planeCount;
       
         int height = (int)self.screenSize.height;
         int width = (int)self.screenSize.width;
@@ -271,6 +285,7 @@ UInt32 _palette[256] = {
                     }
                     else {
                         if (self.pixelArrangement == PixelArrangementPlanar) {
+                            // NOTE:- Mask Interleaved not yet implimented!
                             if (self.bitsPerPlane == 8) {
                                 c+=7;
                                 UInt8 *planes = (UInt8 *)bytes;
@@ -284,7 +299,8 @@ UInt32 _palette[256] = {
                                             i |= (1 << p);
                                         }
                                     }
-                                    *pixels++ = [self.palette getRgbColorAtIndex:i];
+                                    
+                                    *pixels++ = planeCount > 1 ? [self.palette getRgbColorAtIndex:i] : (0xFFFFFF * i) | 0xFF000000;
                                 }
                             } else {
                                 c+=15;
@@ -302,7 +318,7 @@ UInt32 _palette[256] = {
                                             i |= (1 << p);
                                         }
                                     }
-                                    *pixels++ = [self.palette getRgbColorAtIndex:i];
+                                    *pixels++ = planeCount > 1 ? [self.palette getRgbColorAtIndex:i] : (0xFFFFFF * i) | 0xFF000000;
                                 }
                             }
                         } else {
@@ -489,12 +505,14 @@ UInt32 _palette[256] = {
 
 
 - (void)setScreenSize:(CGSize)size {
+    if (size.width > self.mutableTexture.size.width || size.height > self.mutableTexture.size.height) return;
     _screenSize = size;
     [self modifyMutableTexture];
 }
 
 - (void)setMaskInterleaved:(BOOL)maskInterleaved {
     _maskInterleaved = maskInterleaved;
+    [self modifyMutableTexture];
 }
 
 
@@ -508,6 +526,7 @@ UInt32 _palette[256] = {
     }
 }
 
+
 - (void)setPaletteOffset:(NSInteger)paletteOffset {
     _paletteOffset = paletteOffset < self.data.length ? paletteOffset : paletteOffset -self.data.length;
 }
@@ -515,17 +534,7 @@ UInt32 _palette[256] = {
 // MARK:- Private Class Methods
 
 - (NSUInteger)bytesPerLine {
-    NSUInteger width = ( NSUInteger )self.screenSize.width;
-    NSUInteger bytes;
-    
-    if (self.maskInterleaved == YES) {
-        bytes = width / self.bitsPerPlane * ( self.bitsPerPlane / 8 * self.planeCount ) / 2;
-        bytes += bytes / 4;
-    } else {
-        bytes = width / self.bitsPerPlane * ( self.bitsPerPlane / 8 * self.planeCount );
-    }
-    
-    return bytes;
+    return ( NSUInteger )self.screenSize.width / self.bitsPerPlane * ( self.bitsPerPlane / 8 * (self.maskInterleaved == YES ? self.planeCount + 1 : self.planeCount) );
 }
 
 - (void)findAtariSTPaletteFromData:(const NSData *) data  {

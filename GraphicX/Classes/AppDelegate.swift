@@ -195,14 +195,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
     
-    private func updateBitplaneMenu() {
+    private func updatePlanesMenu() {
         if let scene = Singleton.sharedInstance()?.mainScene {
             if scene.pixelArrangement == PixelArrangementPlanar {
-                formatMenu.item(withTitle: "Bitplane")?.isEnabled = true
+                formatMenu.item(withTitle: "Planes")?.isEnabled = true
                 
-                if let menu = formatMenu.item(withTitle: "Bitplane")?.submenu {
-                    menu.item(withTitle: "8 Bits")?.state = scene.bitsPerPlane == 8 ? .on : .off
-                    menu.item(withTitle: "16 Bits")?.state = scene.bitsPerPlane == 16 ? .on : .off
+                if let menu = formatMenu.item(withTitle: "Planes")?.submenu {
+                    menu.item(withTitle: "8")?.state = scene.bitsPerPlane == 8 ? .on : .off
+                    menu.item(withTitle: "16")?.state = scene.bitsPerPlane == 16 ? .on : .off
                     
                     menu.item(withTitle: "1")?.state = .off
                     menu.item(withTitle: "2")?.state = .off
@@ -211,7 +211,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 }
                 
             } else {
-                formatMenu.item(withTitle: "Bitplane")?.isEnabled = false
+                formatMenu.item(withTitle: "Planes")?.isEnabled = false
             }
             
         }
@@ -246,7 +246,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     private func updateAllMenus() {
         updateScreenSizeMenu()
-        updateBitplaneMenu()
+        updatePlanesMenu()
         updatePixelArrangementMenu()
         updateColorsMenu()
         

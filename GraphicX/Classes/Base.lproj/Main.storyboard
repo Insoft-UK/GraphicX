@@ -168,6 +168,18 @@
                                                                         <action selector="screenWidth:" target="Voe-Tx-rLC" id="cdm-8v-Im5"/>
                                                                     </connections>
                                                                 </menuItem>
+                                                                <menuItem title="640" id="eje-Ui-xav">
+                                                                    <modifierMask key="keyEquivalentModifierMask"/>
+                                                                    <connections>
+                                                                        <action selector="screenWidth:" target="Voe-Tx-rLC" id="RiF-ZL-KiJ"/>
+                                                                    </connections>
+                                                                </menuItem>
+                                                                <menuItem title="720" id="A2g-zK-xrb">
+                                                                    <modifierMask key="keyEquivalentModifierMask"/>
+                                                                    <connections>
+                                                                        <action selector="screenWidth:" target="Voe-Tx-rLC" id="xpf-1v-iFv"/>
+                                                                    </connections>
+                                                                </menuItem>
                                                             </items>
                                                         </menu>
                                                     </menuItem>
@@ -191,6 +203,12 @@
                                                                     <modifierMask key="keyEquivalentModifierMask"/>
                                                                     <connections>
                                                                         <action selector="screenHeight:" target="Voe-Tx-rLC" id="FVR-B4-kiI"/>
+                                                                    </connections>
+                                                                </menuItem>
+                                                                <menuItem title="480" id="Qvq-e9-WFL">
+                                                                    <modifierMask key="keyEquivalentModifierMask"/>
+                                                                    <connections>
+                                                                        <action selector="screenHeight:" target="Voe-Tx-rLC" id="dEe-Ds-lt1"/>
                                                                     </connections>
                                                                 </menuItem>
                                                                 <menuItem title="512" id="jes-mw-s58">
@@ -314,9 +332,6 @@
                                         </menuItem>
                                         <menuItem title="Mask Interleaved" id="bfc-7B-Ert">
                                             <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="maskInterleaved:" target="Voe-Tx-rLC" id="X2u-C0-iJh"/>
-                                            </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="5gT-KC-WSO"/>
                                         <menuItem title="Preset Formats" id="pch-9W-Yb1">
