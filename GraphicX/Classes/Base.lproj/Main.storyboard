@@ -332,6 +332,9 @@
                                         </menuItem>
                                         <menuItem title="Mask Interleaved" id="bfc-7B-Ert">
                                             <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="maskInterleaved:" target="Voe-Tx-rLC" id="CAI-hY-NXz"/>
+                                            </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="5gT-KC-WSO"/>
                                         <menuItem title="Preset Formats" id="pch-9W-Yb1">
