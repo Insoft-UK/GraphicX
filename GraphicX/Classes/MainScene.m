@@ -73,12 +73,12 @@ UInt32 _palette[256] = {
 // MARK: - Setup
 
 - (void)setup {
-    self.bitsPerComponent = 8;
+    self.bitsPerComponent = 1;
     self.bitsPerPlane = 16;
     self.planeCount = 4;
     self.dataOffset = 0;
     self.paletteOffset = 0;
-    self.maskInterleaved = NO;
+    self.maskPlane = NO;
     
     [self setScreenSize:CGSizeMake(320, 200)];
     
@@ -248,14 +248,6 @@ UInt32 _palette[256] = {
         return;
     }
     
-    CGFloat xScale = floor(self.mutableTexture.size.width / self.screenSize.width);
-    CGFloat yScale = floor(self.mutableTexture.size.height / self.screenSize.height);
-    CGFloat scale = MinFloat(xScale, yScale);
-    
-    
-    [self.imageNode setScale:scale];
-    self.imageNode.yScale = -self.imageNode.yScale;
-    
     self.dataOffset = self.dataOffset; // Will perform a check when set, so we can be sure the offset is allways valid.
     
     NSInteger height = (NSInteger)self.screenSize.height;
@@ -274,7 +266,7 @@ UInt32 _palette[256] = {
         UInt8 *bytes = (UInt8 *)data.bytes;
         
         bytes += from;
-        int planeCount = self.maskInterleaved == YES ? (int)self.planeCount + 1 : (int)self.planeCount;
+        int planeCount = self.maskPlane == YES ? (int)self.planeCount + 1 : (int)self.planeCount;
       
         int height = (int)self.screenSize.height;
         int width = (int)self.screenSize.width;
@@ -315,41 +307,43 @@ UInt32 _palette[256] = {
                             } else {
                                 UInt16 *planeData = (UInt16 *)bytes;
                                 
-                                if (self.maskInterleaved == YES && c % (self.bitsPerPlane * 2) >= self.bitsPerPlane ) {
-                                    
+                                if (self.maskPlane == YES) {
                                     for (int n=(int)self.bitsPerPlane - 1; n >= 0; n--) {
                                         UInt16 plane = *planeData;
 #ifdef __LITTLE_ENDIAN__
                                         plane = CFSwapInt16BigToHost(plane);
 #endif
                                         if (plane & (1 << n)) {
-                                            *pixel++ = 0xFFFFFFFF;
+                                            pixel[self.bitsPerPlane - 1 - n] = 0;
                                         } else {
-                                            *pixel++ = 0xFF000000;
+                                            pixel[self.bitsPerPlane - 1 - n] = 0xFF000000;
                                         }
                                     }
-                                    c += self.bitsPerPlane - 1;
                                     bytes += self.bitsPerPlane / 8;
-                                } else {
-                                    // Image
-                                    for (int n=(int)self.bitsPerPlane - 1; n >= 0; n--) {
-                                        int colorIndex = 0;
-                                        
-                                        for (int p=0; p<(int)self.planeCount; p++) {
-                                            UInt16 plane = planeData[p];
-#ifdef __LITTLE_ENDIAN__
-                                            plane = CFSwapInt16BigToHost(plane);
-#endif
-                                            if (plane & (1 << n)) {
-                                                colorIndex |= (1 << p);
-                                            }
-                                        }
-                                        *pixel++ = self.planeCount > 1 ? [self.palette getRgbColorAtIndex:colorIndex] : (0xFFFFFF * colorIndex) | 0xFF000000;
-                                    }
-                                    
-                                    c += self.bitsPerPlane - 1;
-                                    bytes += self.bitsPerPlane / 8 * self.planeCount;
                                 }
+                                for (int n=(int)self.bitsPerPlane - 1; n >= 0; n--) {
+                                    int colorIndex = 0;
+                                    
+                                    for (int p=0; p<(int)self.planeCount; p++) {
+                                        UInt16 plane = planeData[p];
+#ifdef __LITTLE_ENDIAN__
+                                        plane = CFSwapInt16BigToHost(plane);
+#endif
+                                        if (plane & (1 << n)) {
+                                            colorIndex |= (1 << p);
+                                        }
+                                    }
+                                    UInt32 color = [self.palette getRgbColorAtIndex:colorIndex];
+                                    if (self.maskPlane == YES && colorIndex == 0) {
+                                        color &= 0x00FFFFFF;
+                                    }
+                                    *pixel = self.planeCount > 1 ? color : (0xFFFFFF * colorIndex) | 0xFF000000;
+                                    pixel++;
+                                }
+                                
+                                c += self.bitsPerPlane - 1;
+                                bytes += self.bitsPerPlane / 8 * self.planeCount;
+                                
                             }
                         } else {
                             if (self.bitsPerComponent == 8 && self.pixelArrangement == PixelArrangementPacked) {
@@ -377,37 +371,20 @@ UInt32 _palette[256] = {
                 }
             }
         }
-        
+        /*
         pixel = (UInt32 *)pixelData + lengthInBytes - 1 - w * 8;
         for (int r = lines - 8; r < lines; r++) {
             for (int c = 0; c < w; c++) {
                 *pixel++ = [self.palette getRgbColorAtIndex:c / (w / 16)];
             }
         }
+         
+         */
     }];
     
     
 }
 
-- (void)rasterWithBitplane:(const void *)bytes ofPlanes:(int)planes bitsPerPlane:(NSUInteger)bits toPixelData:(void *)pixelData {
-    UInt16 *planeData = (UInt16 *)bytes;
-    UInt32 *pixel = (UInt32*)pixelData;
-    
-    for (NSUInteger n=bits - 1; n >= 0; n--) {
-        int i = 0;
-        
-        for (int p=0; p<planes; p++) {
-            UInt16 plane = planeData[p];
-#ifdef __LITTLE_ENDIAN__
-            plane = CFSwapInt16BigToHost(plane);
-#endif
-            if (plane & (1 << n)) {
-                i |= (1 << p);
-            }
-        }
-        *pixel++ = planes > 1 ? [self.palette getRgbColorAtIndex:i] : (0xFFFFFF * i) | 0xFF000000;
-    }
-}
 
 // MARK: - Class Public Methods
 
@@ -440,11 +417,13 @@ UInt32 _palette[256] = {
                     [self setPlaneCount:upf.planeCount];
                     [self setBitsPerPlane:upf.bitsPerPlane];
                     self.bitsPerComponent = upf.bitsPerComponent;
+                    [self setScreenSize:CGSizeMake(upf.width, upf.height)];
                     self.dataOffset = (NSInteger)upf.pictureDataOffset;
                     for (int i=0; i<256; i++) {
                         [self.palette setRgbColor:upf.palette[i] atIndex:i];
                     }
                 } else {
+                    [self setScreenSize:CGSizeMake(320, 200)];
                     self.dataOffset = 0;
                 }
                 [self modifyMutableTexture];
@@ -514,21 +493,19 @@ UInt32 _palette[256] = {
     }
 }
 
-- (void)increaseWidth {
-    _screenSize.width += self.bitsPerPlane;
-    if (self.screenSize.width > self.mutableTexture.size.width) {
-        _screenSize.width = self.mutableTexture.size.width;
+- (void)zoomIn {
+    if (self.imageNode.xScale < 4.0) {
+        self.imageNode.xScale = self.imageNode.xScale + 1.0;
+        self.imageNode.yScale = -self.imageNode.xScale;
     }
-    [self modifyMutableTexture];
+}
+- (void)zoomOut {
+    if (self.imageNode.xScale > 1.0) {
+        self.imageNode.xScale = self.imageNode.xScale - 1.0;
+        self.imageNode.yScale = -self.imageNode.xScale;
+    }
 }
 
-- (void)decreaseWidth {
-    _screenSize.width -= self.bitsPerPlane;
-    if (self.screenSize.width < self.bitsPerPlane) {
-        _screenSize.width = self.bitsPerPlane;
-    }
-    [self modifyMutableTexture];
-}
 
 // MARK:- Public Getter & Setters
 
@@ -540,7 +517,7 @@ UInt32 _palette[256] = {
 - (void)setBitsPerPlane:(UInt32)bitsPerPlane {
     _bitsPerPlane = bitsPerPlane > 7 ? bitsPerPlane & 0xF8 : 0; // Multiple of 8 & >= 8 only!
     if (bitsPerPlane == 8) {
-        self.maskInterleaved = NO;
+        self.maskPlane = NO;
     }
     [self modifyMutableTexture];
 }
@@ -549,7 +526,7 @@ UInt32 _palette[256] = {
     _planeCount = planeCount > 0 ? planeCount : 1;
     [self.palette setColorCount:2 ^ self.planeCount];
     if (planeCount == 1) {
-        self.maskInterleaved = NO;
+        self.maskPlane = NO;
     }
     [self modifyMutableTexture];
 }
@@ -562,11 +539,17 @@ UInt32 _palette[256] = {
 
 - (void)setScreenSize:(CGSize)size {
     _screenSize = size;
+    if (self.screenSize.width < self.bitsPerPlane) {
+        _screenSize.width = self.bitsPerPlane;
+    }
+    if (self.screenSize.width > self.mutableTexture.size.width) {
+        _screenSize.width = self.mutableTexture.size.width;
+    }
     [self modifyMutableTexture];
 }
 
-- (void)setMaskInterleaved:(BOOL)maskInterleaved {
-    _maskInterleaved = maskInterleaved;
+- (void)setMaskPlane:(BOOL)maskPlane {
+    _maskPlane = maskPlane;
     [self modifyMutableTexture];
 }
 
@@ -589,7 +572,7 @@ UInt32 _palette[256] = {
 // MARK:- Private Class Methods
 
 - (NSUInteger)bytesPerLine {
-    return ( NSUInteger )self.screenSize.width / self.bitsPerPlane * ( self.bitsPerPlane / 8 * (self.maskInterleaved == YES ? self.planeCount + 1 : self.planeCount) );
+    return ( NSUInteger )self.screenSize.width / self.bitsPerPlane * ( self.bitsPerPlane / 8 * (self.maskPlane == YES ? self.planeCount + 1 : self.planeCount) );
 }
 
 - (void)findAtariSTPaletteFromData:(const NSData *) data  {

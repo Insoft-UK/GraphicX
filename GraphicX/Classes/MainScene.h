@@ -39,7 +39,7 @@ typedef enum {
 @property (readonly) UInt32 planeCount;
 
 @property (readonly) CGSize screenSize;
-@property (readonly) BOOL maskInterleaved;
+@property (readonly) BOOL maskPlane;
 
 // MARK: - Class Instance Methods
 
@@ -48,15 +48,15 @@ typedef enum {
 - (void)importPalette;
 - (void)exportAs;
 - (void)exportPalette;
-- (void)increaseWidth;
-- (void)decreaseWidth;
+- (void)zoomIn;
+- (void)zoomOut;
 
 // MARK:- Class Getter & Setters
 
 - (void)setBitsPerComponent:(UInt32)bitsPerComponent;
 - (void)setBitsPerPlane:(UInt32)bitsPerPlane;
 - (void)setPlaneCount:(UInt32)planeCount;
-- (void)setMaskInterleaved:(BOOL)maskInterleaved;
+- (void)setMaskPlane:(BOOL)maskPlane;
 
 - (void)setPixelArrangement:(PixelArrangement)pixelArrangement;
 

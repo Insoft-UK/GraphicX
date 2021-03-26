@@ -64,11 +64,11 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="r2n-hg-vvp"/>
-                                        <menuItem title="Export" state="on" id="0eF-3m-sas">
+                                        <menuItem title="Export" id="0eF-3m-sas">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <menu key="submenu" title="Export" id="Jkn-Qd-r4g">
                                                 <items>
-                                                    <menuItem title="Photoshop Palette" id="t8U-dc-GWa">
+                                                    <menuItem title="Photoshop ACT Palette File" id="t8U-dc-GWa">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="exportPalette:" target="Voe-Tx-rLC" id="MGr-s6-XBw"/>
@@ -82,7 +82,7 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <menu key="submenu" title="Import" id="1Fl-At-D9s">
                                                 <items>
-                                                    <menuItem title="Photoshop Palette" id="sZg-Qx-jzp">
+                                                    <menuItem title="Photoshop ACT Palette File" id="sZg-Qx-jzp">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="importPalettet:" target="Voe-Tx-rLC" id="BXr-0a-MQS"/>
@@ -106,75 +106,75 @@
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <menu key="submenu" title="Width" id="L7m-Hl-cgu">
                                                             <items>
-                                                                <menuItem title="16" id="RCj-iD-3NR">
+                                                                <menuItem title="16" tag="16" id="RCj-iD-3NR">
                                                                     <modifierMask key="keyEquivalentModifierMask"/>
                                                                     <connections>
                                                                         <action selector="screenWidth:" target="Voe-Tx-rLC" id="f6n-a9-v8F"/>
                                                                     </connections>
                                                                 </menuItem>
-                                                                <menuItem title="32" id="N8g-vM-duA">
+                                                                <menuItem title="32" tag="32" id="N8g-vM-duA">
                                                                     <modifierMask key="keyEquivalentModifierMask"/>
                                                                     <connections>
                                                                         <action selector="screenWidth:" target="Voe-Tx-rLC" id="a6M-rQ-Iet"/>
                                                                     </connections>
                                                                 </menuItem>
-                                                                <menuItem title="48" id="MOs-XD-WWz">
+                                                                <menuItem title="48" tag="48" id="MOs-XD-WWz">
                                                                     <modifierMask key="keyEquivalentModifierMask"/>
                                                                     <connections>
                                                                         <action selector="screenWidth:" target="Voe-Tx-rLC" id="BGx-2g-xRL"/>
                                                                     </connections>
                                                                 </menuItem>
-                                                                <menuItem title="64" id="X2q-bF-shD">
+                                                                <menuItem title="64" tag="64" id="X2q-bF-shD">
                                                                     <modifierMask key="keyEquivalentModifierMask"/>
                                                                     <connections>
                                                                         <action selector="screenWidth:" target="Voe-Tx-rLC" id="hIa-do-AcP"/>
                                                                     </connections>
                                                                 </menuItem>
                                                                 <menuItem isSeparatorItem="YES" id="bUA-Bv-mc3"/>
-                                                                <menuItem title="128" id="REl-Jg-Vu3">
+                                                                <menuItem title="128" tag="128" id="REl-Jg-Vu3">
                                                                     <modifierMask key="keyEquivalentModifierMask"/>
                                                                     <connections>
                                                                         <action selector="screenWidth:" target="Voe-Tx-rLC" id="KjL-OO-lSS"/>
                                                                     </connections>
                                                                 </menuItem>
-                                                                <menuItem title="160" id="q0O-L3-gVU">
+                                                                <menuItem title="160" tag="160" id="q0O-L3-gVU">
                                                                     <modifierMask key="keyEquivalentModifierMask"/>
                                                                     <connections>
                                                                         <action selector="screenWidth:" target="Voe-Tx-rLC" id="fJ1-CW-b8T"/>
                                                                     </connections>
                                                                 </menuItem>
                                                                 <menuItem isSeparatorItem="YES" id="Tat-FC-8JW"/>
-                                                                <menuItem title="256" id="WLX-Gb-30a">
+                                                                <menuItem title="256 ZX Spectrum" tag="256" id="WLX-Gb-30a">
                                                                     <modifierMask key="keyEquivalentModifierMask"/>
                                                                     <connections>
                                                                         <action selector="screenWidth:" target="Voe-Tx-rLC" id="RjC-h5-utG"/>
                                                                     </connections>
                                                                 </menuItem>
-                                                                <menuItem title="320" state="on" id="ckc-bP-7BC">
+                                                                <menuItem title="320 Atari ST" state="on" tag="320" id="ckc-bP-7BC">
                                                                     <modifierMask key="keyEquivalentModifierMask"/>
                                                                     <connections>
                                                                         <action selector="screenWidth:" target="Voe-Tx-rLC" id="P3f-p5-pzO"/>
                                                                     </connections>
                                                                 </menuItem>
-                                                                <menuItem title="480" id="yCt-zr-eNN">
+                                                                <menuItem title="480" tag="480" id="yCt-zr-eNN">
                                                                     <modifierMask key="keyEquivalentModifierMask"/>
                                                                     <connections>
                                                                         <action selector="screenWidth:" target="Voe-Tx-rLC" id="P7z-LR-tUt"/>
                                                                     </connections>
                                                                 </menuItem>
-                                                                <menuItem title="512" id="DLj-bG-yUa">
+                                                                <menuItem title="512" tag="512" id="DLj-bG-yUa">
                                                                     <modifierMask key="keyEquivalentModifierMask"/>
                                                                     <connections>
                                                                         <action selector="screenWidth:" target="Voe-Tx-rLC" id="cdm-8v-Im5"/>
                                                                     </connections>
                                                                 </menuItem>
-                                                                <menuItem title="640" id="eje-Ui-xav">
+                                                                <menuItem title="640" tag="640" id="eje-Ui-xav">
                                                                     <modifierMask key="keyEquivalentModifierMask"/>
                                                                     <connections>
                                                                         <action selector="screenWidth:" target="Voe-Tx-rLC" id="RiF-ZL-KiJ"/>
                                                                     </connections>
                                                                 </menuItem>
-                                                                <menuItem title="720" id="A2g-zK-xrb">
+                                                                <menuItem title="720" tag="720" id="A2g-zK-xrb">
                                                                     <modifierMask key="keyEquivalentModifierMask"/>
                                                                     <connections>
                                                                         <action selector="screenWidth:" target="Voe-Tx-rLC" id="xpf-1v-iFv"/>
@@ -187,79 +187,83 @@
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <menu key="submenu" title="Height" id="9vM-wU-FK3">
                                                             <items>
-                                                                <menuItem title="128" id="dIT-jB-qQj">
+                                                                <menuItem title="128" tag="128" id="dIT-jB-qQj">
                                                                     <modifierMask key="keyEquivalentModifierMask"/>
                                                                     <connections>
                                                                         <action selector="screenHeight:" target="Voe-Tx-rLC" id="rEN-ef-tXU"/>
                                                                     </connections>
                                                                 </menuItem>
                                                                 <menuItem isSeparatorItem="YES" id="9Em-Dn-KXI"/>
-                                                                <menuItem title="192" id="luc-b1-EvT">
+                                                                <menuItem title="192 ZX Spectrum..." tag="192" id="luc-b1-EvT">
                                                                     <modifierMask key="keyEquivalentModifierMask"/>
                                                                     <connections>
                                                                         <action selector="screenHeight:" target="Voe-Tx-rLC" id="EHH-8H-LYO"/>
                                                                     </connections>
                                                                 </menuItem>
-                                                                <menuItem title="200" state="on" id="pI3-pk-bt7">
+                                                                <menuItem title="200 Atari ST" state="on" tag="200" id="pI3-pk-bt7">
                                                                     <modifierMask key="keyEquivalentModifierMask"/>
                                                                     <connections>
                                                                         <action selector="screenHeight:" target="Voe-Tx-rLC" id="ExE-bc-ETe"/>
                                                                     </connections>
                                                                 </menuItem>
-                                                                <menuItem title="240" id="Mm8-4y-gJj">
+                                                                <menuItem title="240" tag="240" id="Mm8-4y-gJj">
                                                                     <modifierMask key="keyEquivalentModifierMask"/>
                                                                     <connections>
                                                                         <action selector="screenHeight:" target="Voe-Tx-rLC" id="RKP-S1-eTG"/>
                                                                     </connections>
                                                                 </menuItem>
                                                                 <menuItem isSeparatorItem="YES" id="7ZP-l1-N21"/>
-                                                                <menuItem title="256" id="y3b-WS-5W0">
+                                                                <menuItem title="256" tag="256" id="y3b-WS-5W0">
                                                                     <modifierMask key="keyEquivalentModifierMask"/>
                                                                     <connections>
                                                                         <action selector="screenHeight:" target="Voe-Tx-rLC" id="Liy-lK-Qjj"/>
                                                                     </connections>
                                                                 </menuItem>
                                                                 <menuItem isSeparatorItem="YES" id="HOA-i9-IMn"/>
-                                                                <menuItem title="400" id="rvT-VT-6mw">
+                                                                <menuItem title="400" tag="400" id="rvT-VT-6mw">
                                                                     <modifierMask key="keyEquivalentModifierMask"/>
                                                                     <connections>
                                                                         <action selector="screenHeight:" target="Voe-Tx-rLC" id="FVR-B4-kiI"/>
                                                                     </connections>
                                                                 </menuItem>
-                                                                <menuItem title="480" id="Qvq-e9-WFL">
+                                                                <menuItem title="480" tag="480" id="Qvq-e9-WFL">
                                                                     <modifierMask key="keyEquivalentModifierMask"/>
                                                                     <connections>
                                                                         <action selector="screenHeight:" target="Voe-Tx-rLC" id="dEe-Ds-lt1"/>
                                                                     </connections>
                                                                 </menuItem>
                                                                 <menuItem isSeparatorItem="YES" id="RKJ-os-wY5"/>
-                                                                <menuItem title="512" id="jes-mw-s58">
+                                                                <menuItem title="512" tag="512" id="jes-mw-s58">
                                                                     <modifierMask key="keyEquivalentModifierMask"/>
                                                                     <connections>
                                                                         <action selector="screenHeight:" target="Voe-Tx-rLC" id="5aW-fq-7CB"/>
-                                                                    </connections>
-                                                                </menuItem>
-                                                                <menuItem isSeparatorItem="YES" id="QgP-a2-GSg"/>
-                                                                <menuItem title="576" id="P4k-qJ-Hce">
-                                                                    <modifierMask key="keyEquivalentModifierMask"/>
-                                                                    <connections>
-                                                                        <action selector="screenHeight:" target="Voe-Tx-rLC" id="4rq-91-2Tp"/>
                                                                     </connections>
                                                                 </menuItem>
                                                             </items>
                                                         </menu>
                                                     </menuItem>
                                                     <menuItem isSeparatorItem="YES" id="AJ0-Rx-d60"/>
-                                                    <menuItem title="Increase Width" keyEquivalent="i" id="6dh-zS-Vam">
-                                                        <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                                    <menuItem title="Increase Width" keyEquivalent="" id="6dh-zS-Vam">
                                                         <connections>
                                                             <action selector="increaseWidth:" target="Voe-Tx-rLC" id="1J7-fz-haT"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Decrease Width" keyEquivalent="i" id="9Xr-vX-E3A">
-                                                        <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES"/>
+                                                    <menuItem title="Decrease Width" keyEquivalent="" id="9Xr-vX-E3A">
                                                         <connections>
                                                             <action selector="decreaseWidth:" target="Voe-Tx-rLC" id="0PD-gY-uMe"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem isSeparatorItem="YES" id="boI-xZ-4bO"/>
+                                                    <menuItem title="Increase Height" keyEquivalent="" id="y9o-Js-E3w">
+                                                        <modifierMask key="keyEquivalentModifierMask" option="YES"/>
+                                                        <connections>
+                                                            <action selector="increaseHeight:" target="Voe-Tx-rLC" id="ms4-o5-Poa"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="Decrease Height" keyEquivalent="" id="pQ1-2T-IFm">
+                                                        <modifierMask key="keyEquivalentModifierMask" option="YES"/>
+                                                        <connections>
+                                                            <action selector="decreaseHeight:" target="Voe-Tx-rLC" id="xgO-lC-5fY"/>
                                                         </connections>
                                                     </menuItem>
                                                 </items>
@@ -270,7 +274,7 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <menu key="submenu" title="Pixel Arrangement" id="PFq-Jv-GdB">
                                                 <items>
-                                                    <menuItem title="Planar" state="on" id="zpy-od-ul3">
+                                                    <menuItem title="Planar" state="on" tag="1" id="zpy-od-ul3">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="pixelArrangement:" target="Voe-Tx-rLC" id="Od1-jR-Mei"/>
@@ -285,26 +289,44 @@
                                                 </items>
                                             </menu>
                                         </menuItem>
-                                        <menuItem title="Colors" id="8HL-GM-rCw">
+                                        <menuItem title="Color Depth" id="8HL-GM-rCw">
                                             <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="Colors" id="CsE-ld-Ib9">
+                                            <menu key="submenu" title="Color Depth" id="CsE-ld-Ib9">
                                                 <items>
-                                                    <menuItem title="4" id="NGA-aF-GrY">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                    <menuItem title="16.7 Million Colors" tag="24" keyEquivalent="m" id="HjW-2k-Nj7">
+                                                        <modifierMask key="keyEquivalentModifierMask" option="YES"/>
                                                         <connections>
-                                                            <action selector="colors:" target="Voe-Tx-rLC" id="hA3-RO-Xzq"/>
+                                                            <action selector="colors:" target="Voe-Tx-rLC" id="fNm-6Y-dRi"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="16" id="ITk-Qb-V2P">
+                                                    <menuItem title="4096 Colors" tag="8" id="SC3-jt-lL4">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="colors:" target="Voe-Tx-rLC" id="htt-MS-1Ai"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="256 Colors" tag="8" keyEquivalent="i" id="Yxa-Yb-sik">
+                                                        <modifierMask key="keyEquivalentModifierMask" option="YES"/>
+                                                        <connections>
+                                                            <action selector="colors:" target="Voe-Tx-rLC" id="pg7-gh-hD1"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="16 Colors" tag="4" id="ITk-Qb-V2P">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="colors:" target="Voe-Tx-rLC" id="RHL-OQ-W5Q"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Indexed Color" keyEquivalent="i" id="Yxa-Yb-sik">
+                                                    <menuItem title="4 Colors" tag="2" id="NGA-aF-GrY">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
-                                                            <action selector="colors:" target="Voe-Tx-rLC" id="pg7-gh-hD1"/>
+                                                            <action selector="colors:" target="Voe-Tx-rLC" id="hA3-RO-Xzq"/>
                                                         </connections>
+                                                    </menuItem>
+                                                    <menuItem isSeparatorItem="YES" id="rfZ-3U-glA"/>
+                                                    <menuItem title="Alpha Channel" keyEquivalent="a" id="35E-0T-1Uf">
+                                                        <attributedString key="attributedTitle"/>
+                                                        <modifierMask key="keyEquivalentModifierMask" option="YES"/>
                                                     </menuItem>
                                                 </items>
                                             </menu>
@@ -313,54 +335,52 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <menu key="submenu" title="Planes" id="8mr-sm-Yjd">
                                                 <items>
-                                                    <menuItem title="Bits Per Plane" enabled="NO" id="ZvO-Gk-QUH">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                    </menuItem>
-                                                    <menuItem title="8" id="YGs-j5-SAR">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="bitsPerPlane:" target="Voe-Tx-rLC" id="eFP-ZO-Lql"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="16" state="on" id="Lbh-J2-qVU">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="bitsPerPlane:" target="Voe-Tx-rLC" id="znq-OA-3kH"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem isSeparatorItem="YES" id="swp-gr-a21"/>
-                                                    <menuItem title="Plane Count" enabled="NO" id="cqv-fj-IhA">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                    </menuItem>
-                                                    <menuItem title="1" id="Nop-cj-93Q">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                    <menuItem title="1 Plane (Monochrome)" tag="1" keyEquivalent="m" id="Nop-cj-93Q">
                                                         <connections>
                                                             <action selector="planeCount:" target="Voe-Tx-rLC" id="Xus-3r-gOT"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="2" id="BgM-ve-c93">
+                                                    <menuItem title="2 Planes (4 Colors)" tag="2" id="BgM-ve-c93">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="planeCount:" target="Voe-Tx-rLC" id="5Eo-CG-6LS"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="4" state="on" id="RB4-Sm-HuC">
+                                                    <menuItem title="3 Planes (8 Colors)" tag="3" id="E5w-rW-Jvy">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="planeCount:" target="Voe-Tx-rLC" id="QHT-HU-vbh"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="4 Planes (16 Colors)" state="on" tag="4" id="RB4-Sm-HuC">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="planeCount:" target="Voe-Tx-rLC" id="4qU-66-PTv"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="5" id="hbz-o3-HPx">
+                                                    <menuItem title="5 Planes (32 Colors)" tag="5" id="hbz-o3-HPx">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="planeCount:" target="Voe-Tx-rLC" id="i5s-l7-FlF"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem isSeparatorItem="YES" id="W4K-CS-dla"/>
-                                                    <menuItem title="Mask Interleaved" id="bfc-7B-Ert">
+                                                    <menuItem isSeparatorItem="YES" id="swp-gr-a21"/>
+                                                    <menuItem title="16-Bits Per Plane" state="on" tag="16" id="Lbh-J2-qVU">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
-                                                            <action selector="maskInterleaved:" target="Voe-Tx-rLC" id="CAI-hY-NXz"/>
+                                                            <action selector="bitsPerPlane:" target="Voe-Tx-rLC" id="znq-OA-3kH"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="8-Bits Per Plane" tag="8" id="YGs-j5-SAR">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="bitsPerPlane:" target="Voe-Tx-rLC" id="eFP-ZO-Lql"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem isSeparatorItem="YES" id="W4K-CS-dla"/>
+                                                    <menuItem title="Alpha Plane" keyEquivalent="a" id="bfc-7B-Ert">
+                                                        <connections>
+                                                            <action selector="maskPlane:" target="Voe-Tx-rLC" id="JtT-5V-Bs9"/>
                                                         </connections>
                                                     </menuItem>
                                                 </items>
@@ -371,16 +391,34 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <menu key="submenu" title="Presets..." id="mR1-yh-84a">
                                                 <items>
+                                                    <menuItem title="ZX Spectrum NEXT" tag="8" id="bRc-Bk-FKk">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="platform:" target="Voe-Tx-rLC" id="g5f-iZ-2sl"/>
+                                                        </connections>
+                                                    </menuItem>
                                                     <menuItem title="ZX Spectrum" id="Q5e-8K-NDq">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="platform:" target="Voe-Tx-rLC" id="Fhr-Ww-JUc"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Atari ST/E Low" tag="2" id="GB9-OM-e27">
+                                                    <menuItem title="Atari ST Low Resolution" tag="1" id="GB9-OM-e27">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="platform:" target="Voe-Tx-rLC" id="8Nt-Y4-pms"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="Atari ST Medium Resolution" tag="2" id="zVI-sE-bpm">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="platform:" target="Voe-Tx-rLC" id="ZGb-Ll-XNQ"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="Atari ST High Resolution" tag="3" id="SHS-Od-JfO">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="platform:" target="Voe-Tx-rLC" id="hTE-Q9-Imz"/>
                                                         </connections>
                                                     </menuItem>
                                                 </items>
@@ -399,6 +437,25 @@
                                                 </items>
                                             </menu>
                                         </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="View" id="FV2-Y2-xQf">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="View" id="tYo-FJ-KaL">
+                                    <items>
+                                        <menuItem title="Zoom In" keyEquivalent="z" id="Hbu-Jr-836">
+                                            <connections>
+                                                <action selector="zoomIn:" target="Voe-Tx-rLC" id="P2B-gH-Asj"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Zoom Out" keyEquivalent="z" id="y2I-d5-pS8">
+                                            <modifierMask key="keyEquivalentModifierMask" option="YES"/>
+                                            <connections>
+                                                <action selector="zoomOut:" target="Voe-Tx-rLC" id="UEr-Hc-GjC"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="ndw-Bz-MZB"/>
                                     </items>
                                 </menu>
                             </menuItem>

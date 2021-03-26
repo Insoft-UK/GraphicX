@@ -106,7 +106,7 @@ THE SOFTWARE.
                     *byte++ = 0;
                 }
                 
-                byte[1] = ( UInt8 )self.colorCount;
+                byte[0] = ( UInt8 )self.colorCount;
                 byte[2] = 0xff;
                 byte[3] = 0xff;
                 
