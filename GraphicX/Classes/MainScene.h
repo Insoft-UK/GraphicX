@@ -22,24 +22,17 @@ THE SOFTWARE.
 
 #import <SpriteKit/SpriteKit.h>
 
-typedef enum {
-    PixelArrangementPlanar,
-    PixelArrangementPacked
-} PixelArrangement;
-
 @interface MainScene : SKScene
 
 // MARK: - Class Properties
 
-@property (readonly) PixelArrangement pixelArrangement;
 //@property (readonly) NSInteger bytesPerBitplane;
 
 @property (readonly) UInt32 bitsPerComponent;
-@property (readonly) UInt32 bitsPerPlane;
-@property (readonly) UInt32 planeCount;
+@property (readonly) UInt32 planeCount;         // Packed if value == 0, else Planar
 
 @property (readonly) CGSize screenSize;
-@property (readonly) BOOL maskPlane;
+@property (readonly) BOOL alphaPlane;
 
 // MARK: - Class Instance Methods
 
@@ -56,9 +49,8 @@ typedef enum {
 - (void)setBitsPerComponent:(UInt32)bitsPerComponent;
 - (void)setBitsPerPlane:(UInt32)bitsPerPlane;
 - (void)setPlaneCount:(UInt32)planeCount;
-- (void)setMaskPlane:(BOOL)maskPlane;
+- (void)setAlphaPlane:(BOOL)alphaPlane;
 
-- (void)setPixelArrangement:(PixelArrangement)pixelArrangement;
 
 - (void)setScreenSize:(CGSize)size;
 

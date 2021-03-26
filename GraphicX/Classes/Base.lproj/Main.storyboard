@@ -299,7 +299,7 @@
                                                             <action selector="colors:" target="Voe-Tx-rLC" id="fNm-6Y-dRi"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="4096 Colors" tag="8" id="SC3-jt-lL4">
+                                                    <menuItem title="4096 Colors" tag="12" id="SC3-jt-lL4">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="colors:" target="Voe-Tx-rLC" id="htt-MS-1Ai"/>
@@ -450,7 +450,7 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Zoom Out" keyEquivalent="z" id="y2I-d5-pS8">
-                                            <modifierMask key="keyEquivalentModifierMask" option="YES"/>
+                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="zoomOut:" target="Voe-Tx-rLC" id="UEr-Hc-GjC"/>
                                             </connections>
