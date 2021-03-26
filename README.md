@@ -5,8 +5,8 @@
   <li>8/16-Bit Planes</li>
   <li>4-Bit Index Color</li>
   <li>8-Bit Index Color</li>
-  <li>12-Bit 4K Colors</li>
-  <li>16.7 Million Colors</li>
+  <li>12-Bit 4K Colors (TO DO)</li>
+  <li>16.7 Million Colors (TO DO)</li>
   <li>Export PNG File</li>
   <li>Import/Export Photoshop ACT File</li>
   <li>Alpha Plane</li>
