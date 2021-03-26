@@ -22,8 +22,8 @@ THE SOFTWARE.
 
 // Prepairing to port code from Objective-C to Swift
 
-@objc class XImage : NSObject {
-    @objc func writeCGImage(_ image: CGImage, to destinationURL: URL) -> Bool {
+@objc class Ximage : NSObject {
+    @objc @discardableResult class func writeCGImage(_ image: CGImage, to destinationURL: URL) -> Bool {
         guard let destination = CGImageDestinationCreateWithURL(destinationURL as CFURL, kUTTypePNG, 1, nil) else { return false }
         CGImageDestinationAddImage(destination, image, nil)
         return CGImageDestinationFinalize(destination)

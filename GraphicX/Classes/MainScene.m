@@ -44,14 +44,9 @@ UInt32 _palette[256] = {
 @property (nonatomic) NSData *data;
 @property (readonly) NSInteger dataOffset;
 @property (readonly) NSInteger paletteOffset;
-@property (readonly) UInt32 bitsPerPlane;
 
 @property SKSpriteNode *imageNode;
-
 @property Palette *palette;
-
-//@property NSInteger bytesPerLine;
-
 
 
 @end
@@ -75,7 +70,6 @@ UInt32 _palette[256] = {
 
 - (void)setup {
     self.bitsPerComponent = 16;
-    self.bitsPerPlane = 16;
     self.planeCount = 4;
     self.dataOffset = 0;
     self.paletteOffset = 0;
@@ -86,8 +80,8 @@ UInt32 _palette[256] = {
     self.palette = [[Palette alloc] init];
     
     self.size = CGSizeMake(720, 576);
-    self.backgroundColor = [Colors colorFromRgb:bloodRed];
-
+    
+    // TODO: Code refactoring...
     
     self.mutableTexture = [SKMutableTexture mutableTextureWithSize:CGSizeMake(720, 576)];
     [self.mutableTexture modifyPixelDataWithBlock:^(void *pixelData, size_t lengthInBytes) {
@@ -106,8 +100,10 @@ UInt32 _palette[256] = {
     
 }
 
+
 // MARK: - Touch Events
 
+/*
 - (void)touchDownAtPoint:(CGPoint)pos {
     
 }
@@ -119,6 +115,7 @@ UInt32 _palette[256] = {
 - (void)touchUpAtPoint:(CGPoint)pos {
    
 }
+*/
 
 // MARK: - Keyboard Events
 
@@ -140,11 +137,11 @@ UInt32 _palette[256] = {
     } else {
         switch (theEvent.keyCode) {
             case 0x02: // D
-                self.dataOffset += self.bitsPerPlane * self.planeCount / 8;
+                self.dataOffset += self.bitsPerComponent * self.planeCount / 8;
                 break;
                 
             case 0x00: // A
-                self.dataOffset -= self.bitsPerPlane * self.planeCount / 8;
+                self.dataOffset -= self.bitsPerComponent * self.planeCount / 8;
                 break;
                 
             case 0x0D: // W
@@ -204,6 +201,7 @@ UInt32 _palette[256] = {
 
 // MARK: - Mouse Events
 
+/*
 - (void)mouseDown:(NSEvent *)theEvent {
     [self touchDownAtPoint:[theEvent locationInNode:self]];
 }
@@ -213,6 +211,7 @@ UInt32 _palette[256] = {
 - (void)mouseUp:(NSEvent *)theEvent {
     [self touchUpAtPoint:[theEvent locationInNode:self]];
 }
+*/
 
 // MARK: - Update
 
@@ -222,16 +221,6 @@ UInt32 _palette[256] = {
     if (previousDataOffset != self.dataOffset) {
         [self modifyMutableTexture];
     }
-    
-    /*
-    if (ceil(self.mutableTexture.size.width / self.screenSize.width) < 2.0 || ceil(self.mutableTexture.size.height / self.screenSize.height) < 2.0) {
-        self.imageNode.xScale = 1;
-        self.imageNode.yScale = -1;
-    } else {
-        self.imageNode.xScale = 2;
-        self.imageNode.yScale = -2;
-    }
-    */
     
     previousDataOffset = self.dataOffset;
 }
@@ -276,18 +265,18 @@ UInt32 _palette[256] = {
         for (int r = -(lines - height) / 2; r < (height + (lines - height) / 2); ++r) {
             if (r < 0 || r >= height) {
                 for (int c = 0; c < w; ++c) {
-                    *pixel++ = [self.palette getRgbColorAtIndex:0];
+                    *pixel++ = 0;// [self.palette getRgbColorAtIndex:0];
                 }
             } else {
                 for (int c = -(w - width) / 2; c < (width + (w - width) / 2); ++c) {
                     if (c < 0 || c >= width) {
-                        *pixel++ = [self.palette getRgbColorAtIndex:0];
+                        *pixel++ = 0;// [self.palette getRgbColorAtIndex:0];
                     }
                     else {
                         if (self.planeCount > 0) {
                             
                             if (self.bitsPerComponent == 8) {
-                                // NOTE:- Mask Interleaved not suported for 8-bit bitplane/s
+                                // TODO: Alpha Plane not suported for 8-bit bitplane/s
                                 c += self.bitsPerComponent - 1;
                                 UInt8 *planes = (UInt8 *)bytes;
                                 bytes += self.bitsPerComponent / 8 * planeCount;
@@ -345,6 +334,7 @@ UInt32 _palette[256] = {
                                 
                             }
                         } else {
+                            // TODO: Code refactoring...
                             if (self.bitsPerComponent == 8 && self.planeCount == 0) {
                                 // Indexed Color
                                 *pixel++ = [self.palette getRgbColorAtIndex:*bytes++];
@@ -414,7 +404,6 @@ UInt32 _palette[256] = {
                 UniversalPictureFormat upf = getUniversalPictureFormat(self.data.bytes, self.data.length);
                 if (upf.pictureDataOffset != 0) {
                     [self setPlaneCount:upf.planeCount];
-                    [self setBitsPerPlane:upf.bitsPerPlane];
                     self.bitsPerComponent = upf.bitsPerComponent;
                     [self setScreenSize:CGSizeMake(upf.width, upf.height)];
                     self.dataOffset = (NSInteger)upf.pictureDataOffset;
@@ -468,7 +457,7 @@ UInt32 _palette[256] = {
         if (url != nil) {
             [self.mutableTexture modifyPixelDataWithBlock:^(void *pixelData, size_t lengthInBytes) {
                 CGImageRef imageRef = [Image createCGImage:self.mutableTexture.size ofPixelData:pixelData];
-                [Image writeCGImage:CGImageCreateWithImageInRect(imageRef, CGRectMake((self.mutableTexture.size.width - self.screenSize.width) / 2, (self.mutableTexture.size.height - self.screenSize.height) / 2, self.screenSize.width, self.screenSize.height)) to:savePanel.URL];
+                [Ximage writeCGImage:CGImageCreateWithImageInRect(imageRef, CGRectMake((self.mutableTexture.size.width - self.screenSize.width) / 2, (self.mutableTexture.size.height - self.screenSize.height) / 2, self.screenSize.width, self.screenSize.height)) to:savePanel.URL];
                 CGImageRelease(imageRef);
             }];
         }
@@ -510,14 +499,8 @@ UInt32 _palette[256] = {
 
 - (void)setBitsPerComponent:(UInt32)bitsPerComponent {
     _bitsPerComponent = bitsPerComponent > 1 ? bitsPerComponent : 1;
-    self.bitsPerPlane = _bitsPerComponent & 0xF8;
-    [self modifyMutableTexture];
-}
-
-- (void)setBitsPerPlane:(UInt32)bitsPerPlane {
-    _bitsPerPlane = bitsPerPlane > 7 ? bitsPerPlane & 0xF8 : 0; // Multiple of 8 & >= 8 only!
-    if (bitsPerPlane == 8) {
-        self.alphaPlane = NO;
+    if (self.planeCount != 0) {
+        _bitsPerComponent = _bitsPerComponent > 7 ? _bitsPerComponent & 0xF8 : 8;
     }
     [self modifyMutableTexture];
 }
@@ -531,13 +514,10 @@ UInt32 _palette[256] = {
     [self modifyMutableTexture];
 }
 
-
-
-
 - (void)setScreenSize:(CGSize)size {
     _screenSize = size;
-    if (self.screenSize.width < self.bitsPerPlane) {
-        _screenSize.width = self.bitsPerPlane;
+    if (self.screenSize.width < self.bitsPerComponent) {
+        _screenSize.width = self.bitsPerComponent;
     }
     if (self.screenSize.width > self.mutableTexture.size.width) {
         _screenSize.width = self.mutableTexture.size.width;
@@ -569,7 +549,7 @@ UInt32 _palette[256] = {
 // MARK:- Private Class Methods
 
 - (NSUInteger)bytesPerLine {
-    return ( NSUInteger )self.screenSize.width / self.bitsPerPlane * ( self.bitsPerPlane / 8 * (self.alphaPlane == YES ? self.planeCount + 1 : self.planeCount) );
+    return ( NSUInteger )self.screenSize.width / self.bitsPerComponent * ( self.bitsPerComponent / 8 * (self.alphaPlane == YES ? self.planeCount + 1 : self.planeCount) );
 }
 
 - (void)findAtariSTPaletteFromData:(const NSData *) data  {

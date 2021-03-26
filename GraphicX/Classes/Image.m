@@ -51,7 +51,7 @@ THE SOFTWARE.
     return imageRef;
 }
 
-+ (BOOL)writeCGImage:(CGImageRef)image to:(NSURL *)destinationURL {
++ (BOOL)writeCGImage:(CGImageRef)image to:(NSURL *)destinationURL __attribute__((warn_unused_result)) {
     if (image == nil) {
         return NO;
     }

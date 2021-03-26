@@ -17,7 +17,7 @@
 		1365C85026092A1200B23CC3 /* NEOchrome.c in Sources */ = {isa = PBXBuildFile; fileRef = 1365C84F26092A1200B23CC3 /* NEOchrome.c */; };
 		1365C85426092CF300B23CC3 /* UniversalPictureFormat.c in Sources */ = {isa = PBXBuildFile; fileRef = 1365C85326092CF300B23CC3 /* UniversalPictureFormat.c */; };
 		1365C85F260947CC00B23CC3 /* common.c in Sources */ = {isa = PBXBuildFile; fileRef = 1365C85E260947CC00B23CC3 /* common.c */; };
-		1365C86D260A667100B23CC3 /* XImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1365C86C260A667100B23CC3 /* XImage.swift */; };
+		1365C86D260A667100B23CC3 /* Ximage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1365C86C260A667100B23CC3 /* Ximage.swift */; };
 		1365C870260A875700B23CC3 /* Image.m in Sources */ = {isa = PBXBuildFile; fileRef = 1365C86F260A875700B23CC3 /* Image.m */; };
 		1365C875260AA74300B23CC3 /* Palette.m in Sources */ = {isa = PBXBuildFile; fileRef = 1365C874260AA74300B23CC3 /* Palette.m */; };
 /* End PBXBuildFile section */
@@ -44,7 +44,7 @@
 		1365C85326092CF300B23CC3 /* UniversalPictureFormat.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = UniversalPictureFormat.c; sourceTree = "<group>"; };
 		1365C85C2609392700B23CC3 /* common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
 		1365C85E260947CC00B23CC3 /* common.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = common.c; sourceTree = "<group>"; };
-		1365C86C260A667100B23CC3 /* XImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XImage.swift; sourceTree = "<group>"; };
+		1365C86C260A667100B23CC3 /* Ximage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ximage.swift; sourceTree = "<group>"; };
 		1365C86F260A875700B23CC3 /* Image.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Image.m; sourceTree = "<group>"; };
 		1365C872260A876E00B23CC3 /* Image.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
 		1365C874260AA74300B23CC3 /* Palette.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Palette.m; sourceTree = "<group>"; };
@@ -137,7 +137,7 @@
 			children = (
 				1365C7B02605812B00B23CC3 /* Constants.h */,
 				1365C7B12605812B00B23CC3 /* Constants.m */,
-				1365C86C260A667100B23CC3 /* XImage.swift */,
+				1365C86C260A667100B23CC3 /* Ximage.swift */,
 				1365C86F260A875700B23CC3 /* Image.m */,
 				1365C872260A876E00B23CC3 /* Image.h */,
 				1365C877260AA76500B23CC3 /* Palette.h */,
@@ -317,7 +317,7 @@
 				1365C85F260947CC00B23CC3 /* common.c in Sources */,
 				1365C7B22605812B00B23CC3 /* Constants.m in Sources */,
 				1365C7B72605818800B23CC3 /* Singleton.m in Sources */,
-				1365C86D260A667100B23CC3 /* XImage.swift in Sources */,
+				1365C86D260A667100B23CC3 /* Ximage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
