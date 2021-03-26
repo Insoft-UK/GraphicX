@@ -1,5 +1,5 @@
 # GraphicX
-<h4>Utility Features v0.5.3</h4>
+<h4>Utility Features v0.5.1.3</h4>
 <ul>
   <li>Max Size 720x512</li>
   <li>8/16-Bit Planes</li>
