@@ -1,7 +1,5 @@
 # GraphicX
-<h2>Utility</h2>
-
-Features
+<h4>Utility Features</h4>
 <ul>
   <li>8/16-Bit Planes</li>
   <li>4-Bit Index Color</li>
