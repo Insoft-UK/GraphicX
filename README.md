@@ -1,5 +1,5 @@
 # GraphicX
-<h1>Utility</h1>
+<h2>Utility</h2>
 
 Features
 <ul>
