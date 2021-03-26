@@ -299,25 +299,25 @@
                                                             <action selector="colors:" target="Voe-Tx-rLC" id="fNm-6Y-dRi"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="4096 Colors" tag="12" id="SC3-jt-lL4">
+                                                    <menuItem title="12-Bit Index 4K Colors" tag="12" id="SC3-jt-lL4">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="colors:" target="Voe-Tx-rLC" id="htt-MS-1Ai"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="256 Colors" tag="8" keyEquivalent="i" id="Yxa-Yb-sik">
+                                                    <menuItem title="8-Bit Index 256 Colors" tag="8" keyEquivalent="i" id="Yxa-Yb-sik">
                                                         <modifierMask key="keyEquivalentModifierMask" option="YES"/>
                                                         <connections>
                                                             <action selector="colors:" target="Voe-Tx-rLC" id="pg7-gh-hD1"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="16 Colors" tag="4" id="ITk-Qb-V2P">
+                                                    <menuItem title="4-Bit Index 16 Colors" tag="4" id="ITk-Qb-V2P">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="colors:" target="Voe-Tx-rLC" id="RHL-OQ-W5Q"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="4 Colors" tag="2" id="NGA-aF-GrY">
+                                                    <menuItem title="2-Bit Index 4 Colors" tag="2" id="NGA-aF-GrY">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="colors:" target="Voe-Tx-rLC" id="hA3-RO-Xzq"/>

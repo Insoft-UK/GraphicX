@@ -6,5 +6,5 @@
   <li>4-Bit Index Color</li>
   <li>8-Bit Index Color</li>
   <li>Import/Export Photoshop ACT File</li>
-  <li>Mask Plane</li>
+  <li>Alpha Plane</li>
 </ul

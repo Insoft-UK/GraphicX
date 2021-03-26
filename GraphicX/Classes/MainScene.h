@@ -30,9 +30,10 @@ THE SOFTWARE.
 
 @property (readonly) UInt32 bitsPerComponent;
 @property (readonly) UInt32 planeCount;         // Packed if value == 0, else Planar
+@property (readonly) BOOL alphaPlane;
 
 @property (readonly) CGSize screenSize;
-@property (readonly) BOOL alphaPlane;
+
 
 // MARK: - Class Instance Methods
 
@@ -47,10 +48,8 @@ THE SOFTWARE.
 // MARK:- Class Getter & Setters
 
 - (void)setBitsPerComponent:(UInt32)bitsPerComponent;
-- (void)setBitsPerPlane:(UInt32)bitsPerPlane;
 - (void)setPlaneCount:(UInt32)planeCount;
 - (void)setAlphaPlane:(BOOL)alphaPlane;
-
 
 - (void)setScreenSize:(CGSize)size;
 

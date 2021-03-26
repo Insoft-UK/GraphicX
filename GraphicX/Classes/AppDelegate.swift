@@ -59,7 +59,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     @IBAction private func bitsPerPlane(_ sender: NSMenuItem) {
-        Singleton.sharedInstance()?.mainScene.setBitsPerPlane(UInt32(sender.tag))
+        Singleton.sharedInstance()?.mainScene.setBitsPerComponent(UInt32(sender.tag))
         updateAllMenus()
     }
     
@@ -69,35 +69,30 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             case 0: // ZX Spectrum
                 scene.setBitsPerComponent(8)
                 scene.setPlaneCount(1)
-                scene.setBitsPerPlane(8)
                 scene.setScreenSize(CGSize(width: 256, height: 192))
                 scene.setAlphaPlane(false);
                 
             case 1: // Atari ST Low Resolution
                 scene.setBitsPerComponent(16)
                 scene.setPlaneCount(4)
-                scene.setBitsPerPlane(16)
                 scene.setScreenSize(CGSize(width: 320, height: 200))
                 scene.setAlphaPlane(false);
                 
             case 2: // Atari ST Medium Resolution
                 scene.setBitsPerComponent(16)
                 scene.setPlaneCount(2)
-                scene.setBitsPerPlane(16)
                 scene.setScreenSize(CGSize(width: 640, height: 200))
                 scene.setAlphaPlane(false);
                 
             case 3: // Atari ST High Resolution
                 scene.setBitsPerComponent(16)
                 scene.setPlaneCount(1)
-                scene.setBitsPerPlane(16)
                 scene.setScreenSize(CGSize(width: 640, height: 400))
                 scene.setAlphaPlane(false);
                 
             case 8: // ZX Spectrum Next
                 scene.setBitsPerComponent(8)
                 scene.setPlaneCount(0)
-                scene.setBitsPerPlane(8)
                 scene.setScreenSize(CGSize(width: 256, height: 192))
                 
             default: break
@@ -184,9 +179,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 
                 if let menu = mainMenu.item(at: 2)?.submenu?.item(withTitle: "Planes")?.submenu {
                     if menu.item(withTag: 8)?.state == .on {
-                        scene.setBitsPerPlane(8)
+                        scene.setBitsPerComponent(8)
                     } else {
-                        scene.setBitsPerPlane(16)
+                        scene.setBitsPerComponent(16)
                     }
                 }
             default:
