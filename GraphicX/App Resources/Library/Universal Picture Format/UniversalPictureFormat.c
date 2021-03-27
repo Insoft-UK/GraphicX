@@ -30,12 +30,12 @@ UniversalPictureFormat getUniversalPictureFormat(const void *rawData, long unsig
         .bitsPerPixel = 16,
         .width = 320,
         .height = 200,
-        .pictureDataOffset = 0
+        .imageDataOffset = 0
     }; // Pre-Defined Values
     
     if (isNEOchromeFormat(rawData, length) == true) {
         NEOchrome *neo = (NEOchrome *)rawData;
-        upf.pictureDataOffset = sizeof(NEOchrome);
+        upf.imageDataOffset = sizeof(NEOchrome);
         palette(&neo->palette, upf.palette);
         return upf;
     }

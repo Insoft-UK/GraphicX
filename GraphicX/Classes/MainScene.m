@@ -41,11 +41,10 @@ UInt32 _palette[256] = {
 @interface MainScene()
 
 @property (nonatomic) SKMutableTexture *mutableTexture;
-@property (nonatomic) NSData *data;
+@property (nonatomic) NSMutableData *mutableData;
+
 @property (readonly) NSInteger dataOffset;
 @property (readonly) NSInteger paletteOffset;
-
-@property RawData *rawData;
 
 @property SKSpriteNode *imageNode;
 @property Palette *palette;
@@ -73,8 +72,8 @@ UInt32 _palette[256] = {
 - (void)setup {
     self.bitsPerPixel = 16;
     self.planeCount = 4;
-    self.dataOffset = 0;
-    self.paletteOffset = 0;
+    _dataOffset = 0;
+    _paletteOffset = 0;
     self.alphaPlane = NO;
     
     [self setScreenSize:CGSizeMake(320, 200)];
@@ -82,10 +81,8 @@ UInt32 _palette[256] = {
     self.palette = [[Palette alloc] init];
     Singleton.sharedInstance.palette = self.palette;
     
-    self.size = CGSizeMake(720, 576);
+    self.size = CGSizeMake(720, 512);
     
-    self.rawData = [[RawData alloc] init];
-    self.rawData.offset = 0;
     
     // TODO: Code refactoring...
     
@@ -137,7 +134,7 @@ UInt32 _palette[256] = {
                 break;
                 
             case 0x01: // S
-                self.dataOffset = (UInt32)self.data.length - [self bytesPerLine] * height;
+                self.dataOffset = (UInt32)self.mutableData.length - [self bytesPerLine] * height;
                 break;
         }
     } else {
@@ -232,7 +229,7 @@ UInt32 _palette[256] = {
 }
 
 - (void)modifyMutableTexture {
-    if (self.data == nil) {
+    if (self.mutableData == nil) {
         [self.mutableTexture modifyPixelDataWithBlock:^(void *pixelData, size_t lengthInBytes) {
             UInt32 *pixels = (UInt32 *)pixelData;
             while (lengthInBytes -= 4) {
@@ -245,7 +242,7 @@ UInt32 _palette[256] = {
     self.dataOffset = self.dataOffset; // Will perform a check when set, so we can be sure the offset is allways valid.
     
     NSInteger height = (NSInteger)self.screenSize.height;
-    [self modifyTextureWithData: self.data rangeFrom:self.dataOffset to: [self bytesPerLine] * height + self.dataOffset];
+    [self modifyTextureWithData: self.mutableData rangeFrom:self.dataOffset to: [self bytesPerLine] * height + self.dataOffset];
     
 }
 
@@ -258,6 +255,8 @@ UInt32 _palette[256] = {
     [self.mutableTexture modifyPixelDataWithBlock:^(void *pixelData, size_t lengthInBytes) {
         UInt32 *pixel = (UInt32 *)pixelData;
         UInt8 *bytes = (UInt8 *)data.bytes;
+        
+        if (data.bytes == NULL) return;
         
         bytes += from;
         int planeCount = self.alphaPlane == YES ? (int)self.planeCount + 1 : (int)self.planeCount;
@@ -362,19 +361,19 @@ UInt32 _palette[256] = {
                                     bytes += 3;
                                     break;
                                     
-                                case 8: // 8-Bit Index Color
+                                case 8: // 8 Bits Indexed Color...
                                     *pixel++ = [self.palette getRgbColorAtIndex:*bytes];
                                     bytes += 1;
                                     break;
                                     
-                                case 4: // 4-Bit Index Color
+                                case 4: // 4 Bits Indexed Color...
                                     *pixel++ = [self.palette getRgbColorAtIndex:bytes[0] >> 4];
                                     *pixel++ = [self.palette getRgbColorAtIndex:bytes[0] & 0b1111];
                                     bytes += 1;
                                     c += 1;
                                     break;
-                                    
-                                case 2: // 2-Bit Index Color
+                                /*
+                                case 2: // 2 Bits Indexed Color...
                                     *pixel++ = [self.palette getRgbColorAtIndex:bytes[0] >> 6];
                                     *pixel++ = [self.palette getRgbColorAtIndex:(bytes[0] >> 4) & 0b11];
                                     *pixel++ = [self.palette getRgbColorAtIndex:(bytes[0] >> 2) & 0b11];
@@ -382,7 +381,7 @@ UInt32 _palette[256] = {
                                     bytes += 1;
                                     c += 3;
                                     break;
-                                    
+                                    */
                                 case 1:
                                     for (int n=0; n<8; n++) {
                                         if (*bytes & (1 << n)) {
@@ -424,7 +423,7 @@ UInt32 _palette[256] = {
 // MARK: - Class Public Methods
 
 - (void)nextPalette {
-    [self findAtariSTPaletteFromData:self.data];
+    [self findAtariSTPaletteFromData:self.mutableData];
     [self modifyMutableTexture];
 }
 
@@ -441,25 +440,33 @@ UInt32 _palette[256] = {
     if (modalResponse == NSModalResponseOK) {
         url = openPanel.URL;
         if (url != nil) {
-            self.data = [NSData dataWithContentsOfURL:url];
-            
-            if (self.data == nil) {
+            self.mutableData = [NSMutableData dataWithContentsOfURL:url];
+            if (self.mutableData == nil) {
                 NSLog(@"ERROR! No Data");
             } else {
-                
-                UniversalPictureFormat upf = getUniversalPictureFormat(self.data.bytes, self.data.length);
-                if (upf.pictureDataOffset != 0) {
+                UniversalPictureFormat upf = getUniversalPictureFormat(self.mutableData.bytes, self.mutableData.length);
+                if (upf.imageDataOffset != 0) {
                     [self setPlaneCount:upf.planeCount];
                     self.bitsPerPixel = upf.bitsPerPixel;
                     [self setScreenSize:CGSizeMake(upf.width, upf.height)];
-                    self.dataOffset = (UInt32)upf.pictureDataOffset;
+                    self.dataOffset = (UInt32)upf.imageDataOffset;
                     for (int i=0; i<256; i++) {
                         [self.palette setRgbColor:upf.palette[i] atIndex:i];
                     }
+                    if (*upf.title != 0) {
+                        self.view.window.title = [NSString stringWithCString:upf.title encoding:NSUTF8StringEncoding];
+                    } else {
+                        self.view.window.title = [[url.path lastPathComponent] stringByDeletingPathExtension];
+                        
+                    }
                 } else {
                     self.dataOffset = 0;
+                    [self setScreenSize:CGSizeMake(720, 512)];
+                    self.view.window.title = [[url.path lastPathComponent] stringByDeletingPathExtension];
+                    
                 }
 
+                
                 
                 
                 [self modifyMutableTexture];
@@ -497,8 +504,8 @@ UInt32 _palette[256] = {
     NSSavePanel *savePanel = [[NSSavePanel alloc] init];
     savePanel.title = @"GraphicX";
     savePanel.canCreateDirectories = YES;
-    savePanel.nameFieldStringValue = @"GraphicX.png";
-    
+    savePanel.nameFieldStringValue = [NSString stringWithFormat:@"%@.png", [[url.path lastPathComponent] stringByDeletingPathExtension]];
+                                    
     NSModalResponse modalResponse = [savePanel runModal];
     if (modalResponse == NSModalResponseOK) {
         url = savePanel.URL;
@@ -518,7 +525,7 @@ UInt32 _palette[256] = {
     NSSavePanel *savePanel = [[NSSavePanel alloc] init];
     savePanel.title = @"GraphicX";
     savePanel.canCreateDirectories = YES;
-    savePanel.nameFieldStringValue = @"palette.act";
+    savePanel.nameFieldStringValue = [NSString stringWithFormat:@"%@.act", [[url.path lastPathComponent] stringByDeletingPathExtension]];
     
     NSModalResponse modalResponse = [savePanel runModal];
     if (modalResponse == NSModalResponseOK) {
@@ -591,13 +598,13 @@ UInt32 _palette[256] = {
     if (_dataOffset + dataOffset < 0) {
         _dataOffset = 0;
     } else {
-        _dataOffset = dataOffset + [self bytesPerLine] * (UInt32)self.screenSize.height < self.data.length ? dataOffset : self.data.length - [self bytesPerLine] * (UInt32)self.screenSize.height;
+        _dataOffset = dataOffset + [self bytesPerLine] * (UInt32)self.screenSize.height < self.mutableData.length ? dataOffset : self.mutableData.length - [self bytesPerLine] * (UInt32)self.screenSize.height;
     }
 }
 
 
 - (void)setPaletteOffset:(NSInteger)paletteOffset {
-    _paletteOffset = paletteOffset < self.data.length ? paletteOffset : paletteOffset -self.data.length;
+    _paletteOffset = paletteOffset < self.mutableData.length ? paletteOffset : paletteOffset -self.mutableData.length;
 }
 
 // MARK:- Private Class Methods
@@ -612,7 +619,7 @@ UInt32 _palette[256] = {
 
 
 - (void)findAtariSTPaletteFromData:(const NSData *) data  {
-    UInt8 *bytes = (UInt8 *)data.bytes;
+    UInt8 *bytes = (UInt8 *)self.mutableData.bytes;
     bytes += self.paletteOffset;
     NSUInteger lengthInBytes = data.length - 32 - self.paletteOffset;
     

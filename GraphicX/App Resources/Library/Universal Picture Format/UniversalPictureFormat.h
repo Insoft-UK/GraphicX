@@ -26,6 +26,7 @@ THE SOFTWARE.
 #include "NEOchrome.h"
 
 typedef struct {
+    const char title[128];
     int planeCount;                 // Number of bit planes
     int bitsPerPixel;               // 1 Monochrome (B/W) : 2,3,4...8,9,10 (Color)
     
@@ -34,7 +35,7 @@ typedef struct {
     
     uint32_t palette[256];
     
-    unsigned long int pictureDataOffset;    // Zero :- unable to identify raw data
+    unsigned long int imageDataOffset;    // Zero :- unable to identify raw data
 } UniversalPictureFormat;
 
 /* Set up for C function definitions, even when using C++ */
