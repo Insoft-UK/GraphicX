@@ -27,8 +27,7 @@ THE SOFTWARE.
 
 typedef struct {
     int planeCount;                 // Number of bit planes
-    int bitsPerPlane;
-    int bitsPerComponent;           // 1 Monochrome (B/W) : 2,3,4...8,9,10 (Color)
+    int bitsPerPixel;               // 1 Monochrome (B/W) : 2,3,4...8,9,10 (Color)
     
     int width;
     int height;

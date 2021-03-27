@@ -293,6 +293,12 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <menu key="submenu" title="Color Depth" id="CsE-ld-Ib9">
                                                 <items>
+                                                    <menuItem title="1-Bit Monochrome" tag="1" id="NyP-80-HNe">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="colors:" target="Voe-Tx-rLC" id="ZDK-dI-6T9"/>
+                                                        </connections>
+                                                    </menuItem>
                                                     <menuItem title="2-Bit Index Color" tag="2" id="NGA-aF-GrY">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
@@ -305,8 +311,8 @@
                                                             <action selector="colors:" target="Voe-Tx-rLC" id="RHL-OQ-W5Q"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="8-Bit Index Color" tag="8" keyEquivalent="i" id="Yxa-Yb-sik">
-                                                        <modifierMask key="keyEquivalentModifierMask" option="YES"/>
+                                                    <menuItem title="8-Bit Index Color" tag="8" id="Yxa-Yb-sik">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="colors:" target="Voe-Tx-rLC" id="pg7-gh-hD1"/>
                                                         </connections>
@@ -324,9 +330,9 @@
                                                         </connections>
                                                     </menuItem>
                                                     <menuItem isSeparatorItem="YES" id="rfZ-3U-glA"/>
-                                                    <menuItem title="Alpha Channel" keyEquivalent="a" id="35E-0T-1Uf">
+                                                    <menuItem title="Alpha Channel" id="35E-0T-1Uf">
                                                         <attributedString key="attributedTitle"/>
-                                                        <modifierMask key="keyEquivalentModifierMask" option="YES"/>
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
                                                     </menuItem>
                                                 </items>
                                             </menu>
@@ -335,11 +341,6 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <menu key="submenu" title="Planes" id="8mr-sm-Yjd">
                                                 <items>
-                                                    <menuItem title="1 Plane (Monochrome)" tag="1" keyEquivalent="m" id="Nop-cj-93Q">
-                                                        <connections>
-                                                            <action selector="planeCount:" target="Voe-Tx-rLC" id="Xus-3r-gOT"/>
-                                                        </connections>
-                                                    </menuItem>
                                                     <menuItem title="2 Planes (4 Colors)" tag="2" id="BgM-ve-c93">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>

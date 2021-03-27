@@ -27,8 +27,7 @@ static void palette(const void *st_pal, uint32_t *pal);
 UniversalPictureFormat getUniversalPictureFormat(const void *rawData, long unsigned int length) {
     UniversalPictureFormat upf = {
         .planeCount = 4,
-        .bitsPerPlane = 16,
-        .bitsPerComponent = 4,
+        .bitsPerPixel = 16,
         .width = 320,
         .height = 200,
         .pictureDataOffset = 0

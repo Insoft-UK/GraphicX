@@ -26,9 +26,7 @@ THE SOFTWARE.
 
 // MARK: - Class Properties
 
-//@property (readonly) NSInteger bytesPerBitplane;
-
-@property (readonly) UInt32 bitsPerComponent;
+@property (readonly) UInt32 bitsPerPixel;       // When planeCount is equal to 1, bitsPerPixel is regarded as bitsPerPlane 8/16
 @property (readonly) UInt32 planeCount;         // Packed if value == 0, else Planar
 @property (readonly) BOOL alphaPlane;
 
@@ -47,7 +45,7 @@ THE SOFTWARE.
 
 // MARK:- Class Getter & Setters
 
-- (void)setBitsPerComponent:(UInt32)bitsPerComponent;
+- (void)setBitsPerPixel:(UInt32)bitsPerPixel;
 - (void)setPlaneCount:(UInt32)planeCount;
 - (void)setAlphaPlane:(BOOL)alphaPlane;
 

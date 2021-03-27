@@ -59,7 +59,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     @IBAction private func bitsPerPlane(_ sender: NSMenuItem) {
-        Singleton.sharedInstance()?.mainScene.setBitsPerComponent(UInt32(sender.tag))
+        Singleton.sharedInstance()?.mainScene.setBitsPerPixel(UInt32(sender.tag))
         updateAllMenus()
     }
     
@@ -67,31 +67,31 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if let scene = Singleton.sharedInstance()?.mainScene {
             switch sender.tag {
             case 0: // ZX Spectrum
-                scene.setBitsPerComponent(8)
+                scene.setBitsPerPixel(8)
                 scene.setPlaneCount(1)
                 scene.setScreenSize(CGSize(width: 256, height: 192))
                 scene.setAlphaPlane(false);
                 
             case 1: // Atari ST Low Resolution
-                scene.setBitsPerComponent(16)
+                scene.setBitsPerPixel(16)
                 scene.setPlaneCount(4)
                 scene.setScreenSize(CGSize(width: 320, height: 200))
                 scene.setAlphaPlane(false);
                 
             case 2: // Atari ST Medium Resolution
-                scene.setBitsPerComponent(16)
+                scene.setBitsPerPixel(16)
                 scene.setPlaneCount(2)
                 scene.setScreenSize(CGSize(width: 640, height: 200))
                 scene.setAlphaPlane(false);
                 
             case 3: // Atari ST High Resolution
-                scene.setBitsPerComponent(16)
+                scene.setBitsPerPixel(16)
                 scene.setPlaneCount(1)
                 scene.setScreenSize(CGSize(width: 640, height: 400))
                 scene.setAlphaPlane(false);
                 
             case 8: // ZX Spectrum Next
-                scene.setBitsPerComponent(8)
+                scene.setBitsPerPixel(8)
                 scene.setPlaneCount(0)
                 scene.setScreenSize(CGSize(width: 256, height: 192))
                 
@@ -106,7 +106,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBAction private func increaseWidth(_ sender: NSMenuItem) {
         if let scene = Singleton.sharedInstance()?.mainScene {
             var size = scene.screenSize;
-            size.width += CGFloat(scene.bitsPerComponent)
+            size.width += CGFloat(scene.bitsPerPixel)
             scene.setScreenSize(size)
         }
         updateAllMenus()
@@ -115,7 +115,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBAction private func decreaseWidth(_ sender: NSMenuItem) {
         if let scene = Singleton.sharedInstance()?.mainScene {
             var size = scene.screenSize;
-            size.width -= CGFloat(scene.bitsPerComponent)
+            size.width -= CGFloat(scene.bitsPerPixel)
             scene.setScreenSize(size)
         }
         updateAllMenus()
@@ -170,18 +170,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if let scene = Singleton.sharedInstance()?.mainScene {
             switch sender.tag {
             case 0: // Packed
-                scene.setPlaneCount(0)
-                scene.setBitsPerComponent(8)
+                scene.setPlaneCount(1)
+                scene.setBitsPerPixel(1)
                 
             case 1: // Planar
                 scene.setPlaneCount(4)
-                scene.setBitsPerComponent(16)
+                scene.setBitsPerPixel(16)
                 
                 if let menu = mainMenu.item(at: 2)?.submenu?.item(withTitle: "Planes")?.submenu {
                     if menu.item(withTag: 8)?.state == .on {
-                        scene.setBitsPerComponent(8)
+                        scene.setBitsPerPixel(8)
                     } else {
-                        scene.setBitsPerComponent(16)
+                        scene.setBitsPerPixel(16)
                     }
                 }
             default:
@@ -194,8 +194,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     @IBAction func colors(_ sender: NSMenuItem) {
         if let scene = Singleton.sharedInstance()?.mainScene {
-            scene.setPlaneCount(0)
-            scene.setBitsPerComponent(UInt32(sender.tag))
+            scene.setPlaneCount(1)
+            scene.setBitsPerPixel(UInt32(sender.tag))
             updateAllMenus()
         }
     }
@@ -228,18 +228,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             
             // Pixel Arrangement
             if let menu = mainMenu.item(at: 2)?.submenu?.item(withTitle: "Pixel Arrangement")?.submenu {
-                if scene.planeCount == 0 {
+                if scene.planeCount == 1 {
                     // Packed...
                     menu.item(withTitle: "Planar")?.state = .off
                     menu.item(withTitle: "Packed")?.state = .on
                     
                     mainMenu.item(at: 2)?.submenu?.item(withTitle: "Color Depth")?.isEnabled = true
                     if let menu = mainMenu.item(at: 2)?.submenu?.item(withTitle: "Color Depth")?.submenu {
-                        menu.item(withTag: 2)?.state = scene.bitsPerComponent == 2 ? .on : .off
-                        menu.item(withTag: 4)?.state = scene.bitsPerComponent == 4 ? .on : .off
-                        menu.item(withTag: 8)?.state = scene.bitsPerComponent == 8 ? .on : .off
-                        menu.item(withTag: 24)?.state = scene.bitsPerComponent == 24 ? .on : .off
-                        if (scene.bitsPerComponent < 4096) {
+                        menu.item(withTag: 1)?.state = scene.bitsPerPixel == 1 ? .on : .off
+                        menu.item(withTag: 2)?.state = scene.bitsPerPixel == 2 ? .on : .off
+                        menu.item(withTag: 4)?.state = scene.bitsPerPixel == 4 ? .on : .off
+                        menu.item(withTag: 8)?.state = scene.bitsPerPixel == 8 ? .on : .off
+                        menu.item(withTag: 24)?.state = scene.bitsPerPixel == 24 ? .on : .off
+                        if (scene.bitsPerPixel < 4096) {
                             menu.item(withTag: 0)?.state = .off
                         }
                     }
@@ -253,8 +254,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     mainMenu.item(at: 2)?.submenu?.item(withTitle: "Color Depth")?.isEnabled = false
                     mainMenu.item(at: 2)?.submenu?.item(withTitle: "Planes")?.isEnabled = true
                     if let menu = mainMenu.item(at: 2)?.submenu?.item(withTitle: "Planes")?.submenu {
-                        menu.item(withTag: 8)?.state = scene.bitsPerComponent == 8 ? .on : .off
-                        menu.item(withTag: 16)?.state = scene.bitsPerComponent == 16 ? .on : .off
+                        menu.item(withTag: 8)?.state = scene.bitsPerPixel == 8 ? .on : .off
+                        menu.item(withTag: 16)?.state = scene.bitsPerPixel == 16 ? .on : .off
                         for n in 1...5 {
                             menu.item(withTag: n)?.state = scene.planeCount == n ? .on : .off
                         }

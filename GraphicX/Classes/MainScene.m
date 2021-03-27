@@ -69,7 +69,7 @@ UInt32 _palette[256] = {
 // MARK: - Setup
 
 - (void)setup {
-    self.bitsPerComponent = 16;
+    self.bitsPerPixel = 16;
     self.planeCount = 4;
     self.dataOffset = 0;
     self.paletteOffset = 0;
@@ -121,7 +121,7 @@ UInt32 _palette[256] = {
 
 - (void)keyDown:(NSEvent *)theEvent {
     
-    NSInteger height = (NSInteger)self.screenSize.height;
+    UInt32 height = (UInt32)self.screenSize.height;
     
     NSUInteger flags = [theEvent modifierFlags] & NSEventModifierFlagDeviceIndependentFlagsMask;
     if( flags == NSEventModifierFlagCommand ){
@@ -131,17 +131,17 @@ UInt32 _palette[256] = {
                 break;
                 
             case 0x01: // S
-                self.dataOffset = self.data.length - [self bytesPerLine] * height;
+                self.dataOffset = (UInt32)self.data.length - [self bytesPerLine] * height;
                 break;
         }
     } else {
         switch (theEvent.keyCode) {
             case 0x02: // D
-                self.dataOffset += self.bitsPerComponent * self.planeCount / 8;
+                self.dataOffset += self.bitsPerPixel * self.planeCount / 8;
                 break;
                 
             case 0x00: // A
-                self.dataOffset -= self.bitsPerComponent * self.planeCount / 8;
+                self.dataOffset -= self.bitsPerPixel * self.planeCount / 8;
                 break;
                 
             case 0x0D: // W
@@ -273,13 +273,14 @@ UInt32 _palette[256] = {
                         *pixel++ = 0;// [self.palette getRgbColorAtIndex:0];
                     }
                     else {
-                        if (self.planeCount > 0) {
+                        if (self.planeCount > 1) {
+                            // Planer
                             
-                            if (self.bitsPerComponent == 8) {
+                            if (self.bitsPerPixel == 8) {
                                 // TODO: Alpha Plane not suported for 8-bit bitplane/s
-                                c += self.bitsPerComponent - 1;
+                                c += self.bitsPerPixel - 1;
                                 UInt8 *planes = (UInt8 *)bytes;
-                                bytes += self.bitsPerComponent / 8 * planeCount;
+                                bytes += self.bitsPerPixel / 8 * planeCount;
                                 
                                 for (int n=7; n >= 0; n--) {
                                     int i = 0;
@@ -296,20 +297,20 @@ UInt32 _palette[256] = {
                                 UInt16 *planeData = (UInt16 *)bytes;
                                 
                                 if (self.alphaPlane == YES) {
-                                    for (int n=(int)self.bitsPerComponent - 1; n >= 0; n--) {
+                                    for (int n=(int)self.bitsPerPixel - 1; n >= 0; n--) {
                                         UInt16 plane = *planeData;
 #ifdef __LITTLE_ENDIAN__
                                         plane = CFSwapInt16BigToHost(plane);
 #endif
                                         if (plane & (1 << n)) {
-                                            pixel[self.bitsPerComponent - 1 - n] = 0;
+                                            pixel[self.bitsPerPixel - 1 - n] = 0;
                                         } else {
-                                            pixel[self.bitsPerComponent - 1 - n] = 0xFF000000;
+                                            pixel[self.bitsPerPixel - 1 - n] = 0xFF000000;
                                         }
                                     }
-                                    bytes += self.bitsPerComponent / 8;
+                                    bytes += self.bitsPerPixel / 8;
                                 }
-                                for (int n=(int)self.bitsPerComponent - 1; n >= 0; n--) {
+                                for (int n=(int)self.bitsPerPixel - 1; n >= 0; n--) {
                                     int colorIndex = 0;
                                     
                                     for (int p=0; p<(int)self.planeCount; p++) {
@@ -329,32 +330,56 @@ UInt32 _palette[256] = {
                                     pixel++;
                                 }
                                 
-                                c += self.bitsPerComponent - 1;
-                                bytes += self.bitsPerComponent / 8 * self.planeCount;
+                                c += self.bitsPerPixel - 1;
+                                bytes += self.bitsPerPixel / 8 * self.planeCount;
                                 
                             }
                         } else {
-                            // TODO: Code refactoring...
-                            if (self.bitsPerComponent == 8 && self.planeCount == 0) {
-                                // Indexed Color
-                                *pixel++ = [self.palette getRgbColorAtIndex:*bytes++];
+                            // Packed
+                            
+                            switch (self.bitsPerPixel) {
+                                case 24: // 16.7 Million Colors
+                                    break;
+                                    
+                                case 8: // 8-Bit Index Color
+                                    *pixel++ = [self.palette getRgbColorAtIndex:*bytes];
+                                    bytes += 1;
+                                    break;
+                                    
+                                case 4: // 4-Bit Index Color
+                                    *pixel++ = [self.palette getRgbColorAtIndex:bytes[0] >> 4];
+                                    *pixel++ = [self.palette getRgbColorAtIndex:bytes[0] & 0b1111];
+                                    bytes += 1;
+                                    c += 1;
+                                    break;
+                                    
+                                case 2: // 2-Bit Index Color
+                                    *pixel++ = [self.palette getRgbColorAtIndex:bytes[0] >> 6];
+                                    *pixel++ = [self.palette getRgbColorAtIndex:(bytes[0] >> 4) & 0b11];
+                                    *pixel++ = [self.palette getRgbColorAtIndex:(bytes[0] >> 2) & 0b11];
+                                    *pixel++ = [self.palette getRgbColorAtIndex:bytes[0] & 0b11];
+                                    bytes += 1;
+                                    c += 3;
+                                    break;
+                                    
+                                case 1:
+                                    for (int n=0; n<8; n++) {
+                                        if (*bytes & (1 << n)) {
+                                            *pixel++ = 0xFFFFFFFF;
+                                        } else {
+                                            *pixel++ = 0xFF000000;
+                                        }
+                                    }
+                                    bytes += 1;
+                                    c += 7;
+                                    break;
+                                    
+                                default:
+                                    bytes += 1;
+                                    break;
                             }
                             
-                            if (self.bitsPerComponent == 4 && self.planeCount == 0) {
-                                // 16 Colors
-                                *pixel++ = [self.palette getRgbColorAtIndex:bytes[0] >> 4];
-                                *pixel++ = [self.palette getRgbColorAtIndex:bytes[0] & 0b1111];
-                                bytes++;
-                            }
                             
-                            if (self.bitsPerComponent == 2 && self.planeCount == 0) {
-                                // 4 Colors
-                                *pixel++ = [self.palette getRgbColorAtIndex:bytes[0] >> 6];
-                                *pixel++ = [self.palette getRgbColorAtIndex:(bytes[0] >> 4) & 0b11];
-                                *pixel++ = [self.palette getRgbColorAtIndex:(bytes[0] >> 2) & 0b11];
-                                *pixel++ = [self.palette getRgbColorAtIndex:bytes[0] & 0b11];
-                                bytes++;
-                            }
                         }
                     }
                 }
@@ -404,14 +429,13 @@ UInt32 _palette[256] = {
                 UniversalPictureFormat upf = getUniversalPictureFormat(self.data.bytes, self.data.length);
                 if (upf.pictureDataOffset != 0) {
                     [self setPlaneCount:upf.planeCount];
-                    self.bitsPerComponent = upf.bitsPerComponent;
+                    self.bitsPerPixel = upf.bitsPerPixel;
                     [self setScreenSize:CGSizeMake(upf.width, upf.height)];
-                    self.dataOffset = (NSInteger)upf.pictureDataOffset;
+                    self.dataOffset = (UInt32)upf.pictureDataOffset;
                     for (int i=0; i<256; i++) {
                         [self.palette setRgbColor:upf.palette[i] atIndex:i];
                     }
                 } else {
-                    [self setScreenSize:CGSizeMake(320, 200)];
                     self.dataOffset = 0;
                 }
                 [self modifyMutableTexture];
@@ -497,10 +521,10 @@ UInt32 _palette[256] = {
 
 // MARK:- Public Getter & Setters
 
-- (void)setBitsPerComponent:(UInt32)bitsPerComponent {
-    _bitsPerComponent = bitsPerComponent > 1 ? bitsPerComponent : 1;
-    if (self.planeCount != 0) {
-        _bitsPerComponent = _bitsPerComponent > 7 ? _bitsPerComponent & 0xF8 : 8;
+- (void)setBitsPerPixel:(UInt32)bitsPerPixel {
+    _bitsPerPixel = bitsPerPixel > 0 ? bitsPerPixel : 1;
+    if (self.planeCount > 1) {
+        _bitsPerPixel = _bitsPerPixel > 7 ? _bitsPerPixel & 0xF8 : 8;
     }
     [self modifyMutableTexture];
 }
@@ -516,11 +540,17 @@ UInt32 _palette[256] = {
 
 - (void)setScreenSize:(CGSize)size {
     _screenSize = size;
-    if (self.screenSize.width < self.bitsPerComponent) {
-        _screenSize.width = self.bitsPerComponent;
+    if (self.screenSize.width < self.bitsPerPixel) {
+        _screenSize.width = self.bitsPerPixel;
     }
     if (self.screenSize.width > self.mutableTexture.size.width) {
         _screenSize.width = self.mutableTexture.size.width;
+    }
+    if (self.screenSize.height < 8.0) {
+        _screenSize.height = 8.0;
+    }
+    if (self.screenSize.height > self.mutableTexture.size.height) {
+        _screenSize.height = self.mutableTexture.size.height;
     }
     [self modifyMutableTexture];
 }
@@ -537,7 +567,7 @@ UInt32 _palette[256] = {
     if (_dataOffset + dataOffset < 0) {
         _dataOffset = 0;
     } else {
-        _dataOffset = dataOffset + [self bytesPerLine] * (NSUInteger)self.screenSize.height < self.data.length ? dataOffset : self.data.length - [self bytesPerLine] * (NSUInteger)self.screenSize.height;
+        _dataOffset = dataOffset + [self bytesPerLine] * (UInt32)self.screenSize.height < self.data.length ? dataOffset : self.data.length - [self bytesPerLine] * (UInt32)self.screenSize.height;
     }
 }
 
@@ -548,8 +578,12 @@ UInt32 _palette[256] = {
 
 // MARK:- Private Class Methods
 
-- (NSUInteger)bytesPerLine {
-    return ( NSUInteger )self.screenSize.width / self.bitsPerComponent * ( self.bitsPerComponent / 8 * (self.alphaPlane == YES ? self.planeCount + 1 : self.planeCount) );
+- (UInt32)bytesPerLine {
+    if (self.planeCount == 1) {
+        return ( UInt32 )self.screenSize.width * ((self.bitsPerPixel + 7) & 0xF80);
+    } else {
+        return ( UInt32 )self.screenSize.width / self.bitsPerPixel * ( self.bitsPerPixel / 8 * (self.alphaPlane == YES ? self.planeCount + 1 : self.planeCount) );
+    }
 }
 
 - (void)findAtariSTPaletteFromData:(const NSData *) data  {
