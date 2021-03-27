@@ -20,39 +20,31 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#ifndef Palette_h
-#define Palette_h
-
-@interface Palette: NSObject
-
-// MARK: - Class Properties
-
-@property (readonly) NSUInteger colorCount;
-
-// MARK: - Class Instance Methods
-
--(void)loadWithContentsOfFile:( NSString* _Nonnull )file;
--(void)saveAsPhotoshopActAtPath:( NSString* _Nonnull )path;
--(UInt32)colorAtIndex:(NSUInteger)index;
-
-// MARK: - Class Methods
-
-+(UInt8)colorFrom8BitRgb:( UInt8 )rgb;
-+(UInt32)colorFrom9BitRgb:( UInt16 )rgb;
-+(UInt32)colorFrom12BitRgb:( UInt16 )rgb;
 
 
-+(BOOL)isAtariStFormat:( UInt16* _Nonnull )rgb;
-+(BOOL)isAtariSteFormat:( UInt16* _Nonnull )rgb;
+@objc class RawData : NSObject {
+    // MARK: - Private class constants
+    
+    // MARK: - Private Class variable/s
+    private var data:NSData!
 
-// MARK:- Class Getter & Setters
-
--(void)setColorCount:(NSUInteger)count;
--(void)setRgbColor:( UInt32 )rgb atIndex:(NSUInteger)index;
--(UInt32)getRgbColorAtIndex:(NSUInteger)index;
--(void)create8BitRgbPalette;
-
-@end
-
-
-#endif /* Palette_h */
+    
+    // MARK: - Class variable/s
+    @objc var offset:UInt32 = 0
+    
+    // MARK: - Init
+    override init() {
+        super.init()
+        setup()
+    }
+    
+    
+    // MARK: - Setup
+    private func setup() {
+        data = NSMutableData.init(capacity: 2^32) as NSData?; // 4M Bytes
+    }
+    
+    @objc func bytes() -> UnsafeRawPointer {
+        return data.bytes + UnsafeRawPointer.Stride(offset);
+    }
+}

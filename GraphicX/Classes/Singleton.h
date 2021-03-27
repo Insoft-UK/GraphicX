@@ -22,9 +22,12 @@ THE SOFTWARE.
 
 @class MainScene;
 
+//#import "GraphicX-Swift.h"
+
 @interface Singleton : NSObject
 
 @property MainScene *mainScene;
+@property Palette *palette;
 @property NSImageView *imageView;
 
 +(instancetype)sharedInstance;

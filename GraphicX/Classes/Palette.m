@@ -125,6 +125,15 @@ THE SOFTWARE.
 
 // MARK: - Public Class Methods
 
+// ZX Spectrum NEXT :- R2 R1 R0 G2 G1 G0 B1 B0
++(UInt8)colorFrom8BitRgb:( UInt8 )rgb {
+    UInt32 r = ( rgb & 0b11100000 ) | ( ( rgb & 0b01000000 ) >> 2 ) | ( ( rgb & 0b11100000 >> 4 ) ) | ( ( rgb & 0b01000000 ) >> 6 );
+    UInt32 g = ( ( rgb & 0b00011100 >> 1 ) ) | ( ( rgb & 0b00001000 ) >> 3 ) | ( ( rgb & 0b00011100 << 3 ) ) | ( ( rgb & 0b00001000 ) << 1 );
+    UInt32 b = ( ( rgb & 0b00000011 ) << 2 ) | ( rgb & 0b00000011 ) | ( ( rgb & 0b00000011 ) << 6 ) | ( ( rgb & 0b00000011 << 4 ) );
+    
+    return r | g << 8 | b << 16 | 0xFF000000;
+}
+
 // Atari ST  :- xx xx xx xx xx R2 R1 R0  xx G2 G1 G0 xx B2 B1 B0
 +(UInt32)colorFrom9BitRgb:( UInt16 )rgb {
     UInt32 color;
@@ -149,6 +158,8 @@ THE SOFTWARE.
     return  color | ( color >> 4 ) | 0xFF000000;
 }
 
+
+
 +(BOOL)isAtariStFormat:( UInt16* _Nonnull )rgb {
     UInt16 color;
     
@@ -161,6 +172,7 @@ THE SOFTWARE.
     }
     return ![self isAnyRepeatsInList:rgb withLength:16];
 }
+
 
 +(BOOL)isAtariSteFormat:( UInt16* _Nonnull )rgb {
     UInt16 color;
@@ -188,6 +200,14 @@ THE SOFTWARE.
 
 -(UInt32)getRgbColorAtIndex:(NSUInteger)index {
     return *( UInt32* )( self.data.bytes + ( ( index & 255 ) << 2 ) );
+}
+
+-(void)create8BitRgbPalette {
+    UInt32* pal = ( UInt32* )self.data.bytes;
+    
+    for (UInt8 rgb=0; rgb<=255; rgb++) {
+        *pal++ = [Palette colorFrom8BitRgb:rgb];
+    }
 }
 
 // MARK:- Private Class Methods

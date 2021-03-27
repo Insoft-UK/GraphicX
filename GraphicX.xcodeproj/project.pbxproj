@@ -20,6 +20,7 @@
 		1365C86D260A667100B23CC3 /* Ximage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1365C86C260A667100B23CC3 /* Ximage.swift */; };
 		1365C870260A875700B23CC3 /* Image.m in Sources */ = {isa = PBXBuildFile; fileRef = 1365C86F260A875700B23CC3 /* Image.m */; };
 		1365C875260AA74300B23CC3 /* Palette.m in Sources */ = {isa = PBXBuildFile; fileRef = 1365C874260AA74300B23CC3 /* Palette.m */; };
+		1365C8AC260F757000B23CC3 /* RawData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1365C8AB260F757000B23CC3 /* RawData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +51,7 @@
 		1365C874260AA74300B23CC3 /* Palette.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Palette.m; sourceTree = "<group>"; };
 		1365C877260AA76500B23CC3 /* Palette.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Palette.h; sourceTree = "<group>"; };
 		1365C8A4260E77C300B23CC3 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
+		1365C8AB260F757000B23CC3 /* RawData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +144,7 @@
 				1365C872260A876E00B23CC3 /* Image.h */,
 				1365C877260AA76500B23CC3 /* Palette.h */,
 				1365C874260AA74300B23CC3 /* Palette.m */,
+				1365C8AB260F757000B23CC3 /* RawData.swift */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -307,6 +310,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1365C8AC260F757000B23CC3 /* RawData.swift in Sources */,
 				1365C870260A875700B23CC3 /* Image.m in Sources */,
 				1365C79626057FA700B23CC3 /* ViewController.swift in Sources */,
 				1365C875260AA74300B23CC3 /* Palette.m in Sources */,
