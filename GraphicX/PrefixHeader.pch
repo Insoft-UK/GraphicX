@@ -41,10 +41,8 @@ THE SOFTWARE.
 /// Scenes
 #import "MainScene.h"
 
-
 /// Universal Picture Format
 #import "UniversalPictureFormat.h"
-
 
 #endif
 

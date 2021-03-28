@@ -20,6 +20,7 @@
 		1365C86D260A667100B23CC3 /* Ximage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1365C86C260A667100B23CC3 /* Ximage.swift */; };
 		1365C870260A875700B23CC3 /* Image.m in Sources */ = {isa = PBXBuildFile; fileRef = 1365C86F260A875700B23CC3 /* Image.m */; };
 		1365C875260AA74300B23CC3 /* Palette.m in Sources */ = {isa = PBXBuildFile; fileRef = 1365C874260AA74300B23CC3 /* Palette.m */; };
+		1365C8BC260FF62400B23CC3 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 1365C8BB260FF62400B23CC3 /* Credits.rtf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +52,7 @@
 		1365C877260AA76500B23CC3 /* Palette.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Palette.h; sourceTree = "<group>"; };
 		1365C8A4260E77C300B23CC3 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		1365C8B0260FB18300B23CC3 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = SOURCE_ROOT; };
+		1365C8BB260FF62400B23CC3 /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +111,7 @@
 		1365C7A526057FDF00B23CC3 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				1365C8BB260FF62400B23CC3 /* Credits.rtf */,
 				1365C79C26057FAC00B23CC3 /* Info.plist */,
 				1365C7B42605816A00B23CC3 /* PrefixHeader.pch */,
 				1365C79D26057FAC00B23CC3 /* GraphicX.entitlements */,
@@ -278,6 +281,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1365C79826057FAC00B23CC3 /* Assets.xcassets in Resources */,
+				1365C8BC260FF62400B23CC3 /* Credits.rtf in Resources */,
 				1365C79B26057FAC00B23CC3 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
