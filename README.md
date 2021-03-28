@@ -15,3 +15,5 @@ ZX Spectrum, Atari ST, Amiga etc...
   <li>Import/Export Photoshop ACT File</li>
   <li>Alpha Plane</li>
 </ul
+  
+ NOTE: When in plane mode and Alpha Plane is on, the order currently supports only Alpha + Color.
