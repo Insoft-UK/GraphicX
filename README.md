@@ -2,7 +2,7 @@
 Ripping high quality sprites from old retro uncompressed game files.
 ZX Spectrum, Atari ST, Amiga etc...
 
-<h4>Utility Features v0.5.2</h4>
+<h4>Utility Features</h4>
 <ul>
   <li>Max Size 720x512</li>
   <li>8/16-Bit Planes</li>
