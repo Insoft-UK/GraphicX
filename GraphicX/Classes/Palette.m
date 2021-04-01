@@ -35,6 +35,7 @@ THE SOFTWARE.
 @property NSUInteger upperLimit;
 @property NSInteger colorSteps;
 @property double animSpeed; // Number of 50Hz cycles :- PAL
+@property BOOL changes;
 
 @end
 
@@ -53,7 +54,14 @@ THE SOFTWARE.
 
 -(void)setup {
     self.mutableData = [NSMutableData dataWithCapacity:1024];
-    [self create8BitRgbPalette];
+    
+    for (UInt8 rgb=0; ; rgb++) {
+        [self setRgbColor:[Palette colorFrom8BitRgb:rgb] atIndex:rgb];
+        if (rgb == 255) break;
+    }
+    
+    _colorCount = 256;
+    _transparentIndex = 0xE3;
 }
 
 // MARK: - Public Instance Methods
@@ -66,9 +74,9 @@ THE SOFTWARE.
         UInt16 c = 0;
         
         if ( data.length == 772 ) {
-            _colorCount =  CFSwapInt16BigToHost(*(UInt16 *)(data.bytes + 770));
+            _colorCount =  CFSwapInt16BigToHost(*(UInt16 *)(data.bytes + 768));
             self.mutableData.length = self.colorCount * sizeof(UInt32);
-            _transparentIndex = _colorCount =  CFSwapInt16BigToHost(*(UInt16 *)(data.bytes + 772));
+            _transparentIndex =  CFSwapInt16BigToHost(*(UInt16 *)(data.bytes + 770));
         } else {
             _colorCount = 255;
             _transparentIndex = 0x3E;
@@ -79,6 +87,7 @@ THE SOFTWARE.
             byte += 3;
         }
     }
+    self.changes = YES;
 }
 
 -(void)saveAsPhotoshopActAtPath:( NSString* _Nonnull )path {
@@ -150,23 +159,16 @@ THE SOFTWARE.
     return rgb;
 }
 
--(void)create8BitRgbPalette {
-    for (UInt8 rgb=0; ; rgb++) {
-        [self setRgbColor:[Palette colorFrom8BitRgb:rgb] atIndex:rgb];
-        if (rgb == 255) break;
-    }
-    
-    _colorCount = 256;
-    _transparentIndex = 0xE3;
-}
-
 -(BOOL)updateWithDelta:(NSTimeInterval)delta {
     self.frameCount += delta * 50.0;
+    
+    BOOL changes = self.changes;
+    self.changes = NO;
     
     if (self.frameCount >= self.animSpeed) {
         self.frameCount = 0.0;
         if (self.colorSteps == 0) {
-            return NO;
+            return changes;
         }
         for (NSInteger s=0; s<labs(self.colorSteps); s++) {
             if (self.colorSteps < 0) { // Left Animation
@@ -187,7 +189,7 @@ THE SOFTWARE.
         }
         return YES;
     }
-    return NO;
+    return changes;
 }
 
 // MARK: - Public Class Methods
@@ -281,10 +283,12 @@ THE SOFTWARE.
 
 -(void)setRgbColor:( UInt32 )rgb atIndex:(NSUInteger)index {
     *( UInt32* )( self.mutableData.mutableBytes + ( ( index & 255 ) * sizeof(UInt32) ) ) = rgb | 0xFF000000;
+    self.changes = YES;
 }
 
 -(void)setColorWithRed:(UInt8)r green:(UInt8)g blue:(UInt8)b atIndex:(NSUInteger)index {
     *( UInt32* )( self.mutableData.mutableBytes + ( ( index & 255 ) * sizeof(UInt32) ) ) = (UInt32)r | ((UInt32)g << 8) | ((UInt32)b << 16) | 0xFF000000;
+    self.changes = YES;
 }
 
 -(void)setAnimationLowerLimit:(NSUInteger)lower withUpperLimitOf:(NSUInteger)upper withStep:(NSUInteger)step durationOf:(NSTimeInterval)duration {
@@ -295,7 +299,7 @@ THE SOFTWARE.
 }
 
 -(void)setColorCount:(NSUInteger)count {
-    _colorCount = count & 255;
+    _colorCount = count < 1 ? 256 : count;
 }
 
 -(void)setTransparentIndex:(NSUInteger)index {

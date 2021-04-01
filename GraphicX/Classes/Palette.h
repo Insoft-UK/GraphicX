@@ -36,7 +36,7 @@ THE SOFTWARE.
 -(void)saveAsPhotoshopActAtPath:( NSString* _Nonnull )path;
 -(UInt32)colorAtIndex:(NSUInteger)index;
 -(UInt32)rgbColorAtIndex:(NSUInteger)index;
--(void)create8BitRgbPalette __attribute__((deprecated));
+// DELETED! -(void)create8BitRgbPalette __attribute__((deprecated));
 -(BOOL)updateWithDelta:(NSTimeInterval)delta;
 
 
