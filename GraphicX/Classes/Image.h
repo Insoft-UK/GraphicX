@@ -25,12 +25,48 @@ THE SOFTWARE.
 #ifndef Image_h
 #define Image_h
 
-@interface Image: NSObject
+@interface Image: SKNode
+
+// MARK: - Class Properties
+
+@property (readonly) CGSize size;
+@property (readonly) UInt32 bitsPerPixel;       // When planeCount is equal to 1, bitsPerPixel is regarded as bitsPerPlane 8/16
+@property (readonly) UInt32 planeCount;         // Packed if value == 0, else Planar
+@property BOOL alphaPlane;
+@property (readonly) Palette *palette;
+@property (readonly) NSData* data;
+
+// MARK: - Class Init
+
+-(id)initWithSize:(CGSize)size;
+
+// MARK: - Class Instance Methods
+
+- (void)firstAtariSTPalette;
+- (void)nextAtariSTPalette;
+-(void)modifyWithContentsOfURL:(NSURL*)url;
+-(void)nextDataBlock;
+-(void)previousDataBlock;
+-(void)decreaseBySingleLine;
+-(void)increaseBySingleLine;
+-(void)decreaseByBytes:(NSUInteger)bytes;
+-(void)increaseByBytes:(NSUInteger)bytes;
+-(void)updateWithDelta:(NSTimeInterval)delta;
+-(void)home;
+-(void)end;
+-(void)saveImageAtURL:(NSURL *)url;
+
 
 // MARK: - Class Methods
 
 + (CGImageRef)createCGImage:(CGSize)size ofPixelData:(const void *)pixelData;
 + (BOOL)writeCGImage:(CGImageRef)image to:(NSURL *)destinationURL;
+
+// MARK:- Class Getter & Setters
+
+- (void)setBitsPerPixel:(UInt32)bitsPerPixel;
+- (void)setPlaneCount:(UInt32)planeCount;
+- (void)setSize:(CGSize)size;
 
 @end
 

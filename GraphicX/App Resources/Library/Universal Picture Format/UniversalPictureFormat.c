@@ -30,13 +30,32 @@ UniversalPictureFormat getUniversalPictureFormat(const void *rawData, long unsig
         .bitsPerPixel = 16,
         .width = 320,
         .height = 200,
-        .imageDataOffset = 0
+        .imageDataOffset = 0,
+        .paletteAnim = false
     }; // Pre-Defined Values
     
     if (isNEOchromeFormat(rawData, length) == true) {
         NEOchrome *neo = (NEOchrome *)rawData;
         upf.imageDataOffset = sizeof(NEOchrome);
         palette(&neo->palette, upf.palette);
+        
+        if (swapInt16BigToHost(neo->colorAniLimits) & 1<<15) { // Animated Palette ON!
+            upf.numOfColors = 16;
+            upf.paletteAnim = true;
+            upf.colorLowerLimit = (swapInt16BigToHost(neo->colorAniLimits) >> 4) & 15;
+            upf.colorUpperLimit = swapInt16BigToHost(neo->colorAniLimits) & 15;
+            upf.animSpeed = swapInt16BigToHost(neo->colorAniSpeedDir) & 255;
+            if (swapInt16BigToHost(neo->colorAniSpeedDir) & 0x80) {
+                upf.animSpeed = -upf.animSpeed;
+            }
+            upf.numOfColorSteps = swapInt16BigToHost(neo->numOfColorSteps) & 15;
+            if (swapInt16BigToHost(neo->numOfColorSteps) & 16) {
+                upf.numOfColorSteps = -upf.numOfColorSteps;
+            }
+        }
+        
+        
+        upf.lengthInBytes = 32000 + upf.imageDataOffset;
         return upf;
     }
     

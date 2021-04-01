@@ -27,7 +27,7 @@ import Cocoa
 class AppDelegate: NSObject, NSApplicationDelegate {
     
     @IBOutlet weak var mainMenu: NSMenu!
-    
+    @IBOutlet weak var window: NSWindowController!
     
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
@@ -49,52 +49,56 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         Singleton.sharedInstance()?.mainScene.zoomOut()
     }
     
-    @IBAction private func findPalette(_ sender: NSMenuItem) {
-        Singleton.sharedInstance()?.mainScene.nextPalette()
+    @IBAction private func firstPalette(_ sender: NSMenuItem) {
+        Singleton.sharedInstance()?.image.firstAtariSTPalette()
+    }
+    
+    @IBAction private func nextPalette(_ sender: NSMenuItem) {
+        Singleton.sharedInstance()?.image.nextAtariSTPalette()
     }
     
     @IBAction private func planeCount(_ sender: NSMenuItem) {
-        Singleton.sharedInstance()?.mainScene.setPlaneCount(UInt32(sender.tag))
+        Singleton.sharedInstance()?.image.setPlaneCount(UInt32(sender.tag))
         updateAllMenus()
     }
     
     @IBAction private func bitsPerPlane(_ sender: NSMenuItem) {
-        Singleton.sharedInstance()?.mainScene.setBitsPerPixel(UInt32(sender.tag))
+        Singleton.sharedInstance()?.image.setBitsPerPixel(UInt32(sender.tag))
         updateAllMenus()
     }
     
     @IBAction private func platform(_ sender: NSMenuItem) {
-        if let scene = Singleton.sharedInstance()?.mainScene {
+        if let image = Singleton.sharedInstance()?.image {
             switch sender.tag {
             case 0: // ZX Spectrum
-                scene.setBitsPerPixel(8)
-                scene.setPlaneCount(1)
-                scene.setScreenSize(CGSize(width: 256, height: 192))
-                scene.setAlphaPlane(false);
+                image.setBitsPerPixel(8)
+                image.setPlaneCount(1)
+                image.setSize(CGSize(width: 256, height: 192))
+                image.alphaPlane = false;
                 
             case 1: // Atari ST Low Resolution
-                scene.setBitsPerPixel(16)
-                scene.setPlaneCount(4)
-                scene.setScreenSize(CGSize(width: 320, height: 200))
-                scene.setAlphaPlane(false);
+                image.setBitsPerPixel(16)
+                image.setPlaneCount(4)
+                image.setSize(CGSize(width: 320, height: 200))
+                image.alphaPlane = false;
                 
             case 2: // Atari ST Medium Resolution
-                scene.setBitsPerPixel(16)
-                scene.setPlaneCount(2)
-                scene.setScreenSize(CGSize(width: 640, height: 200))
-                scene.setAlphaPlane(false);
+                image.setBitsPerPixel(16)
+                image.setPlaneCount(2)
+                image.setSize(CGSize(width: 640, height: 200))
+                image.alphaPlane = false;
                 
             case 3: // Atari ST High Resolution
-                scene.setBitsPerPixel(16)
-                scene.setPlaneCount(1)
-                scene.setScreenSize(CGSize(width: 640, height: 400))
-                scene.setAlphaPlane(false);
+                image.setBitsPerPixel(16)
+                image.setPlaneCount(1)
+                image.setSize(CGSize(width: 640, height: 400))
+                image.alphaPlane = false;
                 
             case 8: // ZX Spectrum Next
-                scene.setBitsPerPixel(8)
-                scene.setPlaneCount(0)
-                scene.setScreenSize(CGSize(width: 256, height: 192))
-                
+                image.setBitsPerPixel(8)
+                image.setPlaneCount(0)
+                image.setSize(CGSize(width: 256, height: 192))
+                Singleton.sharedInstance()?.image.palette.create8BitRgbPalette()
             default: break
                 
             }
@@ -104,43 +108,58 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     @IBAction private func increaseWidth(_ sender: NSMenuItem) {
-        if let scene = Singleton.sharedInstance()?.mainScene {
-            var size = scene.screenSize;
-            size.width += CGFloat(scene.bitsPerPixel)
-            scene.setScreenSize(size)
+        if let image = Singleton.sharedInstance()?.image {
+            var size = image.size;
+            size.width += CGFloat(image.bitsPerPixel)
+            image.setSize(size)
         }
         updateAllMenus()
     }
     
     @IBAction private func decreaseWidth(_ sender: NSMenuItem) {
-        if let scene = Singleton.sharedInstance()?.mainScene {
-            var size = scene.screenSize;
-            size.width -= CGFloat(scene.bitsPerPixel)
-            scene.setScreenSize(size)
+        if let image = Singleton.sharedInstance()?.image {
+            var size = image.size;
+            size.width -= CGFloat(image.bitsPerPixel)
+            image.setSize(size)
         }
         updateAllMenus()
     }
     
     @IBAction private func increaseHeight(_ sender: NSMenuItem) {
-        if let scene = Singleton.sharedInstance()?.mainScene {
-            var size = scene.screenSize;
+        if let image = Singleton.sharedInstance()?.image {
+            var size = image.size;
             size.height += 1.0
-            scene.setScreenSize(size)
+            image.setSize(size)
         }
         updateAllMenus()
     }
     
     @IBAction private func decreaseHeight(_ sender: NSMenuItem) {
-        if let scene = Singleton.sharedInstance()?.mainScene {
-            var size = scene.screenSize;
+        if let image = Singleton.sharedInstance()?.image {
+            var size = image.size;
             size.height -= 1.0
-            scene.setScreenSize(size)
+            image.setSize(size)
         }
         updateAllMenus()
     }
     
     @IBAction private func openDocument(_ sender: NSMenuItem) {
-        Singleton.sharedInstance()?.mainScene.openDocument()
+        let openPanel = NSOpenPanel()
+        
+        openPanel.title = "GraphicX"
+        openPanel.canChooseFiles = true
+        openPanel.canChooseDirectories = true
+        openPanel.canCreateDirectories = false
+        
+        let modalresponse = openPanel.runModal()
+        if modalresponse == .OK {
+            if let url = openPanel.url {
+                Singleton.sharedInstance()?.image.modify(withContentsOf: url)
+                NSApp.windows.first?.title = url.deletingPathExtension().lastPathComponent
+                Singleton.sharedInstance()?.mainScene.checkForKnownFormats()
+            }
+        }
+        
         updateAllMenus()
     }
     
@@ -148,8 +167,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         Singleton.sharedInstance()?.mainScene.importPalette()
     }
     
-    @IBAction private func exportAs(_ sender: NSMenuItem) {
-        Singleton.sharedInstance()?.mainScene.exportAs()
+    @IBAction private func saveAs(_ sender: NSMenuItem) {
+        let savePanel = NSSavePanel()
+        
+        savePanel.title = "GraphicX"
+        savePanel.canCreateDirectories = true
+        savePanel.nameFieldStringValue = "\(NSApp.windows.first?.title ?? "name").png"
+        
+        let modalresponse = savePanel.runModal()
+        if modalresponse == .OK {
+            if let url = savePanel.url {
+                Singleton.sharedInstance()?.image.save(at: url)
+            }
+        }
     }
     
     @IBAction private func exportPalette(_ sender: NSMenuItem) {
@@ -157,31 +187,31 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     @IBAction private func screenWidth(_ sender: NSMenuItem) {
-        Singleton.sharedInstance()?.mainScene.setScreenSize(CGSize(width: CGFloat(sender.tag), height: (Singleton.sharedInstance()?.mainScene.screenSize.height)!))
+        Singleton.sharedInstance()?.image.setSize(CGSize(width: CGFloat(sender.tag), height: (Singleton.sharedInstance()?.image.size.height)!))
         updateAllMenus()
     }
     
     @IBAction private func screenHeight(_ sender: NSMenuItem) {
-        Singleton.sharedInstance()?.mainScene.setScreenSize(CGSize(width: (Singleton.sharedInstance()?.mainScene.screenSize.width)!, height: CGFloat(sender.tag)))
+        Singleton.sharedInstance()?.image.setSize(CGSize(width: (Singleton.sharedInstance()?.image.size.width)!, height: CGFloat(sender.tag)))
         updateAllMenus()
     }
     
     @IBAction private func pixelArrangement(_ sender: NSMenuItem) {
-        if let scene = Singleton.sharedInstance()?.mainScene {
+        if let image = Singleton.sharedInstance()?.image {
             switch sender.tag {
             case 0: // Packed
-                scene.setPlaneCount(1)
-                scene.setBitsPerPixel(1)
+                image.setPlaneCount(1)
+                image.setBitsPerPixel(1)
                 
             case 1: // Planar
-                scene.setPlaneCount(4)
-                scene.setBitsPerPixel(16)
+                image.setPlaneCount(4)
+                image.setBitsPerPixel(16)
                 
                 if let menu = mainMenu.item(at: 2)?.submenu?.item(withTitle: "Planes")?.submenu {
                     if menu.item(withTag: 8)?.state == .on {
-                        scene.setBitsPerPixel(8)
+                        image.setBitsPerPixel(8)
                     } else {
-                        scene.setBitsPerPixel(16)
+                        image.setBitsPerPixel(16)
                     }
                 }
             default:
@@ -193,16 +223,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     @IBAction func colors(_ sender: NSMenuItem) {
-        if let scene = Singleton.sharedInstance()?.mainScene {
-            scene.setPlaneCount(1)
-            scene.setBitsPerPixel(UInt32(sender.tag))
+        if let image = Singleton.sharedInstance()?.image {
+            image.setPlaneCount(1)
+            image.setBitsPerPixel(UInt32(sender.tag))
             updateAllMenus()
         }
     }
     
     @IBAction func maskPlane(_ sender: NSMenuItem) {
-        if let scene = Singleton.sharedInstance()?.mainScene {
-            scene.setAlphaPlane(!scene.alphaPlane)
+        if let image = Singleton.sharedInstance()?.image {
+            image.alphaPlane = !image.alphaPlane
         }
         updateAllMenus()
     }
@@ -210,39 +240,36 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // MARK: - Private Methods
     
     private func updateAllMenus() {
-        if let scene = Singleton.sharedInstance()?.mainScene {
+        if let image = Singleton.sharedInstance()?.image {
             // Size
             if let menu = mainMenu.item(at: 2)?.submenu?.item(withTitle: "Size")?.submenu {
                 if let width = menu.item(withTitle: "Width")?.submenu {
                     for item in width.items {
-                        item.state = item.tag == Int(scene.screenSize.width) ? .on : .off
+                        item.state = item.tag == Int(image.size.width) ? .on : .off
                     }
                 }
                 
                 if let height = menu.item(withTitle: "Height")?.submenu {
                     for item in height.items {
-                        item.state = item.tag == Int(scene.screenSize.height) ? .on : .off
+                        item.state = item.tag == Int(image.size.height) ? .on : .off
                     }
                 }
             }
             
             // Pixel Arrangement
             if let menu = mainMenu.item(at: 2)?.submenu?.item(withTitle: "Pixel Arrangement")?.submenu {
-                if scene.planeCount == 1 {
+                if image.planeCount == 0 {
                     // Packed...
                     menu.item(withTitle: "Planar")?.state = .off
                     menu.item(withTitle: "Packed")?.state = .on
                     
                     mainMenu.item(at: 2)?.submenu?.item(withTitle: "Color Depth")?.isEnabled = true
                     if let menu = mainMenu.item(at: 2)?.submenu?.item(withTitle: "Color Depth")?.submenu {
-                        menu.item(withTag: 1)?.state = scene.bitsPerPixel == 1 ? .on : .off
-                        menu.item(withTag: 2)?.state = scene.bitsPerPixel == 2 ? .on : .off
-                        menu.item(withTag: 4)?.state = scene.bitsPerPixel == 4 ? .on : .off
-                        menu.item(withTag: 8)?.state = scene.bitsPerPixel == 8 ? .on : .off
-                        menu.item(withTag: 24)?.state = scene.bitsPerPixel == 24 ? .on : .off
-                        if (scene.bitsPerPixel < 4096) {
-                            menu.item(withTag: 0)?.state = .off
-                        }
+                        menu.item(withTag: 1)?.state = image.bitsPerPixel == 1 ? .on : .off
+                        menu.item(withTag: 2)?.state = image.bitsPerPixel == 2 ? .on : .off
+                        menu.item(withTag: 4)?.state = image.bitsPerPixel == 4 ? .on : .off
+                        menu.item(withTag: 8)?.state = image.bitsPerPixel == 8 ? .on : .off
+                        menu.item(withTag: 24)?.state = image.bitsPerPixel == 24 ? .on : .off
                     }
                     
                     mainMenu.item(at: 2)?.submenu?.item(withTitle: "Planes")?.isEnabled = false
@@ -254,16 +281,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     mainMenu.item(at: 2)?.submenu?.item(withTitle: "Color Depth")?.isEnabled = false
                     mainMenu.item(at: 2)?.submenu?.item(withTitle: "Planes")?.isEnabled = true
                     if let menu = mainMenu.item(at: 2)?.submenu?.item(withTitle: "Planes")?.submenu {
-                        menu.item(withTag: 8)?.state = scene.bitsPerPixel == 8 ? .on : .off
-                        menu.item(withTag: 16)?.state = scene.bitsPerPixel == 16 ? .on : .off
+                        menu.item(withTag: 8)?.state = image.bitsPerPixel == 8 ? .on : .off
+                        menu.item(withTag: 16)?.state = image.bitsPerPixel == 16 ? .on : .off
                         for n in 1...5 {
-                            menu.item(withTag: n)?.state = scene.planeCount == n ? .on : .off
+                            menu.item(withTag: n)?.state = image.planeCount == n ? .on : .off
                         }
-                        menu.item(withTitle: "Alpha Plane")?.state = scene.alphaPlane == true ? .on : .off
+                        menu.item(withTitle: "Alpha Plane")?.state = image.alphaPlane == true ? .on : .off
                     }
                 }
             }
             
         }
     }
+    
+    
+    
 }

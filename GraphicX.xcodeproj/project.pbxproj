@@ -21,6 +21,7 @@
 		1365C870260A875700B23CC3 /* Image.m in Sources */ = {isa = PBXBuildFile; fileRef = 1365C86F260A875700B23CC3 /* Image.m */; };
 		1365C875260AA74300B23CC3 /* Palette.m in Sources */ = {isa = PBXBuildFile; fileRef = 1365C874260AA74300B23CC3 /* Palette.m */; };
 		1365C8BC260FF62400B23CC3 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 1365C8BB260FF62400B23CC3 /* Credits.rtf */; };
+		1365C9622612340400B23CC3 /* endian.c in Sources */ = {isa = PBXBuildFile; fileRef = 1365C9602612340400B23CC3 /* endian.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +54,8 @@
 		1365C8A4260E77C300B23CC3 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		1365C8B0260FB18300B23CC3 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = SOURCE_ROOT; };
 		1365C8BB260FF62400B23CC3 /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
+		1365C9602612340400B23CC3 /* endian.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = endian.c; sourceTree = "<group>"; };
+		1365C9612612340400B23CC3 /* endian.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = endian.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -190,6 +193,7 @@
 				1365C858260932BB00B23CC3 /* Atari ST Picture Formats */,
 				1365C84D260929E800B23CC3 /* includes */,
 				1365C85326092CF300B23CC3 /* UniversalPictureFormat.c */,
+				1365C9602612340400B23CC3 /* endian.c */,
 				1365C85E260947CC00B23CC3 /* common.c */,
 			);
 			path = "Universal Picture Format";
@@ -199,6 +203,7 @@
 			isa = PBXGroup;
 			children = (
 				1365C85226092CF300B23CC3 /* UniversalPictureFormat.h */,
+				1365C9612612340400B23CC3 /* endian.h */,
 				1365C85C2609392700B23CC3 /* common.h */,
 			);
 			name = includes;
@@ -317,6 +322,7 @@
 				1365C79626057FA700B23CC3 /* ViewController.swift in Sources */,
 				1365C875260AA74300B23CC3 /* Palette.m in Sources */,
 				1365C78E26057FA700B23CC3 /* AppDelegate.swift in Sources */,
+				1365C9622612340400B23CC3 /* endian.c in Sources */,
 				1365C85426092CF300B23CC3 /* UniversalPictureFormat.c in Sources */,
 				1365C7CD260584AB00B23CC3 /* MainScene.m in Sources */,
 				1365C85026092A1200B23CC3 /* NEOchrome.c in Sources */,
@@ -476,7 +482,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.5.2;
+				MARKETING_VERSION = 0.6;
 				PRODUCT_BUNDLE_IDENTIFIER = uk.insoft.GraphicX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT)/Classes/GraphicX-Bridging-Header.h";
@@ -505,7 +511,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.5.2;
+				MARKETING_VERSION = 0.6;
 				PRODUCT_BUNDLE_IDENTIFIER = uk.insoft.GraphicX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT)/Classes/GraphicX-Bridging-Header.h";

@@ -26,29 +26,19 @@ THE SOFTWARE.
 
 // MARK: - Class Properties
 
-@property (readonly) UInt32 bitsPerPixel;       // When planeCount is equal to 1, bitsPerPixel is regarded as bitsPerPlane 8/16
-@property (readonly) UInt32 planeCount;         // Packed if value == 0, else Planar
-@property (readonly) BOOL alphaPlane;
 
-@property (readonly) CGSize screenSize;
 
 
 // MARK: - Class Instance Methods
 
-- (void)nextPalette;
-- (void)openDocument;
+
+-(void)checkForKnownFormats;
 - (void)importPalette;
-- (void)exportAs;
 - (void)exportPalette;
 - (void)zoomIn;
 - (void)zoomOut;
 
 // MARK:- Class Getter & Setters
 
-- (void)setBitsPerPixel:(UInt32)bitsPerPixel;
-- (void)setPlaneCount:(UInt32)planeCount;
-- (void)setAlphaPlane:(BOOL)alphaPlane;
-
-- (void)setScreenSize:(CGSize)size;
 
 @end

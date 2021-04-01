@@ -23,6 +23,4 @@ THE SOFTWARE.
 
 #include "common.h"
 
-word bswap(word val) {
-    return (val << 8) | ((val >> 8) & 0xFF);
-}
+

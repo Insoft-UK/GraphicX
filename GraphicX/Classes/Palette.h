@@ -28,30 +28,35 @@ THE SOFTWARE.
 // MARK: - Class Properties
 
 @property (readonly) NSUInteger colorCount;
+@property (readonly) NSUInteger transparentIndex;
 
 // MARK: - Class Instance Methods
 
 -(void)loadWithContentsOfFile:( NSString* _Nonnull )file;
 -(void)saveAsPhotoshopActAtPath:( NSString* _Nonnull )path;
 -(UInt32)colorAtIndex:(NSUInteger)index;
+-(UInt32)rgbColorAtIndex:(NSUInteger)index;
+-(void)create8BitRgbPalette;
+- (UInt32)findAtariSTPaletteFromData:(NSData * _Nonnull)data atOffset:(UInt32)offset;
+-(BOOL)updateWithDelta:(NSTimeInterval)delta;
+
 
 // MARK: - Class Methods
 
-+(UInt8)colorFrom8BitRgb:( UInt8 )rgb;
++(UInt32)colorFrom8BitRgb:( UInt8 )rgb;
 +(UInt32)colorFrom9BitRgb:( UInt16 )rgb;
 +(UInt32)colorFrom12BitRgb:( UInt16 )rgb;
 
 
-+(BOOL)isAtariStFormat:( UInt16* _Nonnull )rgb;
-+(BOOL)isAtariSteFormat:( UInt16* _Nonnull )rgb;
++(BOOL)isAtariStFormat:( const UInt16* _Nonnull )rgb;
++(BOOL)isAtariSteFormat:( const UInt16* _Nonnull )rgb;
 
 // MARK:- Class Getter & Setters
 
--(void)setColorCount:(NSUInteger)count;
 -(void)setRgbColor:( UInt32 )rgb atIndex:(NSUInteger)index;
--(UInt32)getRgbColorAtIndex:(NSUInteger)index;
--(void)create8BitRgbPalette;
-
+-(void)setAnimationLowerLimit:(NSUInteger)lower withUpperLimitOf:(NSUInteger)upper withStep:(NSUInteger)step durationOf:(NSTimeInterval)duration ;
+-(void)setColorCount:(NSUInteger)count;
+-(void)setTransparentIndex:(NSUInteger)index;
 @end
 
 

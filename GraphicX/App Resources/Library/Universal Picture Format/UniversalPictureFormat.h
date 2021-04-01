@@ -33,9 +33,18 @@ typedef struct {
     int width;
     int height;
     
-    uint32_t palette[256];
+    ulword palette[256];
     
-    unsigned long int imageDataOffset;    // Zero :- unable to identify raw data
+    bool paletteAnim;
+    ubyte colorLowerLimit;
+    ubyte colorUpperLimit;
+    word numOfColorSteps;
+    word animSpeed;
+    
+    byte numOfColors;
+    
+    ulword lengthInBytes;
+    ulword imageDataOffset;    // Zero :- unable to identify raw data
 } UniversalPictureFormat;
 
 /* Set up for C function definitions, even when using C++ */

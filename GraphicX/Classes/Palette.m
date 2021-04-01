@@ -26,10 +26,17 @@ THE SOFTWARE.
 
 // MARK: - Private Properties
 
-@property NSData *data;
+@property NSMutableData *mutableData;
+
+@property NSTimeInterval lastUpdateTime;
+@property NSTimeInterval frameCount;
+
+@property NSUInteger lowerLimit;
+@property NSUInteger upperLimit;
+@property NSInteger colorSteps;
+@property double animSpeed; // Number of 50Hz cycles :- PAL
 
 @end
-
 
 
 @implementation Palette
@@ -45,29 +52,26 @@ THE SOFTWARE.
 }
 
 -(void)setup {
-    self.data = ( NSData* )[NSMutableData dataWithCapacity:1024];
-    
-    if (self.data != nil) {
-        [self setColorCount:16];
-        for ( int i = 0; i < self.colorCount; i++ ) {
-            [self setRgbColor:0x111111 * i atIndex:i];
-        }
-    }
+    self.mutableData = [NSMutableData dataWithCapacity:1024];
+    [self create8BitRgbPalette];
 }
 
 // MARK: - Public Instance Methods
 
 -(void)loadWithContentsOfFile:( NSString* _Nonnull )file {
-    NSData *actData = [NSData dataWithContentsOfFile:file];
+    NSData *data = [NSData dataWithContentsOfFile:file];
 
-    if ( actData.length >= 768 ) {
-        UInt8* byte = ( UInt8* )actData.bytes;
-        int c = 0;
+    if ( data.length >= 768 ) {
+        UInt8* byte = ( UInt8* )data.bytes;
+        UInt16 c = 0;
         
-        if ( actData.length >= 771 ) {
-            [self setColorCount:( NSUInteger )byte[771]];
+        if ( data.length == 772 ) {
+            _colorCount =  CFSwapInt16BigToHost(*(UInt16 *)(data.bytes + 770));
+            self.mutableData.length = self.colorCount * sizeof(UInt32);
+            _transparentIndex = _colorCount =  CFSwapInt16BigToHost(*(UInt16 *)(data.bytes + 772));
         } else {
-            [self setColorCount:256];
+            _colorCount = 255;
+            _transparentIndex = 0x3E;
         }
         
         for (; c < self.colorCount; c++) {
@@ -86,17 +90,29 @@ THE SOFTWARE.
     fp = fopen([path UTF8String], "wb");
     
     if ( fp != nil ) {
-        NSData* actData = ( NSData* )[NSMutableData dataWithLength:772];
-        if (actData != nil) {
-            if (actData.length == 772) {
-                UInt8* byte = ( UInt8* )actData.bytes;
-                int c = 0;
+        NSMutableData* act = [NSMutableData dataWithCapacity:772];
+        if (act != nil) {
+            act.length = 772;
+                UInt8* byte = ( UInt8* )act.mutableBytes;
+                UInt16 c = 0;
                 
                 for (; c < self.colorCount; c++) {
-                    UInt32 rgb = [self getRgbColorAtIndex:c];
-                    *byte++ = rgb & 0xFF;
-                    *byte++ = ( rgb & 0xFF00 ) >> 8;
-                    *byte++ = ( rgb & 0xFF0000 ) >> 16;
+            
+                    UInt32 rgb = [self rgbColorAtIndex:c];
+#ifdef __LITTLE_ENDIAN__
+                    rgb = CFSwapInt32HostToBig(rgb); // / ABGR -> RGBA
+#endif
+
+                    // RGBA
+                    byte[0] = rgb >> 24;
+                    byte[1] = ( rgb >> 16 ) & 255;
+                    byte[2] = ( rgb >> 8 ) & 255;
+                    
+#ifdef DEBUG
+                    NSLog(@"R:0x%02X, G:0x%02X, B:0x%02X", byte[0], byte[1], byte[2]);
+#endif
+                    
+                    byte += 3;
                 }
                 
                 // Zero... out any unused palette entries.
@@ -106,13 +122,17 @@ THE SOFTWARE.
                     *byte++ = 0;
                 }
                 
-                byte[0] = ( UInt8 )self.colorCount;
-                byte[2] = 0xff;
-                byte[3] = 0xff;
+                fwrite(act.bytes, sizeof(char), 768, fp);
                 
-                fwrite(actData.bytes, sizeof(char), 772, fp);
+                c = CFSwapInt16HostToBig(self.colorCount);
+                fwrite(&c, sizeof(UInt16), 1, fp);
+                
+                c = CFSwapInt16HostToBig(self.transparentIndex);
+                fwrite(&c, sizeof(UInt16), 1, fp);
+                
+                
                 //[fileHandler writeData:actData];
-            }
+            
         }
         //[fileHandler closeFile];
         fclose(fp);
@@ -120,18 +140,116 @@ THE SOFTWARE.
 }
 
 -(UInt32)colorAtIndex:(NSUInteger)index {
-    return *( UInt32* )( self.data.bytes + ( ( index & 255 ) << 2 ) );
+    return *( UInt32* )( self.mutableData.bytes + ( ( index & 255 ) << 2 ) );
+}
+
+-(UInt32)rgbColorAtIndex:(NSUInteger)index {
+    UInt32 *pal = self.mutableData.mutableBytes;
+    UInt32 rgb = pal[index & 255];
+    
+    return rgb;
+}
+
+-(void)create8BitRgbPalette {
+    for (UInt8 rgb=0; ; rgb++) {
+        [self setRgbColor:[Palette colorFrom8BitRgb:rgb] atIndex:rgb];
+        if (rgb == 255) break;
+    }
+    
+    _colorCount = 256;
+    _transparentIndex = 0xE3;
+}
+
+- (UInt32)findAtariSTPaletteFromData:(NSData * _Nonnull)data atOffset:(UInt32)offset {
+    
+    const UInt8 *bytes = (const UInt8 *)data.bytes + offset;
+    NSUInteger offsetLimit = data.length - sizeof(UInt16) * 16;
+
+    while (offset <= offsetLimit) {
+        const UInt16* pal = ( const UInt16* )bytes;
+        
+        if ([Palette isAtariSteFormat:( const UInt16* )bytes] == YES) {
+            for (int i=0; i<16; i++) {
+                [self setRgbColor:[Palette colorFrom12BitRgb:pal[i]] atIndex:i];
+            }
+            _colorCount = 16;
+            _transparentIndex = 0;
+            return offset;
+        } else if ([Palette isAtariStFormat:( const UInt16* )bytes] == YES) {
+            for (int i=0; i<16; i++) {
+                [self setRgbColor:[Palette colorFrom9BitRgb:pal[i]] atIndex:i];
+            }
+            _colorCount = 16;
+            _transparentIndex = 0;
+            return offset;
+        }
+        offset++;
+        bytes++;
+    }
+    
+    return -1;
+}
+
+-(BOOL)updateWithDelta:(NSTimeInterval)delta {
+    self.frameCount += delta * 50.0;
+    
+    if (self.frameCount >= self.animSpeed) {
+        self.frameCount = 0.0;
+        if (self.colorSteps == 0) {
+            return NO;
+        }
+        for (NSInteger s=0; s<labs(self.colorSteps); s++) {
+            if (self.colorSteps < 0) { // Left Animation
+                UInt32 tmpColor = [self rgbColorAtIndex:self.lowerLimit];
+                for (NSUInteger i=self.lowerLimit; i<self.upperLimit; i++) {
+                    [self setRgbColor:[self rgbColorAtIndex:i + 1] atIndex:i];
+                }
+                [self setRgbColor:tmpColor atIndex:self.upperLimit];
+            }
+            
+            if (self.colorSteps > 0) { // Right Animation
+                UInt32 tmpColor = [self rgbColorAtIndex:self.upperLimit];
+                for (NSUInteger i=self.upperLimit; i>self.lowerLimit; i--) {
+                    [self setRgbColor:[self rgbColorAtIndex:i - 1] atIndex:i];
+                }
+                [self setRgbColor:tmpColor atIndex:self.lowerLimit];
+            }
+        }
+        return YES;
+    }
+    return NO;
 }
 
 // MARK: - Public Class Methods
 
 // ZX Spectrum NEXT :- R2 R1 R0 G2 G1 G0 B1 B0
-+(UInt8)colorFrom8BitRgb:( UInt8 )rgb {
-    UInt32 r = ( rgb & 0b11100000 ) | ( ( rgb & 0b01000000 ) >> 2 ) | ( ( rgb & 0b11100000 >> 4 ) ) | ( ( rgb & 0b01000000 ) >> 6 );
-    UInt32 g = ( ( rgb & 0b00011100 >> 1 ) ) | ( ( rgb & 0b00001000 ) >> 3 ) | ( ( rgb & 0b00011100 << 3 ) ) | ( ( rgb & 0b00001000 ) << 1 );
-    UInt32 b = ( ( rgb & 0b00000011 ) << 2 ) | ( rgb & 0b00000011 ) | ( ( rgb & 0b00000011 ) << 6 ) | ( ( rgb & 0b00000011 << 4 ) );
++(UInt32)colorFrom8BitRgb:( UInt8 )rgb {
+    /*
+     3 bits in red and green channels give us 8 values.
+     When scaled to the 0–255 range we get:
+     */
+    UInt32 tbl[] = {0, 36, 72, 109, 145, 182, 218, 255};
+
+    UInt32 r = (rgb & 0b11100000) >> 5;
+    UInt32 g = (rgb & 0b00011100) >> 2;
     
-    return r | g << 8 | b << 16 | 0xFF000000;
+    /*
+     2 bits in the blue channel only give us 4 values: 0 85 170 255
+     If we know that we can make shades of grey by using the same value
+     in all three RGB channels, it quickly becomes obvious that the
+     asymmetric distribution of R3/G3 vs B2 makes it impossible to
+     generate ANY shades of perfect grey at all on the Next in the new modes.
+
+     We can find values that are close to each other, and in that case
+     we see that blue will be the limiting channel. So let's just choose
+     4 values we'll use for R/G that match the ones in B:
+     
+     So we simply convert 2 bits in the blue channel to 3 bits.
+     */
+    UInt32 b = (rgb & 0b00000011) << 1;
+    if (rgb & 0b00000010) b |= 0b00000001;
+    
+    return tbl[r] | tbl[g] << 8 | tbl[b] << 16 | 0xFF000000;
 }
 
 // Atari ST  :- xx xx xx xx xx R2 R1 R0  xx G2 G1 G0 xx B2 B1 B0
@@ -160,7 +278,7 @@ THE SOFTWARE.
 
 
 
-+(BOOL)isAtariStFormat:( UInt16* _Nonnull )rgb {
++(BOOL)isAtariStFormat:( const UInt16* _Nonnull )rgb {
     UInt16 color;
     
     for ( int i=0; i < 16; i++) {
@@ -174,7 +292,7 @@ THE SOFTWARE.
 }
 
 
-+(BOOL)isAtariSteFormat:( UInt16* _Nonnull )rgb {
++(BOOL)isAtariSteFormat:( const UInt16* _Nonnull )rgb {
     UInt16 color;
 
     for ( int i=0; i < 16; i++) {
@@ -190,29 +308,30 @@ THE SOFTWARE.
 
 // MARK:- Public Getter & Setters
 
--(void)setColorCount:( NSUInteger )count {
-    _colorCount = (count <= 256) ? count : 256;
-}
 
 -(void)setRgbColor:( UInt32 )rgb atIndex:(NSUInteger)index {
-    *( UInt32* )( self.data.bytes + ( ( index & 255 ) << 2 ) ) = rgb | 0xFF000000;
+    *( UInt32* )( self.mutableData.mutableBytes + ( ( index & 255 ) * sizeof(UInt32) ) ) = rgb | 0xFF000000;
 }
 
--(UInt32)getRgbColorAtIndex:(NSUInteger)index {
-    return *( UInt32* )( self.data.bytes + ( ( index & 255 ) << 2 ) );
+
+-(void)setAnimationLowerLimit:(NSUInteger)lower withUpperLimitOf:(NSUInteger)upper withStep:(NSUInteger)step durationOf:(NSTimeInterval)duration {
+    self.lowerLimit = lower;
+    self.upperLimit = upper;
+    self.colorSteps = step;
+    self.animSpeed = duration;
 }
 
--(void)create8BitRgbPalette {
-    UInt32* pal = ( UInt32* )self.data.bytes;
-    
-    for (UInt8 rgb=0; rgb<=255; rgb++) {
-        *pal++ = [Palette colorFrom8BitRgb:rgb];
-    }
+-(void)setColorCount:(NSUInteger)count {
+    _colorCount = count & 255;
+}
+
+-(void)setTransparentIndex:(NSUInteger)index {
+    _transparentIndex = index & 255;
 }
 
 // MARK:- Private Class Methods
 
-+(BOOL)isAnyRepeatsInList:( UInt16* )list withLength:( NSUInteger )length {
++(BOOL)isAnyRepeatsInList:( const UInt16* )list withLength:( NSUInteger )length {
     for (NSUInteger i = 0; i < length; i++) {
         for (NSUInteger j = 0; j < length; j++) {
             if (i != j) {

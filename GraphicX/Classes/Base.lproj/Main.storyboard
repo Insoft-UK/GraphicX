@@ -60,7 +60,7 @@
                                         <menuItem isSeparatorItem="YES" id="m54-Is-iLE"/>
                                         <menuItem title="Save As..." keyEquivalent="S" id="Bw7-FT-i3A">
                                             <connections>
-                                                <action selector="exportAs:" target="Voe-Tx-rLC" id="Ldf-kP-byT"/>
+                                                <action selector="saveAs:" target="Voe-Tx-rLC" id="N7r-2p-Ffn"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="r2n-hg-vvp"/>
@@ -418,9 +418,15 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <menu key="submenu" title="Find" id="1b7-l0-nxx">
                                                 <items>
-                                                    <menuItem title="Atari ST/E Palette" tag="1" keyEquivalent="p" id="Xz5-n4-O0W">
+                                                    <menuItem title="First Atari ST Palette" keyEquivalent="p" id="2w5-0G-XUh">
                                                         <connections>
-                                                            <action selector="findPalette:" target="Voe-Tx-rLC" id="jPp-il-mpm"/>
+                                                            <action selector="firstPalette:" target="Voe-Tx-rLC" id="NIc-LP-UG2"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="Next Atari ST Palette" keyEquivalent="p" id="jop-BY-s7Q">
+                                                        <modifierMask key="keyEquivalentModifierMask" option="YES"/>
+                                                        <connections>
+                                                            <action selector="nextPalette:" target="Voe-Tx-rLC" id="m6a-f6-PXa"/>
                                                         </connections>
                                                     </menuItem>
                                                 </items>
@@ -484,10 +490,25 @@
                         <outlet property="mainMenu" destination="AYu-sK-qS6" id="Scj-AI-iLn"/>
                     </connections>
                 </customObject>
+                <toolbar implicitIdentifier="09D11707-F4A3-4FD5-970E-AC5832E91C2B" autosavesConfiguration="NO" displayMode="iconAndLabel" sizeMode="regular" id="XmR-JU-ePu">
+                    <allowedToolbarItems>
+                        <toolbarItem implicitItemIdentifier="NSToolbarShowColorsItem" id="bEb-mU-A6G"/>
+                        <toolbarItem implicitItemIdentifier="NSToolbarShowFontsItem" id="fh7-Iy-uXu"/>
+                        <toolbarItem implicitItemIdentifier="NSToolbarPrintItem" id="79n-cb-Sdi"/>
+                        <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="cTa-6Y-mhs"/>
+                        <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="ewO-EH-TfR"/>
+                    </allowedToolbarItems>
+                    <defaultToolbarItems>
+                        <toolbarItem reference="bEb-mU-A6G"/>
+                        <toolbarItem reference="fh7-Iy-uXu"/>
+                        <toolbarItem reference="ewO-EH-TfR"/>
+                        <toolbarItem reference="79n-cb-Sdi"/>
+                    </defaultToolbarItems>
+                </toolbar>
                 <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-39" y="-281"/>
+            <point key="canvasLocation" x="-11" y="-458"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
@@ -509,7 +530,7 @@
                 </windowController>
                 <customObject id="Oky-zY-oP4" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="83" y="114"/>
+            <point key="canvasLocation" x="53" y="130"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="hIz-AP-VOD">

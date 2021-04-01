@@ -26,6 +26,7 @@ THE SOFTWARE.
 #include <stdio.h>
 #include <stdbool.h>
 
+#include "endian.h"
 
 typedef int8_t byte;
 typedef int16_t word;
@@ -39,8 +40,6 @@ typedef uint32_t ulword;
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-    word bswap(word val);
 
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus
