@@ -160,36 +160,6 @@ THE SOFTWARE.
     _transparentIndex = 0xE3;
 }
 
-- (UInt32)findAtariSTPaletteFromData:(NSData * _Nonnull)data atOffset:(UInt32)offset {
-    
-    const UInt8 *bytes = (const UInt8 *)data.bytes + offset;
-    NSUInteger offsetLimit = data.length - sizeof(UInt16) * 16;
-
-    while (offset <= offsetLimit) {
-        const UInt16* pal = ( const UInt16* )bytes;
-        
-        if ([Palette isAtariSteFormat:( const UInt16* )bytes] == YES) {
-            for (int i=0; i<16; i++) {
-                [self setRgbColor:[Palette colorFrom12BitRgb:pal[i]] atIndex:i];
-            }
-            _colorCount = 16;
-            _transparentIndex = 0;
-            return offset;
-        } else if ([Palette isAtariStFormat:( const UInt16* )bytes] == YES) {
-            for (int i=0; i<16; i++) {
-                [self setRgbColor:[Palette colorFrom9BitRgb:pal[i]] atIndex:i];
-            }
-            _colorCount = 16;
-            _transparentIndex = 0;
-            return offset;
-        }
-        offset++;
-        bytes++;
-    }
-    
-    return -1;
-}
-
 -(BOOL)updateWithDelta:(NSTimeInterval)delta {
     self.frameCount += delta * 50.0;
     
@@ -313,6 +283,9 @@ THE SOFTWARE.
     *( UInt32* )( self.mutableData.mutableBytes + ( ( index & 255 ) * sizeof(UInt32) ) ) = rgb | 0xFF000000;
 }
 
+-(void)setColorWithRed:(UInt8)r green:(UInt8)g blue:(UInt8)b atIndex:(NSUInteger)index {
+    *( UInt32* )( self.mutableData.mutableBytes + ( ( index & 255 ) * sizeof(UInt32) ) ) = (UInt32)r | ((UInt32)g << 8) | ((UInt32)b << 16) | 0xFF000000;
+}
 
 -(void)setAnimationLowerLimit:(NSUInteger)lower withUpperLimitOf:(NSUInteger)upper withStep:(NSUInteger)step durationOf:(NSTimeInterval)duration {
     self.lowerLimit = lower;

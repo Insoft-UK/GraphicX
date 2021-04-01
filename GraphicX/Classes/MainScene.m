@@ -21,13 +21,8 @@ THE SOFTWARE.
 */
 
 #import "MainScene.h"
-
 #import "GraphicX-Swift.h"
-
-
-
 #import <Cocoa/Cocoa.h>
-
 
 @interface MainScene()
 
@@ -56,15 +51,16 @@ THE SOFTWARE.
 // MARK: - Setup
 
 - (void)setup {
-    self.size = CGSizeMake(720, 512);
+    CGSize size = NSApp.windows.firstObject.frame.size;
+    self.size = CGSizeMake(size.width, size.height - 28);
     
-    self.image = [[Image alloc] initWithSize:CGSizeMake(720, 576)];
+    self.image = [[Image alloc] initWithSize:self.size];
     self.image.position = CGPointMake(self.size.width / 2, self.size.height / 2);
     [self addChild:self.image];
     
     self.info = [SKLabelNode labelNodeWithText:@"info..."];
     self.info.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeRight;
-    self.info.position = CGPointMake(self.frame.size.width - 32, 8);
+    self.info.position = CGPointMake(self.size.width - 8, 8);
     self.info.fontSize = 10;
     self.info.fontName = @"Arial Bold";
     [self addChild:self.info];
@@ -167,10 +163,6 @@ THE SOFTWARE.
         }
         
     }
-    
-    
-    
-    
 }
 
 // MARK: - Mouse Events
@@ -198,11 +190,7 @@ THE SOFTWARE.
 }
 
 
-
-
-
 // MARK: - Class Public Methods
-
 
 -(void)checkForKnownFormats {
     UniversalPictureFormat upf = getUniversalPictureFormat(self.image.data.bytes, self.image.data.length);
@@ -223,55 +211,6 @@ THE SOFTWARE.
 }
 
 
-- (void)importPalette {
-    NSURL *url;
-    
-    NSOpenPanel *openPanel = [[NSOpenPanel alloc] init];
-    openPanel.title = @"GraphicX";
-    openPanel.canChooseFiles = YES;
-    openPanel.canChooseDirectories = YES;
-    openPanel.canCreateDirectories = NO;
-    
-    NSModalResponse modalResponse = [openPanel runModal];
-    if (modalResponse == NSModalResponseOK) {
-        url = openPanel.URL;
-        if (url != nil) {
-            [self.image.palette loadWithContentsOfFile:url.path];
-        }
-    }
-}
-
-
-
-- (void)exportPalette {
-    NSURL *url;
-    
-    NSSavePanel *savePanel = [[NSSavePanel alloc] init];
-    savePanel.title = @"GraphicX";
-    savePanel.canCreateDirectories = YES;
-    savePanel.nameFieldStringValue = [NSString stringWithFormat:@"%@.act", [self.view.window.title stringByDeletingPathExtension]];
-    
-    NSModalResponse modalResponse = [savePanel runModal];
-    if (modalResponse == NSModalResponseOK) {
-        url = savePanel.URL;
-        if (url != nil) {
-            [self.image.palette saveAsPhotoshopActAtPath:url.path];
-        }
-    }
-}
-
-- (void)zoomIn {
-    if (self.image.xScale < 8.0) {
-        [self.image setScale:self.image.xScale + 1.0];
-    }
-}
-- (void)zoomOut {
-    if (self.image.xScale > 1.0) {
-        [self.image setScale:self.image.xScale - 1.0];
-    }
-}
-
-
 // MARK:- Public Getter & Setters
 
 
@@ -279,9 +218,6 @@ THE SOFTWARE.
 
 
 // MARK:- Private Class Methods
-
-
-
 
 
 @end

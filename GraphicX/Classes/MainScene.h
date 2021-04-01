@@ -26,17 +26,9 @@ THE SOFTWARE.
 
 // MARK: - Class Properties
 
-
-
-
 // MARK: - Class Instance Methods
 
-
 -(void)checkForKnownFormats;
-- (void)importPalette;
-- (void)exportPalette;
-- (void)zoomIn;
-- (void)zoomOut;
 
 // MARK:- Class Getter & Setters
 

@@ -77,6 +77,7 @@ THE SOFTWARE.
         }];
         
         node = [SKSpriteNode spriteNodeWithTexture:(SKTexture*)texture size:size];
+        node.texture.filteringMode = SKTextureFilteringNearest;
         [self addChild:node];
         
         _palette = [[Palette alloc] init];
@@ -85,6 +86,7 @@ THE SOFTWARE.
     if (self.mutableTexture) {
         node = [SKSpriteNode spriteNodeWithTexture:(SKTexture*)self.mutableTexture size:size];
         node.yScale = -1;
+        node.texture.filteringMode = SKTextureFilteringNearest;
         [self addChild:node];
     }
     
@@ -123,6 +125,8 @@ THE SOFTWARE.
         self.paletteOffset++;
         bytes++;
     }
+    
+    self.changes = YES;
 }
 
 -(void)modifyWithContentsOfURL:(NSURL*)url {
@@ -192,7 +196,7 @@ THE SOFTWARE.
         
         for (NSUInteger r = (l - h) / 2; r < l - (l - h) / 2; ++r) {
             for (NSUInteger c = (s - w) / 2; c < s - (s - w) / 2; ++c) {
-                if (self.planeCount > 0) {
+                if ([self isPlaner] == YES) {
                     // Planer
                     if (self.bitsPerPixel == 8) {
                         UInt8 *planeData = (UInt8 *)bytes;
@@ -402,14 +406,16 @@ THE SOFTWARE.
 
 // MARK:- Private Class Methods
 
+-(BOOL)isPlaner {
+    return self.planeCount > 1 ? YES : NO;
+}
+
+-(BOOL)isPacked {
+    return self.planeCount <= 1 ? YES : NO;
+}
+
 -(NSInteger)bytesPerLine {
-    if (self.planeCount == 0) {
-        // Packed
-        return ( NSInteger )self.size.width * ((self.bitsPerPixel + 7) & 0xF80);
-    } else {
-        // Planer
-        return ( NSInteger )self.size.width / self.bitsPerPixel * ( self.bitsPerPixel / 8 * (self.alphaPlane == YES ? self.planeCount + 1 : self.planeCount) );
-    }
+    return ( NSInteger )(self.size.width * (CGFloat)self.bitsPerPixel / 8.0 / (CGFloat)self.planeCount);
 }
 
 -(void)adjustDataOffsetBy:(NSInteger)amount {

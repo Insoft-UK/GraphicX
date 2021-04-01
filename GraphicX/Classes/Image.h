@@ -30,8 +30,8 @@ THE SOFTWARE.
 // MARK: - Class Properties
 
 @property (readonly) CGSize size;
-@property (readonly) UInt32 bitsPerPixel;       // When planeCount is equal to 1, bitsPerPixel is regarded as bitsPerPlane 8/16
-@property (readonly) UInt32 planeCount;         // Packed if value == 0, else Planar
+@property (readonly) UInt32 bitsPerPixel;       // When planeCount is greater than 1, bitsPerPixel is regarded as bitsPerPlane 8/16
+@property (readonly) UInt32 planeCount;         // Packed if value == 1, else Planar
 @property BOOL alphaPlane;
 @property (readonly) Palette *palette;
 @property (readonly) NSData* data;

@@ -36,8 +36,7 @@ THE SOFTWARE.
 -(void)saveAsPhotoshopActAtPath:( NSString* _Nonnull )path;
 -(UInt32)colorAtIndex:(NSUInteger)index;
 -(UInt32)rgbColorAtIndex:(NSUInteger)index;
--(void)create8BitRgbPalette;
-- (UInt32)findAtariSTPaletteFromData:(NSData * _Nonnull)data atOffset:(UInt32)offset;
+-(void)create8BitRgbPalette __attribute__((deprecated));
 -(BOOL)updateWithDelta:(NSTimeInterval)delta;
 
 
@@ -54,6 +53,7 @@ THE SOFTWARE.
 // MARK:- Class Getter & Setters
 
 -(void)setRgbColor:( UInt32 )rgb atIndex:(NSUInteger)index;
+-(void)setColorWithRed:(UInt8)r green:(UInt8)g blue:(UInt8)b atIndex:(NSUInteger)index;
 -(void)setAnimationLowerLimit:(NSUInteger)lower withUpperLimitOf:(NSUInteger)upper withStep:(NSUInteger)step durationOf:(NSTimeInterval)duration ;
 -(void)setColorCount:(NSUInteger)count;
 -(void)setTransparentIndex:(NSUInteger)index;
