@@ -12,6 +12,7 @@ ZX Spectrum, Atari ST, Amiga etc...
   <li>16.7 Million Colors (v0.6)</li>
   <li>Export PNG File</li>
   <li>Import/Export Photoshop ACT File</li>
+  <li>Import ZX Spectrum NEXT NPL File</li>
   <li>Alpha Plane</li>
 </ul
   
