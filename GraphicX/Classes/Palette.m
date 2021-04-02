@@ -69,7 +69,7 @@ THE SOFTWARE.
 -(void)loadWithContentsOfFile:( NSString* _Nonnull )file {
     NSData *data = [NSData dataWithContentsOfFile:file];
 
-    if ( data.length >= 768 ) {
+    if ( data.length >= 768 ) { // ACT
         UInt8* byte = ( UInt8* )data.bytes;
         UInt16 c = 0;
         
@@ -78,13 +78,37 @@ THE SOFTWARE.
             self.mutableData.length = self.colorCount * sizeof(UInt32);
             _transparentIndex =  CFSwapInt16BigToHost(*(UInt16 *)(data.bytes + 770));
         } else {
-            _colorCount = 255;
-            _transparentIndex = 0x3E;
+            _colorCount = 256;
+            _transparentIndex = 0xFFFF;
         }
         
         for (; c < self.colorCount; c++) {
             [self setRgbColor:( ( UInt32 )byte[2] << 16 ) | ( ( UInt32 )byte[1] << 8 ) | ( UInt32 )byte[0] atIndex:c];
             byte += 3;
+        }
+    } else if ( data.length <= 512 ) { // NPL
+        UInt8* byte = ( UInt8* )data.bytes;
+        UInt16 c = 0;
+        
+        _colorCount = data.length / 2;
+        _transparentIndex = 227;
+        
+        for (; c < self.colorCount; c++) { // R2 R1 R0 G2 G1 G0 B2 B1  x x x x x x x B0
+#ifdef DEBUG
+                    NSLog(@"RGB:0x%04X", CFSwapInt16LittleToHost(*(UInt16*)byte));
+#endif
+            UInt8 r = (byte[0] >> 4) & 0b1110;
+            if (r & 0b0100) r |= 1;
+            r |= (r << 4);
+            UInt8 g = (byte[0] >> 1) & 0b1110;
+            if (g & 0b0100) g |= 1;
+            g |= (g << 4);
+            UInt8 b = ((byte[0] << 1) | byte[1]) & 0b1110;
+            if (b & 0b0100) b |= 1;
+            b |= (b << 4);
+            
+            [self setColorWithRed:r green:g blue:b atIndex:c];
+            byte += 2;
         }
     }
     self.changes = YES;

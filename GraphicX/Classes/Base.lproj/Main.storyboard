@@ -88,6 +88,12 @@
                                                             <action selector="importPalette:" target="Voe-Tx-rLC" id="NgW-bL-sXs"/>
                                                         </connections>
                                                     </menuItem>
+                                                    <menuItem title="ZX Spectrum NEXT Palette File" tag="1" id="3TZ-EU-8k7">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="importPalette:" target="Voe-Tx-rLC" id="aJd-MI-tXs"/>
+                                                        </connections>
+                                                    </menuItem>
                                                 </items>
                                             </menu>
                                         </menuItem>

@@ -120,6 +120,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if let palette = Singleton.sharedInstance()?.image.palette {
             if let filePath = Bundle.main.path(forResource: sender.title, ofType: "act") {
                 palette.load(withContentsOfFile: filePath)
+                return
+            }
+            if let filePath = Bundle.main.path(forResource: sender.title, ofType: "npl") {
+                palette.load(withContentsOfFile: filePath)
+                return
             }
         }
     }
