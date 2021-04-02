@@ -7,6 +7,7 @@ ZX Spectrum, Atari ST, Amiga etc...
   <li>Max Size 800x600</li>
   <li>8/16-Bit Planes</li>
   <li>Max Planes 5 + Alpha Plane</li>
+  <li>Bitmap</li>
   <li>4-Bit Index Color</li>
   <li>8-Bit Index Color</li>
   <li>16.7 Million Colors</li>
