@@ -43,12 +43,14 @@ THE SOFTWARE.
 // MARK: - Class Methods
 
 +(UInt32)colorFrom8BitRgb:( UInt8 )rgb;
++(UInt32)colorFrom9BitNextRgb:( UInt16 )rgb;
 +(UInt32)colorFrom9BitRgb:( UInt16 )rgb;
 +(UInt32)colorFrom12BitRgb:( UInt16 )rgb;
 
 
 +(BOOL)isAtariStFormat:( const UInt16* _Nonnull )rgb;
 +(BOOL)isAtariSteFormat:( const UInt16* _Nonnull )rgb;
++(BOOL)isNextFormat:( const UInt16* _Nonnull )rgb;
 
 // MARK:- Class Getter & Setters
 

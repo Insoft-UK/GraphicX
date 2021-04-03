@@ -64,6 +64,7 @@ THE SOFTWARE.
     self.info.fontSize = 10;
     self.info.fontName = @"Arial Bold";
     [self addChild:self.info];
+    
 
 }
 
@@ -92,21 +93,23 @@ THE SOFTWARE.
     if( flags == NSEventModifierFlagCommand ){
         switch (theEvent.keyCode) {
             case 0x0D: // W
-                [self.image home];
+                //[self.image home];
+                [self.image setDataOffsetTo:0];
                 break;
                 
             case 0x01: // S
-                [self.image end];
+                //[self.image end];
+                [self.image setDataOffsetTo:self.image.data.length];
                 break;
         }
     } else {
         switch (theEvent.keyCode) {
             case 0x02: // D
-                [self.image increaseByBytes:self.image.bitsPerPixel * self.image.planeCount / 8];
+                [self.image setDataOffsetBy:self.image.bitsPerPixel * self.image.planeCount / 8];
                 break;
                 
             case 0x00: // A
-                [self.image decreaseByBytes:self.image.bitsPerPixel * self.image.planeCount / 8];
+                [self.image setDataOffsetBy:-(self.image.bitsPerPixel * self.image.planeCount / 8)];
                 break;
                 
             case 0x0D: // W
@@ -139,11 +142,11 @@ THE SOFTWARE.
                 break;
                 
             case 0x7b /* CURSOR LEFT */:
-                [self.image decreaseByBytes:1];
+                [self.image setDataOffsetBy:-1];
                 break;
                 
             case 0x7c /* CURSOR RIGHT */:
-                [self.image increaseByBytes:1];
+                [self.image setDataOffsetBy:1];
                 break;
                 
             case 0x7d /* CURSOR DOWN */:

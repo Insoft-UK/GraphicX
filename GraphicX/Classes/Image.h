@@ -32,7 +32,7 @@ THE SOFTWARE.
 @property (readonly) CGSize size;
 @property (readonly) UInt32 bitsPerPixel;       // When planeCount is greater than 1, bitsPerPixel is regarded as bitsPerPlane 8/16
 @property (readonly) UInt32 planeCount;         // Packed if value == 1, else Planar
-@property BOOL alphaPlane;
+@property (nonatomic) BOOL alphaPlane;
 @property (readonly) Palette *palette;
 @property (readonly) NSData* data;
 
@@ -49,11 +49,13 @@ THE SOFTWARE.
 -(void)previousDataBlock;
 -(void)decreaseBySingleLine;
 -(void)increaseBySingleLine;
--(void)decreaseByBytes:(NSUInteger)bytes;
--(void)increaseByBytes:(NSUInteger)bytes;
+-(void)decreaseByBytes:(NSUInteger)bytes __attribute__((deprecated("Use setDataOffsetBy instead.")));
+-(void)increaseByBytes:(NSUInteger)bytes __attribute__((deprecated("Use setDataOffsetBy instead.")));
+-(void)setDataOffsetBy:(NSInteger)amount;
+-(void)setDataOffsetTo:(NSInteger)amount;
 -(void)updateWithDelta:(NSTimeInterval)delta;
--(void)home;
--(void)end;
+-(void)home __attribute__((deprecated("Use setDataOffsetTo instead.")));
+-(void)end __attribute__((deprecated("Use setDataOffsetTo instead.")));
 -(void)saveImageAtURL:(NSURL *)url;
 
 
@@ -66,6 +68,7 @@ THE SOFTWARE.
 
 - (void)setBitsPerPixel:(UInt32)bitsPerPixel;
 - (void)setPlaneCount:(UInt32)planeCount;
+- (void)setAlphaPlane:(BOOL)state;
 - (void)setSize:(CGSize)size;
 
 @end

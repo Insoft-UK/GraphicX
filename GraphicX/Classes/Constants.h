@@ -27,13 +27,6 @@ THE SOFTWARE.
 
 #define UInt8(n) ((UInt8)n)
 
-
-static UInt32 bloodRed = 0xb42222;
-
-@interface Colors: NSObject
-+(NSColor*)colorFromRgb:(UInt32)rgb;
-@end
-
 // MARK: - Debug
 static const BOOL kDebug = NO;
 

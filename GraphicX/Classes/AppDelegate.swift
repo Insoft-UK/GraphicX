@@ -81,14 +81,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             switch sender.tag {
             case 0: // ZX Spectrum
                 image.setSize(CGSize(width: 256, height: 192))
-                image.setBitsPerPixel(8)
+                image.setBitsPerPixel(1)
                 image.setPlaneCount(1)
                 image.alphaPlane = false
                 
             case 8:
                 image.setSize(CGSize(width: 256, height: 192))
                 image.setBitsPerPixel(8)
-                image.setPlaneCount(0)
+                image.setPlaneCount(1)
                 image.alphaPlane = false
                 
             case 1: // Atari ST Low Resolution
@@ -103,9 +103,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 image.setPlaneCount(2)
                 image.alphaPlane = false
                 
-            case 3: // Atari ST Heigh Resolution
+            case 3: // Atari ST High Resolution
                 image.setSize(CGSize(width: 640, height: 400))
-                image.setBitsPerPixel(16)
+                image.setBitsPerPixel(1)
                 image.setPlaneCount(1)
                 image.alphaPlane = false
                 

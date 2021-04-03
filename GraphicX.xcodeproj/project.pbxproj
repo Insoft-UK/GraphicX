@@ -11,7 +11,6 @@
 		1365C79626057FA700B23CC3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1365C79526057FA700B23CC3 /* ViewController.swift */; };
 		1365C79826057FAC00B23CC3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1365C79726057FAC00B23CC3 /* Assets.xcassets */; };
 		1365C79B26057FAC00B23CC3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1365C79926057FAC00B23CC3 /* Main.storyboard */; };
-		1365C7B22605812B00B23CC3 /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 1365C7B12605812B00B23CC3 /* Constants.m */; };
 		1365C7B72605818800B23CC3 /* Singleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 1365C7B62605818800B23CC3 /* Singleton.m */; };
 		1365C7CD260584AB00B23CC3 /* MainScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 1365C7CC260584AB00B23CC3 /* MainScene.m */; };
 		1365C85026092A1200B23CC3 /* NEOchrome.c in Sources */ = {isa = PBXBuildFile; fileRef = 1365C84F26092A1200B23CC3 /* NEOchrome.c */; };
@@ -30,6 +29,7 @@
 		1365C97A2616654700B23CC3 /* Black Body.act in Resources */ = {isa = PBXBuildFile; fileRef = 1365C9792616654600B23CC3 /* Black Body.act */; };
 		1365C97D2616655100B23CC3 /* Grayscale.act in Resources */ = {isa = PBXBuildFile; fileRef = 1365C97C2616655100B23CC3 /* Grayscale.act */; };
 		1365C9802616655E00B23CC3 /* Spectrum.act in Resources */ = {isa = PBXBuildFile; fileRef = 1365C97F2616655E00B23CC3 /* Spectrum.act */; };
+		1365C9A2261760A400B23CC3 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1365C9A1261760A400B23CC3 /* Colors.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,7 +42,6 @@
 		1365C79D26057FAC00B23CC3 /* GraphicX.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GraphicX.entitlements; sourceTree = "<group>"; };
 		1365C7AF2605812A00B23CC3 /* GraphicX-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GraphicX-Bridging-Header.h"; sourceTree = "<group>"; };
 		1365C7B02605812B00B23CC3 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
-		1365C7B12605812B00B23CC3 /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
 		1365C7B42605816A00B23CC3 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		1365C7B52605818800B23CC3 /* Singleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Singleton.h; sourceTree = "<group>"; };
 		1365C7B62605818800B23CC3 /* Singleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Singleton.m; sourceTree = "<group>"; };
@@ -72,6 +71,7 @@
 		1365C9792616654600B23CC3 /* Black Body.act */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Black Body.act"; sourceTree = "<group>"; };
 		1365C97C2616655100B23CC3 /* Grayscale.act */ = {isa = PBXFileReference; lastKnownFileType = file; path = Grayscale.act; sourceTree = "<group>"; };
 		1365C97F2616655E00B23CC3 /* Spectrum.act */ = {isa = PBXFileReference; lastKnownFileType = file; path = Spectrum.act; sourceTree = "<group>"; };
+		1365C9A1261760A400B23CC3 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,12 +160,12 @@
 			isa = PBXGroup;
 			children = (
 				1365C7B02605812B00B23CC3 /* Constants.h */,
-				1365C7B12605812B00B23CC3 /* Constants.m */,
 				1365C86C260A667100B23CC3 /* Ximage.swift */,
 				1365C86F260A875700B23CC3 /* Image.m */,
 				1365C872260A876E00B23CC3 /* Image.h */,
 				1365C877260AA76500B23CC3 /* Palette.h */,
 				1365C874260AA74300B23CC3 /* Palette.m */,
+				1365C9A1261760A400B23CC3 /* Colors.swift */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -366,8 +366,8 @@
 				1365C85426092CF300B23CC3 /* UniversalPictureFormat.c in Sources */,
 				1365C7CD260584AB00B23CC3 /* MainScene.m in Sources */,
 				1365C85026092A1200B23CC3 /* NEOchrome.c in Sources */,
+				1365C9A2261760A400B23CC3 /* Colors.swift in Sources */,
 				1365C85F260947CC00B23CC3 /* common.c in Sources */,
-				1365C7B22605812B00B23CC3 /* Constants.m in Sources */,
 				1365C7B72605818800B23CC3 /* Singleton.m in Sources */,
 				1365C86D260A667100B23CC3 /* Ximage.swift in Sources */,
 			);

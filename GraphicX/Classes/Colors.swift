@@ -20,16 +20,34 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#import "Constants.h"
 
-@implementation Colors
+import SpriteKit
 
-+(NSColor*)colorFromRgb:(UInt32)rgb {
-    return [NSColor colorWithRed:(CGFloat)((rgb & 0xFF0000) >> 16) / 255.0
-                           green:(CGFloat)((rgb & 0x00FF00) >> 8) / 255.0
-                            blue:(CGFloat)(rgb & 0x0000FF) / 255.0
-                           alpha:1.0];
+@objc class Colors : NSObject {
+    
+    class var red:Int         { return 0xb42222 }
+    
+    class func colorFrom(rgb: Int) -> SKColor {
+        return SKColor(red: CGFloat((rgb & 0xFF0000) >> 16) / 255.0,
+                       green: CGFloat((rgb & 0x00FF00) >> 8) / 255.0,
+                       blue: CGFloat(rgb & 0x0000FF) / 255.0,
+                       alpha: 1.0)
+    }
+    
+    class func rgbFrom(color: SKColor) -> Int {
+        return Colors.rgbaFrom(color: color) >> 8
+    }
+    
+    class func rgbaFrom(color: SKColor) -> Int {
+        return
+            ( Int(color.redComponent * 255.0) << 24 ) |
+            ( Int(color.greenComponent * 255.0) << 16 ) |
+            ( Int(color.redComponent * 255.0) << 8 ) | 255
+    }
+    
+    class func colorFrom8Bit(rgb: Int8) -> SKColor {
+        return SKColor(red: CGFloat(red >> 5) / 7.0 * 255.0, green: CGFloat(rgb & 0b11100) / 28 * 255.0, blue: CGFloat(rgb & 0b11) / 3 * 255.0, alpha: 1.0)
+    }
+    
+    
 }
-@end
-
-

@@ -55,7 +55,7 @@ THE SOFTWARE.
 - (void)setupWithSize:(CGSize)size {
     self.mutableTexture = [[SKMutableTexture alloc] initWithSize:size];
     self.mutableData = [[NSMutableData alloc] initWithCapacity:(NSUInteger)2^32];
-    self.mutableData.length = 256 * 256 * sizeof(UInt32);
+    self.mutableData.length = self.size.width * self.size.height * sizeof(UInt32);
     
     _data = (NSData*)self.mutableData;
     
@@ -138,35 +138,56 @@ THE SOFTWARE.
 }
 
 -(void)nextDataBlock {
-    [self adjustDataOffsetBy:[self bytesPerLine] * (NSInteger)self.size.height];
+    [self setDataOffsetBy:[self bytesPerLine] * (NSInteger)self.size.height];
 }
 
 -(void)previousDataBlock {
-    [self adjustDataOffsetBy:-[self bytesPerLine] * (NSInteger)self.size.height];
+    [self setDataOffsetBy:-[self bytesPerLine] * (NSInteger)self.size.height];
 }
 
 -(void)decreaseBySingleLine {
-    [self adjustDataOffsetBy:-[self bytesPerLine]];
+    [self setDataOffsetBy:-[self bytesPerLine]];
 }
 
 -(void)increaseBySingleLine {
-    [self adjustDataOffsetBy:[self bytesPerLine]];
+    [self setDataOffsetBy:[self bytesPerLine]];
 }
 
 -(void)decreaseByBytes:(NSUInteger)bytes {
-    [self adjustDataOffsetBy:-(NSInteger)bytes];
+    [self setDataOffsetBy:-(NSInteger)bytes];
 }
 
 -(void)increaseByBytes:(NSUInteger)bytes {
-    [self adjustDataOffsetBy:(NSInteger)bytes];
+    [self setDataOffsetBy:(NSInteger)bytes];
+}
+
+-(void)setDataOffsetBy:(NSInteger)amount {
+    self.offset += amount;
+    
+    if (self.offset < 0) {
+        self.offset = 0;
+        return;
+    }
+    
+    if (self.offset > self.mutableData.length - (NSInteger)self.size.height * [self bytesPerLine]) {
+        self.offset = (NSInteger)(self.mutableData.length - (NSInteger)self.size.height * [self bytesPerLine]);
+    }
+    
+    self.changes = YES;
+}
+
+-(void)setDataOffsetTo:(NSInteger)amount {
+    [self setDataOffsetBy:amount - self.offset];
 }
 
 -(void)home {
     self.offset = 0;
+    self.changes = YES;
 }
 
 -(void)end {
     self.offset = self.offset = (NSInteger)(self.mutableData.length - (NSInteger)self.size.height * [self bytesPerLine]);
+    self.changes = YES;
 }
 
 -(void)saveImageAtURL:(NSURL *)url {
@@ -279,6 +300,9 @@ THE SOFTWARE.
                             
                         case 8: // 8 Bits Indexed Color...
                             pixel[r * s + c] = [self.palette rgbColorAtIndex:bytes[0]];
+                            if (self.palette.transparentIndex == bytes[0] && self.alphaPlane == YES) {
+                                pixel[r * s + c] = 0;
+                            }
                             bytes += 1;
                             break;
                             
@@ -380,12 +404,25 @@ THE SOFTWARE.
     self.changes = YES;
 }
 
+- (void)setAlphaPlane:(BOOL)state {
+    _alphaPlane = state;
+    self.changes = YES;
+}
+
 - (void)setSize:(CGSize)size {
+    NSInteger bytesPerLine = ( NSInteger )(size.width * (CGFloat)self.bitsPerPixel / 8.0 / (CGFloat)self.planeCount);
+    if (bytesPerLine * (NSInteger)size.height > self.mutableData.length) {
+        size.width = 16;
+        size.height = 16;
+    }
+    
     if (size.width < self.size.width || size.height < self.size.height) {
+        // When size is reduced then image pixel data must be zeroed out!
         [self.mutableTexture modifyPixelDataWithBlock:^(void *pixelData, size_t lengthInBytes) {
             memset(pixelData, 0, lengthInBytes);
         }];
     }
+    
     _size = size;
     
     if (self.size.width < self.bitsPerPixel) {
@@ -418,20 +455,7 @@ THE SOFTWARE.
     return ( NSInteger )(self.size.width * (CGFloat)self.bitsPerPixel / 8.0 / (CGFloat)self.planeCount);
 }
 
--(void)adjustDataOffsetBy:(NSInteger)amount {
-    self.offset += amount;
-    
-    if (self.offset < 0) {
-        self.offset = 0;
-        return;
-    }
-    
-    if (self.offset > self.mutableData.length - (NSInteger)self.size.height * [self bytesPerLine]) {
-        self.offset = (NSInteger)(self.mutableData.length - (NSInteger)self.size.height * [self bytesPerLine]);
-    }
-    
-    self.changes = YES;
-}
+
 
 @end
 

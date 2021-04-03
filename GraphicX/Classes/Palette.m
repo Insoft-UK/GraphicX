@@ -91,23 +91,16 @@ THE SOFTWARE.
         UInt16 c = 0;
         
         _colorCount = data.length / 2;
-        _transparentIndex = 227;
+        _transparentIndex = 227; // Default
         
-        for (; c < self.colorCount; c++) { // R2 R1 R0 G2 G1 G0 B2 B1  x x x x x x x B0
-#ifdef DEBUG
-                    NSLog(@"RGB:0x%04X", CFSwapInt16LittleToHost(*(UInt16*)byte));
-#endif
-            UInt8 r = (byte[0] >> 4) & 0b1110;
-            if (r & 0b0100) r |= 1;
-            r |= (r << 4);
-            UInt8 g = (byte[0] >> 1) & 0b1110;
-            if (g & 0b0100) g |= 1;
-            g |= (g << 4);
-            UInt8 b = ((byte[0] << 1) | byte[1]) & 0b1110;
-            if (b & 0b0100) b |= 1;
-            b |= (b << 4);
+        for (; c < self.colorCount; c++) { // R2 R1 R0 G2 G1 G0 B2 B1  xx xx xx xx xx xx xx B0 (le)
+            UInt32 color = [Palette colorFrom9BitNextRgb:*(UInt16*)byte];
             
-            [self setColorWithRed:r green:g blue:b atIndex:c];
+            [self setRgbColor:color atIndex:c];
+            if (color == 0xFFFF00FF) {
+                _transparentIndex = c;
+            }
+            
             byte += 2;
         }
     }
@@ -248,7 +241,24 @@ THE SOFTWARE.
     return tbl[r] | tbl[g] << 8 | tbl[b] << 16 | 0xFF000000;
 }
 
-// Atari ST  :- xx xx xx xx xx R2 R1 R0  xx G2 G1 G0 xx B2 B1 B0
+// ZX Spectrum NEXT :- R2 R1 R0 G2 G1 G0 B2 B1  xx xx xx xx xx xx xx B0 (le)
++(UInt32)colorFrom9BitNextRgb:( UInt16 )rgb {
+    /*
+     3 bits in red green and blue channels give us 8 values.
+     When scaled to the 0–255 range we get:
+     */
+    UInt32 tbl[] = {0, 36, 72, 109, 145, 182, 218, 255};
+#ifdef __BIG_ENDIAN__
+    rgb = CFSwapInt16LittleToHost(rgb);
+#endif
+    UInt32 r = (rgb & 0b11100000) >> 5;
+    UInt32 g = (rgb & 0b00011100) >> 2;
+    UInt32 b = ((rgb & 0b00000011) << 1) | (rgb >> 8);
+    
+    return tbl[r] | tbl[g] << 8 | tbl[b] << 16 | 0xFF000000;
+}
+
+// Atari ST  :- xx xx xx xx xx R2 R1 R0  xx G2 G1 G0 xx B2 B1 B0 (be)
 +(UInt32)colorFrom9BitRgb:( UInt16 )rgb {
     UInt32 color;
 #ifdef __LITTLE_ENDIAN__
@@ -302,6 +312,17 @@ THE SOFTWARE.
     return ![self isAnyRepeatsInList:rgb withLength:16];
 }
 
++(BOOL)isNextFormat:( const UInt16* _Nonnull )rgb {
+    UInt16 color;
+
+    for ( int i=0; i < 16; i++) {
+        color = rgb[i];
+        if ( color & 0b1111111000000000 ) return NO;
+    }
+    
+    return ![self isAnyRepeatsInList:rgb withLength:16];
+}
+
 // MARK:- Public Getter & Setters
 
 
@@ -312,6 +333,9 @@ THE SOFTWARE.
 
 -(void)setColorWithRed:(UInt8)r green:(UInt8)g blue:(UInt8)b atIndex:(NSUInteger)index {
     *( UInt32* )( self.mutableData.mutableBytes + ( ( index & 255 ) * sizeof(UInt32) ) ) = (UInt32)r | ((UInt32)g << 8) | ((UInt32)b << 16) | 0xFF000000;
+    if (index == _transparentIndex) {
+        *( UInt32* )( self.mutableData.mutableBytes + ( ( index & 255 ) * sizeof(UInt32) ) ) &= 0x00FFFFFF;
+    }
     self.changes = YES;
 }
 
