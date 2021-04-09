@@ -34,7 +34,7 @@ THE SOFTWARE.
 @property NSUInteger lowerLimit;
 @property NSUInteger upperLimit;
 @property NSInteger colorSteps;
-@property double animSpeed; // Number of 50Hz cycles :- PAL
+@property NSTimeInterval cycleSpeed; // Number of 50Hz cycles :- PAL
 @property BOOL changes;
 
 @end
@@ -182,13 +182,14 @@ THE SOFTWARE.
     BOOL changes = self.changes;
     self.changes = NO;
     
-    if (self.frameCount >= self.animSpeed) {
+    if (self.frameCount >= fabs(self.cycleSpeed)) {
         self.frameCount = 0.0;
         if (self.colorSteps == 0) {
             return changes;
         }
-        for (NSInteger s=0; s<labs(self.colorSteps); s++) {
-            if (self.colorSteps < 0) { // Left Animation
+        for (NSInteger s=0; s<self.colorSteps; s++) {
+            /*
+            if (self.cycleSpeed > 0.0) {
                 UInt32 tmpColor = [self rgbColorAtIndex:self.lowerLimit];
                 for (NSUInteger i=self.lowerLimit; i<self.upperLimit; i++) {
                     [self setRgbColor:[self rgbColorAtIndex:i + 1] atIndex:i];
@@ -196,13 +197,22 @@ THE SOFTWARE.
                 [self setRgbColor:tmpColor atIndex:self.upperLimit];
             }
             
-            if (self.colorSteps > 0) { // Right Animation
+            if (self.cycleSpeed < 0.0) {
                 UInt32 tmpColor = [self rgbColorAtIndex:self.upperLimit];
                 for (NSUInteger i=self.upperLimit; i>self.lowerLimit; i--) {
                     [self setRgbColor:[self rgbColorAtIndex:i - 1] atIndex:i];
                 }
                 [self setRgbColor:tmpColor atIndex:self.lowerLimit];
             }
+             */
+            NSInteger d = self.cycleSpeed >  0.0 ? 1 : -1;
+            NSInteger i = d == 1 ? self.lowerLimit : self.upperLimit;
+            NSInteger j = d == 1 ? self.upperLimit : self.lowerLimit;
+            UInt32 t = [self rgbColorAtIndex:i];
+            for (; i!=j; i+=d) {
+                [self setRgbColor:[self rgbColorAtIndex:i + d] atIndex:i];
+            }
+            [self setRgbColor:t atIndex:j];
         }
         return YES;
     }
@@ -339,11 +349,11 @@ THE SOFTWARE.
     self.changes = YES;
 }
 
--(void)setAnimationLowerLimit:(NSUInteger)lower withUpperLimitOf:(NSUInteger)upper withStep:(NSUInteger)step durationOf:(NSTimeInterval)duration {
-    self.lowerLimit = lower;
-    self.upperLimit = upper;
-    self.colorSteps = step;
-    self.animSpeed = duration;
+-(void)setColorAnimationWith:(NSUInteger)leftLimit rightLimit:(NSUInteger)right withStep:(NSInteger)steps cycleSpeed:(NSTimeInterval)speed {
+    self.lowerLimit = leftLimit;
+    self.upperLimit = right;
+    self.colorSteps = steps;
+    self.cycleSpeed = speed;
 }
 
 -(void)setColorCount:(NSUInteger)count {

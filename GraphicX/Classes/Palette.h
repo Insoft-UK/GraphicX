@@ -56,7 +56,7 @@ THE SOFTWARE.
 
 -(void)setRgbColor:( UInt32 )rgb atIndex:(NSUInteger)index;
 -(void)setColorWithRed:(UInt8)r green:(UInt8)g blue:(UInt8)b atIndex:(NSUInteger)index;
--(void)setAnimationLowerLimit:(NSUInteger)lower withUpperLimitOf:(NSUInteger)upper withStep:(NSUInteger)step durationOf:(NSTimeInterval)duration ;
+-(void)setColorAnimationWith:(NSUInteger)leftLimit rightLimit:(NSUInteger)right withStep:(NSInteger)steps cycleSpeed:(NSTimeInterval)speed ;
 -(void)setColorCount:(NSUInteger)count;
 -(void)setTransparentIndex:(NSUInteger)index;
 @end

@@ -24,17 +24,11 @@ THE SOFTWARE.
 #define common_h
 
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include <stdbool.h>
 
 #include "endian.h"
-
-typedef int8_t byte;
-typedef int16_t word;
-typedef int32_t lword;
-
-typedef uint8_t ubyte;
-typedef uint16_t uword;
-typedef uint32_t ulword;
 
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus

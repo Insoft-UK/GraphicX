@@ -20,31 +20,36 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#ifndef PrefixHeader_pch
-#define PrefixHeader_pch
+#ifndef Degas_h
+#define Degas_h
 
-#ifdef __OBJC__
-#import <Foundation/Foundation.h>
-#if !TARGET_OS_OSX
-#import <UIKit/UIKit.h>
-#endif
-#import <SpriteKit/SpriteKit.h>
+#include "common.h"
 
-/// Utilities
-#import "Constants.h"
-#import "Palette.h"
-#import "Image.h"
+#pragma pack(1)     /* set alignment to 1 byte boundary */
 
-/// Singletons
-#import "Singleton.h"
+typedef struct {
+    int16_t resolution;     /*
+                             resolution [0 = low res, 1 = medium res, 2 = high res]
+                             Other bits may be used in the future; use a simple bit
+                             test rather than checking for specific word values.
+                             */
+    
+    int16_t palette[16];
+} Degas;
 
-/// Scenes
-#import "MainScene.h"
+#pragma pack()   /* restore original alignment from stack */
 
-/// Picture Formats
-#import "NEOchrome.h"
-#import "Degas.h"
 
+/* Set up for C function definitions, even when using C++ */
+#ifdef __cplusplus
+extern "C" {
 #endif
 
-#endif /* PrefixHeader_pch */
+    bool isDegasFormat(const void *rawData, long unsigned int length);
+
+/* Ends C function definitions when using C++ */
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* Degas_h */

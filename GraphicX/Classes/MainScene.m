@@ -196,20 +196,70 @@ THE SOFTWARE.
 // MARK: - Class Public Methods
 
 -(void)checkForKnownFormats {
-    UniversalPictureFormat upf = getUniversalPictureFormat(self.image.data.bytes, self.image.data.length);
-    if (upf.imageDataOffset != 0) {
-        [self.image setPlaneCount:upf.planeCount];
-        [self.image setBitsPerPixel:upf.bitsPerPixel];
-        [self.image setSize:CGSizeMake(upf.width, upf.height)];
-        [self.image increaseByBytes:upf.imageDataOffset];
-        [self.image.palette setAnimationLowerLimit:upf.colorLowerLimit withUpperLimitOf:upf.colorUpperLimit withStep:upf.numOfColorSteps durationOf:upf.animSpeed];
-        for (int i=0; i<256; i++) {
-            [self.image.palette setRgbColor:upf.palette[i] atIndex:i];
+    
+    if (isNEOchromeFormat(self.image.data.bytes, self.image.data.length) == true) {
+        NEOchrome *neo = (NEOchrome *)self.image.data.bytes;
+        
+        // Palette
+        for (NSInteger i=0; i<256; i++) {
+            UInt32 color = [Palette colorFrom12BitRgb:neo->palette[i]];
+            [self.image.palette setRgbColor:color atIndex:i];
         }
-        [self.image.palette setColorCount:upf.numOfColors];
-        if (*upf.title != 0) {
-            self.view.window.title = [NSString stringWithCString:upf.title encoding:NSUTF8StringEncoding];
+        [self.image.palette setColorCount:16];
+        [self.image.palette setTransparentIndex:256];
+        
+        if (CFSwapInt16BigToHost(neo->colorAniLimits) & 0x8000) { /// Palette Animation!
+            [self.image.palette setColorAnimationWith:(CFSwapInt16BigToHost(neo->colorAniLimits) >> 4) & 0xF
+                                           rightLimit:CFSwapInt16BigToHost(neo->colorAniLimits) & 0xF
+                                             withStep:CFSwapInt16BigToHost(neo->colorAniSpeedDir) & 0xFF
+                                           cycleSpeed:(NSTimeInterval)(CFSwapInt16BigToHost(neo->colorAniSpeedDir) & 0xFF)];
         }
+        
+        // Image
+        [self.image setPlaneCount:4];
+        [self.image setBitsPerPixel:16];
+        [self.image setSize:CGSizeMake(320, 200)];
+        [self.image setDataOffsetTo:sizeof(NEOchrome)];
+        return;
+    }
+    
+    if (isDegasFormat(self.image.data.bytes, self.image.data.length) == true) {
+        Degas *degas = (Degas *)self.image.data.bytes;
+        
+        // Palette
+        for (NSInteger i=0; i<256; i++) {
+            UInt32 color = [Palette colorFrom12BitRgb:degas->palette[i]];
+            [self.image.palette setRgbColor:color atIndex:i];
+        }
+        [self.image.palette setColorCount:16];
+        [self.image.palette setTransparentIndex:256];
+        
+        // Image
+        switch (CFSwapInt16BigToHost(degas->resolution) & 3) {
+            case 0:
+                [self.image setPlaneCount:4];
+                [self.image setBitsPerPixel:16];
+                [self.image setSize:CGSizeMake(320, 200)];
+                break;
+                
+            case 1:
+                [self.image setPlaneCount:2];
+                [self.image setBitsPerPixel:16];
+                [self.image setSize:CGSizeMake(640, 200)];
+                break;
+                
+            case 2:
+                [self.image setPlaneCount:1];
+                [self.image setBitsPerPixel:1];
+                [self.image setSize:CGSizeMake(640, 400)];
+                break;
+                
+            default:
+                break;
+        }
+        
+        [self.image setDataOffsetTo:sizeof(Degas)];
+        return;
     }
 }
 

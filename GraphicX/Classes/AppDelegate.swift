@@ -176,8 +176,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let modalresponse = openPanel.runModal()
         if modalresponse == .OK {
             if let url = openPanel.url {
+            
+                //let plugin = url.pathExtension.lowercased()
+                //print(("./\(Bundle.main.resourcePath!)\(plugin) "+url.path).runAsCommand())
                 Singleton.sharedInstance()?.image.modify(withContentsOf: url)
-                NSApp.windows.first?.title = url.deletingPathExtension().lastPathComponent
+                NSApp.windows.first?.title = url.lastPathComponent
                 Singleton.sharedInstance()?.mainScene.checkForKnownFormats()
             }
         }

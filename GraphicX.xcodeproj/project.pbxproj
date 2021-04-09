@@ -14,7 +14,6 @@
 		1365C7B72605818800B23CC3 /* Singleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 1365C7B62605818800B23CC3 /* Singleton.m */; };
 		1365C7CD260584AB00B23CC3 /* MainScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 1365C7CC260584AB00B23CC3 /* MainScene.m */; };
 		1365C85026092A1200B23CC3 /* NEOchrome.c in Sources */ = {isa = PBXBuildFile; fileRef = 1365C84F26092A1200B23CC3 /* NEOchrome.c */; };
-		1365C85426092CF300B23CC3 /* UniversalPictureFormat.c in Sources */ = {isa = PBXBuildFile; fileRef = 1365C85326092CF300B23CC3 /* UniversalPictureFormat.c */; };
 		1365C85F260947CC00B23CC3 /* common.c in Sources */ = {isa = PBXBuildFile; fileRef = 1365C85E260947CC00B23CC3 /* common.c */; };
 		1365C86D260A667100B23CC3 /* Ximage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1365C86C260A667100B23CC3 /* Ximage.swift */; };
 		1365C870260A875700B23CC3 /* Image.m in Sources */ = {isa = PBXBuildFile; fileRef = 1365C86F260A875700B23CC3 /* Image.m */; };
@@ -30,6 +29,9 @@
 		1365C97D2616655100B23CC3 /* Grayscale.act in Resources */ = {isa = PBXBuildFile; fileRef = 1365C97C2616655100B23CC3 /* Grayscale.act */; };
 		1365C9802616655E00B23CC3 /* Spectrum.act in Resources */ = {isa = PBXBuildFile; fileRef = 1365C97F2616655E00B23CC3 /* Spectrum.act */; };
 		1365C9A2261760A400B23CC3 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1365C9A1261760A400B23CC3 /* Colors.swift */; };
+		1365C9A8261939BB00B23CC3 /* Degas.c in Sources */ = {isa = PBXBuildFile; fileRef = 1365C9A7261939BB00B23CC3 /* Degas.c */; };
+		1365C9B4261A321700B23CC3 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1365C9B3261A321700B23CC3 /* String.swift */; };
+		1365C9B8261A372F00B23CC3 /* Plug-Ins in Resources */ = {isa = PBXBuildFile; fileRef = 1365C9B7261A372F00B23CC3 /* Plug-Ins */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,8 +51,6 @@
 		1365C7CC260584AB00B23CC3 /* MainScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainScene.m; sourceTree = "<group>"; };
 		1365C84E26092A1200B23CC3 /* NEOchrome.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NEOchrome.h; sourceTree = "<group>"; };
 		1365C84F26092A1200B23CC3 /* NEOchrome.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = NEOchrome.c; sourceTree = "<group>"; };
-		1365C85226092CF300B23CC3 /* UniversalPictureFormat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UniversalPictureFormat.h; sourceTree = "<group>"; };
-		1365C85326092CF300B23CC3 /* UniversalPictureFormat.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = UniversalPictureFormat.c; sourceTree = "<group>"; };
 		1365C85C2609392700B23CC3 /* common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
 		1365C85E260947CC00B23CC3 /* common.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = common.c; sourceTree = "<group>"; };
 		1365C86C260A667100B23CC3 /* Ximage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ximage.swift; sourceTree = "<group>"; };
@@ -72,6 +72,10 @@
 		1365C97C2616655100B23CC3 /* Grayscale.act */ = {isa = PBXFileReference; lastKnownFileType = file; path = Grayscale.act; sourceTree = "<group>"; };
 		1365C97F2616655E00B23CC3 /* Spectrum.act */ = {isa = PBXFileReference; lastKnownFileType = file; path = Spectrum.act; sourceTree = "<group>"; };
 		1365C9A1261760A400B23CC3 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		1365C9A6261939BB00B23CC3 /* Degas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Degas.h; sourceTree = "<group>"; };
+		1365C9A7261939BB00B23CC3 /* Degas.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Degas.c; sourceTree = "<group>"; };
+		1365C9B3261A321700B23CC3 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
+		1365C9B7261A372F00B23CC3 /* Plug-Ins */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Plug-Ins"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +121,7 @@
 		1365C7A426057FCE00B23CC3 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				1365C9B2261A31FD00B23CC3 /* Extensions */,
 				1365C7AF2605812A00B23CC3 /* GraphicX-Bridging-Header.h */,
 				1365C7AA2605805100B23CC3 /* Storyboards */,
 				1365C7A92605804400B23CC3 /* View Controller */,
@@ -190,6 +195,7 @@
 		1365C7AB260580A400B23CC3 /* App Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1365C9B7261A372F00B23CC3 /* Plug-Ins */,
 				1365C9822616658000B23CC3 /* Predefined Palettes */,
 				1365C7AC260580C300B23CC3 /* Library */,
 			);
@@ -199,46 +205,31 @@
 		1365C7AC260580C300B23CC3 /* Library */ = {
 			isa = PBXGroup;
 			children = (
-				1365C84C260929C500B23CC3 /* Universal Picture Format */,
+				1365C858260932BB00B23CC3 /* File Formats */,
 			);
 			path = Library;
 			sourceTree = "<group>";
 		};
-		1365C84C260929C500B23CC3 /* Universal Picture Format */ = {
-			isa = PBXGroup;
-			children = (
-				1365C858260932BB00B23CC3 /* Atari ST Picture Formats */,
-				1365C84D260929E800B23CC3 /* includes */,
-				1365C85326092CF300B23CC3 /* UniversalPictureFormat.c */,
-				1365C9602612340400B23CC3 /* endian.c */,
-				1365C85E260947CC00B23CC3 /* common.c */,
-			);
-			path = "Universal Picture Format";
-			sourceTree = "<group>";
-		};
-		1365C84D260929E800B23CC3 /* includes */ = {
-			isa = PBXGroup;
-			children = (
-				1365C85226092CF300B23CC3 /* UniversalPictureFormat.h */,
-				1365C9612612340400B23CC3 /* endian.h */,
-				1365C85C2609392700B23CC3 /* common.h */,
-			);
-			name = includes;
-			sourceTree = "<group>";
-		};
-		1365C858260932BB00B23CC3 /* Atari ST Picture Formats */ = {
+		1365C858260932BB00B23CC3 /* File Formats */ = {
 			isa = PBXGroup;
 			children = (
 				1365C85A260932F800B23CC3 /* includes */,
 				1365C84F26092A1200B23CC3 /* NEOchrome.c */,
+				1365C9A7261939BB00B23CC3 /* Degas.c */,
+				1365C9602612340400B23CC3 /* endian.c */,
+				1365C85E260947CC00B23CC3 /* common.c */,
 			);
-			name = "Atari ST Picture Formats";
+			name = "File Formats";
+			path = "Universal Picture Format";
 			sourceTree = "<group>";
 		};
 		1365C85A260932F800B23CC3 /* includes */ = {
 			isa = PBXGroup;
 			children = (
+				1365C9612612340400B23CC3 /* endian.h */,
+				1365C85C2609392700B23CC3 /* common.h */,
 				1365C84E26092A1200B23CC3 /* NEOchrome.h */,
+				1365C9A6261939BB00B23CC3 /* Degas.h */,
 			);
 			name = includes;
 			sourceTree = "<group>";
@@ -256,6 +247,14 @@
 				1365C9762616618900B23CC3 /* Atari ST Grayscale.act */,
 			);
 			path = "Predefined Palettes";
+			sourceTree = "<group>";
+		};
+		1365C9B2261A31FD00B23CC3 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				1365C9B3261A321700B23CC3 /* String.swift */,
+			);
+			name = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -328,6 +327,7 @@
 				1365C96B261653E600B23CC3 /* Atari 128 (NTSC).act in Resources */,
 				1365C97D2616655100B23CC3 /* Grayscale.act in Resources */,
 				1365C9772616618900B23CC3 /* Atari ST Grayscale.act in Resources */,
+				1365C9B8261A372F00B23CC3 /* Plug-Ins in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -358,12 +358,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1365C9A8261939BB00B23CC3 /* Degas.c in Sources */,
+				1365C9B4261A321700B23CC3 /* String.swift in Sources */,
 				1365C870260A875700B23CC3 /* Image.m in Sources */,
 				1365C79626057FA700B23CC3 /* ViewController.swift in Sources */,
 				1365C875260AA74300B23CC3 /* Palette.m in Sources */,
 				1365C78E26057FA700B23CC3 /* AppDelegate.swift in Sources */,
 				1365C9622612340400B23CC3 /* endian.c in Sources */,
-				1365C85426092CF300B23CC3 /* UniversalPictureFormat.c in Sources */,
 				1365C7CD260584AB00B23CC3 /* MainScene.m in Sources */,
 				1365C85026092A1200B23CC3 /* NEOchrome.c in Sources */,
 				1365C9A2261760A400B23CC3 /* Colors.swift in Sources */,
@@ -522,7 +523,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.6.3;
+				MARKETING_VERSION = 0.6.4;
 				PRODUCT_BUNDLE_IDENTIFIER = uk.insoft.GraphicX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT)/Classes/GraphicX-Bridging-Header.h";
@@ -551,7 +552,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.6.3;
+				MARKETING_VERSION = 0.6.4;
 				PRODUCT_BUNDLE_IDENTIFIER = uk.insoft.GraphicX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT)/Classes/GraphicX-Bridging-Header.h";

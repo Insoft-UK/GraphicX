@@ -20,31 +20,30 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#ifndef PrefixHeader_pch
-#define PrefixHeader_pch
+#ifndef common_h
+#define common_h
 
-#ifdef __OBJC__
-#import <Foundation/Foundation.h>
-#if !TARGET_OS_OSX
-#import <UIKit/UIKit.h>
-#endif
-#import <SpriteKit/SpriteKit.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdbool.h>
 
-/// Utilities
-#import "Constants.h"
-#import "Palette.h"
-#import "Image.h"
+#include "endian.h"
 
-/// Singletons
-#import "Singleton.h"
-
-/// Scenes
-#import "MainScene.h"
-
-/// Picture Formats
-#import "NEOchrome.h"
-#import "Degas.h"
-
+/* Set up for C function definitions, even when using C++ */
+#ifdef __cplusplus
+extern "C" {
 #endif
 
-#endif /* PrefixHeader_pch */
+uint32_t colorFrom9BitRgb( uint16_t rgb);
+uint32_t colorFrom12BitRgb( uint16_t rgb);
+bool isAtariStFormat( const uint16_t* rgb);
+bool isAtariSteFormat( const uint16_t* rgb);
+
+/* Ends C function definitions when using C++ */
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* common_h */

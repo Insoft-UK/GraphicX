@@ -20,31 +20,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#ifndef PrefixHeader_pch
-#define PrefixHeader_pch
-
-#ifdef __OBJC__
-#import <Foundation/Foundation.h>
-#if !TARGET_OS_OSX
-#import <UIKit/UIKit.h>
-#endif
-#import <SpriteKit/SpriteKit.h>
-
-/// Utilities
-#import "Constants.h"
-#import "Palette.h"
-#import "Image.h"
-
-/// Singletons
-#import "Singleton.h"
-
-/// Scenes
-#import "MainScene.h"
-
-/// Picture Formats
-#import "NEOchrome.h"
-#import "Degas.h"
-
-#endif
-
-#endif /* PrefixHeader_pch */
+extension String {
+    func runAsCommand() -> String {
+        let pipe = Pipe()
+        let task = Process()
+        task.launchPath = "/bin/sh"
+        task.arguments = ["-c", String(format:"%@", self)]
+        task.standardOutput = pipe
+        let file = pipe.fileHandleForReading
+        task.launch()
+        if let result = NSString(data: file.readDataToEndOfFile(), encoding: String.Encoding.utf8.rawValue) {
+            return result as String
+        }
+        else {
+            return "--- Error running command - Unable to initialize string from file data ---"
+        }
+    }
+}

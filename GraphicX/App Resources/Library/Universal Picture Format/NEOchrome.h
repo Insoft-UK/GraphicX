@@ -28,38 +28,38 @@ THE SOFTWARE.
 #pragma pack(1)     /* set alignment to 1 byte boundary */
 
 typedef struct {
-    word flag;              // flag word [always 0]
-    word resolution;        // resolution [0 = low res, 1 = medium res, 2 = high res]
+    int16_t flag;              // flag word [always 0]
+    int16_t resolution;        // resolution [0 = low res, 1 = medium res, 2 = high res]
     
-    word palette[16];
-    byte filename[12];      // filename [usually "        .   "]
+    int16_t palette[16];
+    char filename[12];      // filename [usually "        .   "]
     
-    word colorAniLimits;    /*
+    int16_t colorAniLimits;    /*
                              color animation limits.  High bit (bit 15) set if color
                              animation data is valid.  Low byte contains color animation
                              limits (4 most significant bits are left/lower limit,
                              4 least significant bits are right/upper limit).
                              */
     
-    word colorAniSpeedDir;  /*
+    int16_t colorAniSpeedDir;  /*
                              color animation speed and direction.  High bit (bit 15) set
                              if animation is on.  Low order byte is # vblanks per step.
                              If negative, scroll is left (decreasing).  Number of vblanks
                              between cycles is |x| - 1
                              */
     
-    word numOfColorSteps;   /*
+    int16_t numOfColorSteps;   /*
                              # of color steps (as defined in previous word) to display
                              picture before going to the next.  (For use in slide shows)
                              */
     
-    word imageXoffset;      // image X offset [unused, always 0]
-    word imageYoffset;      // image Y offset [unused, always 0]
+    int16_t imageXoffset;      // image X offset [unused, always 0]
+    int16_t imageYoffset;      // image Y offset [unused, always 0]
     
-    word imageWidth;        // image width [unused, always 320]
-    word imageHeight;       // image height [unused, always 200]
+    int16_t imageWidth;        // image width [unused, always 320]
+    int16_t imageHeight;       // image height [unused, always 200]
     
-    word _reserved[33];         // reserved for future expansion
+    int16_t _reserved[33];         // reserved for future expansion
     
 } NEOchrome;
 

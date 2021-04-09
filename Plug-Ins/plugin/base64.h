@@ -20,31 +20,28 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#ifndef PrefixHeader_pch
-#define PrefixHeader_pch
+#ifndef base64_h
+#define base64_h
 
-#ifdef __OBJC__
-#import <Foundation/Foundation.h>
-#if !TARGET_OS_OSX
-#import <UIKit/UIKit.h>
-#endif
-#import <SpriteKit/SpriteKit.h>
+#include <stdint.h>
 
-/// Utilities
-#import "Constants.h"
-#import "Palette.h"
-#import "Image.h"
 
-/// Singletons
-#import "Singleton.h"
-
-/// Scenes
-#import "MainScene.h"
-
-/// Picture Formats
-#import "NEOchrome.h"
-#import "Degas.h"
-
+/* Set up for C function definitions, even when using C++ */
+#ifdef __cplusplus
+extern "C" {
 #endif
 
-#endif /* PrefixHeader_pch */
+char *base64_encode(const unsigned char *data,
+                    size_t input_length,
+                    size_t *output_length);
+
+unsigned char *base64_decode(const char *data,
+                             size_t input_length,
+                             size_t *output_length);
+
+/* Ends C function definitions when using C++ */
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* base64_h */

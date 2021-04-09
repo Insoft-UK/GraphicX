@@ -20,43 +20,51 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#ifndef UniversalPictureFormat_h
-#define UniversalPictureFormat_h
+#ifndef plugin_h
+#define plugin_h
 
-#include "NEOchrome.h"
+#include "common.h"
+#include "endian.h"
+#include "base64.h"
+
+#pragma pack(1)     /* set alignment to 1 byte boundary */
 
 typedef struct {
-    const char title[128];
-    int planeCount;                 // Number of bit planes
-    int bitsPerPixel;               // 1 Monochrome (B/W) : 2,3,4...8,9,10 (Color)
-    
-    int width;
-    int height;
-    
-    ulword palette[256];
-    
-    bool paletteAnim;
-    ubyte colorLowerLimit;
-    ubyte colorUpperLimit;
-    word numOfColorSteps;
-    word animSpeed;
-    
-    byte numOfColors;
-    
-    ulword lengthInBytes;
-    ulword imageDataOffset;    // Zero :- unable to identify raw data
-} UniversalPictureFormat;
+    char id[8]; // "Plug-In"
+    uint16_t width;
+    uint16_t height;
+    uint8_t  type;          // 0: 256 Color Indexed(256 RGBA Palette + Pixel Data)  1: 24 16.7 Million Colors  2: 32-bit 16.7 Million Colors
+    unsigned long length;   // Length of data in bytes that follow the header data.
+}PlugInHeader;
+
+typedef struct {
+    PlugInHeader header;
+    void *bytes;
+} PlugIn;
+
+typedef struct {
+    unsigned long length;
+    void *bytes;
+} Data;
+
+#pragma pack()   /* restore original alignment from stack */
+
 
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-UniversalPictureFormat getUniversalPictureFormat(const void *rawData, long unsigned int length);
+Data dataWithContentsOfFile(const char *file);
+Data dataWithCapacity(unsigned long numberOfBytes);
+void dataDealloc(Data *data);
+void plugInDealloc(PlugIn *plugin);
+PlugIn plugInWithContentsOfData(const Data *data);
+bool outputPlugInAsBase64(const PlugIn *plugin);
 
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* UniversalPictureFormat_h */
+#endif /* plugin_h */
